@@ -7,7 +7,7 @@ const person = {
     return `${this.firstName} ${this.lastName}`;
   },
   role: "Software Engineer",
-  avatar: "/images/avatar.jpg",
+  avatar: "/images/emma.JPG",
   location: "Africa/Lagos", // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
   languages: ["English"], // optional: Leave the array empty if you don't want to display languages
 };
@@ -55,7 +55,7 @@ const home = {
   headline: <>Software Engineer</>,
   subline: (
     <>
-      I'm Emmanuel, a software engineer at <InlineCode>FLY</InlineCode>, where I craft intuitive
+      I'm Emmanuel, a software engineer at <InlineCode>NoName</InlineCode>, where I craft intuitive
       <br /> user experiences. After hours, I build my own projects.
     </>
   ),
@@ -108,7 +108,7 @@ const about = {
         images: [
           // optional: leave the array empty if you don't want to display images
           {
-            src: "/images/projects/project-01/cover-01.jpg",
+            src: "/images/gallery/7321 (1).jpg",
             alt: "Once UI Project",
             width: 16,
             height: 9,
