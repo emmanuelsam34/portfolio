@@ -119,9 +119,9 @@ const StylePanel = forwardRef<HTMLDivElement, StylePanelProps>(({ ...rest }, ref
         <Flex horizontal="space-between" vertical="center" fillWidth paddingX="24" paddingY="16">
           <Text variant="label-default-s">Shape</Text>
           <Flex gap="4">
-            {shapes.map((radius, index) => (
+            {shapes.map((radius) => (
               <Flex
-                data-border={shapes[index]}
+                data-border={radius}
                 key={radius}
                 horizontal="center"
                 vertical="center"
