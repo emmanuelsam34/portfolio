@@ -6,7 +6,7 @@ import classNames from "classnames";
 import { Footer, Header, RouteGuard } from "@/components";
 import { baseURL, effects, style } from "@/app/resources";
 
-import { Plus_Jakarta_Sans } from "next/font/google";
+import localFont from "next/font/local";
 
 import { person, home } from "@/app/resources/content";
 import { Background, Column, Flex, ToastProvider } from "@/once-ui/components";
@@ -17,10 +17,10 @@ export async function generateMetadata() {
     title: home.title,
     description: home.description,
     openGraph: {
-      title: `${person.firstName}'s Portfolio`,
-      description: "Portfolio website showcasing my work.",
+      title: home.title,
+      description: home.description,
       url: baseURL,
-      siteName: `${person.firstName}'s Portfolio`,
+      siteName: person.name,
       locale: "en_US",
       type: "website",
     },
@@ -38,10 +38,10 @@ export async function generateMetadata() {
   };
 }
 
-const primary = Plus_Jakarta_Sans({
+const primary = localFont({
   variable: "--font-primary",
-  subsets: ["latin"],
-  display: "swap",
+  src: "../../public/fonts/Inter.ttf",
+  display: "swap"
 });
 
 type FontConfig = {
@@ -52,14 +52,18 @@ type FontConfig = {
 	Replace with code for secondary and tertiary fonts
 	from https://once-ui.com/customize
 */
-const secondary: FontConfig | undefined = undefined;
+const secondary = localFont({
+  variable: "--font-secondary",
+  src: "../../public/fonts/Inter.ttf",
+  display: "swap",
+});
 const tertiary: FontConfig | undefined = undefined;
 /*
  */
 
-const code = Plus_Jakarta_Sans({
+const code = localFont({
   variable: "--font-code",
-  subsets: ["latin"],
+  src: "../../public/fonts/Inter.ttf",
   display: "swap",
 });
 

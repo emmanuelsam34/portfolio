@@ -1,11 +1,13 @@
 import { notFound } from "next/navigation";
+
 import { CustomMDX } from "@/components/mdx";
-import { getPosts } from "@/app/utils/utils";
-import { AvatarGroup, Button, Column, Flex, Heading, SmartImage, Text } from "@/once-ui/components";
-import { baseURL } from "@/app/resources";
-import { person } from "@/app/resources/content";
-import { formatDate } from "@/app/utils/formatDate";
 import ScrollToHash from "@/components/ScrollToHash";
+import { getPosts } from "@/app/utils/utils";
+import { Button, Column, Flex, SmartImage, Tag, Text, Heading } from "@/once-ui/components";
+import { baseURL } from "@/app/resources";
+import { person, work } from "@/app/resources/content";
+
+import styles from "../project-page.module.scss";
 
 interface WorkParams {
   params: {
@@ -14,113 +16,153 @@ interface WorkParams {
 }
 
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
-  const posts = getPosts(["src", "app", "work", "projects"]);
-  return posts.map((post) => ({
+  return getPosts(["src", "app", "work", "projects"]).map((post) => ({
     slug: post.slug,
   }));
 }
 
-export function generateMetadata({ params: { slug } }: WorkParams) {
-  let post = getPosts(["src", "app", "work", "projects"]).find((post) => post.slug === slug);
+function getProjectBundle(slug: string) {
+  const post = getPosts(["src", "app", "work", "projects"]).find((entry) => entry.slug === slug);
+  const project = work.featuredProjects.find((entry) => entry.slug === slug);
 
-  if (!post) {
+  if (!post || !project) {
+    return null;
+  }
+
+  return { post, project };
+}
+
+export function generateMetadata({ params: { slug } }: WorkParams) {
+  const bundle = getProjectBundle(slug);
+
+  if (!bundle) {
     return;
   }
 
-  let {
-    title,
-    publishedAt: publishedTime,
-    summary: description,
-    images,
-    image,
-    team,
-  } = post.metadata;
-  let ogImage = image ? `https://${baseURL}${image}` : `https://${baseURL}/og?title=${title}`;
+  const { post, project } = bundle;
+  const ogImage = post.metadata.images?.[0]
+    ? `https://${baseURL}${post.metadata.images[0]}`
+    : `https://${baseURL}/og?title=${encodeURIComponent(project.name)}`;
 
   return {
-    title,
-    description,
-    images,
-    team,
+    title: project.name,
+    description: project.summary,
     openGraph: {
-      title,
-      description,
-      type: "article",
-      publishedTime,
+      title: project.name,
+      description: project.summary,
+      type: "website",
       url: `https://${baseURL}/work/${post.slug}`,
-      images: [
-        {
-          url: ogImage,
-        },
-      ],
+      images: [{ url: ogImage }],
     },
     twitter: {
       card: "summary_large_image",
-      title,
-      description,
+      title: project.name,
+      description: project.summary,
       images: [ogImage],
     },
   };
 }
 
 export default function Project({ params }: WorkParams) {
-  let post = getPosts(["src", "app", "work", "projects"]).find((post) => post.slug === params.slug);
+  const bundle = getProjectBundle(params.slug);
 
-  if (!post) {
+  if (!bundle) {
     notFound();
   }
 
-  const avatars =
-    post.metadata.team?.map((person) => ({
-      src: person.avatar,
-    })) || [];
+  const { post, project } = bundle;
 
   return (
-    <Column as="section" maxWidth="m" horizontal="center" gap="l">
+    <Column as="section" maxWidth="l" horizontal="center" className={styles.page}>
       <script
         type="application/ld+json"
         suppressHydrationWarning
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "BlogPosting",
-            headline: post.metadata.title,
-            datePublished: post.metadata.publishedAt,
-            dateModified: post.metadata.publishedAt,
-            description: post.metadata.summary,
-            image: post.metadata.image
-              ? `https://${baseURL}${post.metadata.image}`
-              : `https://${baseURL}/og?title=${post.metadata.title}`,
+            "@type": "SoftwareApplication",
+            name: project.name,
+            description: project.summary,
+            applicationCategory: project.platform,
+            operatingSystem: "Web and mobile",
             url: `https://${baseURL}/work/${post.slug}`,
-            author: {
+            creator: {
               "@type": "Person",
               name: person.name,
             },
           }),
         }}
       />
-      <Column maxWidth="xs" gap="16">
-        <Button href="/work" variant="tertiary" weight="default" size="s" prefixIcon="chevronLeft">
-          Projects
-        </Button>
-        <Heading variant="display-strong-s">{post.metadata.title}</Heading>
-      </Column>
+
+      <div className={styles.hero}>
+        <Column gap="20">
+          <Button href="/work" variant="tertiary" weight="default" size="s" prefixIcon="chevronLeft">
+            Back to selected work
+          </Button>
+
+          <div className={styles.heroGrid}>
+            <Column gap="16">
+              <Flex gap="8" wrap>
+                <Tag variant="neutral" size="s">
+                  {project.platform}
+                </Tag>
+                <Tag variant="brand" size="s">
+                  {project.status}
+                </Tag>
+                <Tag variant="accent" size="s">
+                  {project.year}
+                </Tag>
+              </Flex>
+              <Heading as="h1" variant="display-strong-l">
+                {project.name}
+              </Heading>
+              <Text variant="heading-default-l" onBackground="neutral-weak">
+                {project.tagline}
+              </Text>
+              <Text variant="body-default-l" onBackground="neutral-medium">
+                {project.summary}
+              </Text>
+            </Column>
+
+            <Column gap="12">
+              <div className={styles.metaCard}>
+                <Column gap="8">
+                  <Text className={styles.sectionLabel}>Highlights</Text>
+                  {project.highlights.map((item) => (
+                    <Text key={item} variant="body-default-s" onBackground="neutral-strong">
+                      {item}
+                    </Text>
+                  ))}
+                </Column>
+              </div>
+              <div className={styles.metaCard}>
+                <Column gap="8">
+                  <Text className={styles.sectionLabel}>Core stack</Text>
+                  <Flex gap="8" wrap>
+                    {project.stack.map((item) => (
+                      <Tag key={item} variant="neutral" size="s">
+                        {item}
+                      </Tag>
+                    ))}
+                  </Flex>
+                </Column>
+              </div>
+            </Column>
+          </div>
+        </Column>
+      </div>
+
       {post.metadata.images.length > 0 && (
         <SmartImage
           priority
           aspectRatio="16 / 9"
-          radius="m"
-          alt="image"
+          radius="l"
+          alt={project.name}
           src={post.metadata.images[0]}
         />
       )}
-      <Column style={{ margin: "auto" }} as="article" maxWidth="xs">
-        <Flex gap="12" marginBottom="24" vertical="center">
-          {post.metadata.team && <AvatarGroup reverse avatars={avatars} size="m" />}
-          <Text variant="body-default-s" onBackground="neutral-weak">
-            {formatDate(post.metadata.publishedAt)}
-          </Text>
-        </Flex>
+
+      <Column style={{ margin: "auto" }} as="article" maxWidth="s">
         <CustomMDX source={post.content} />
       </Column>
       <ScrollToHash />

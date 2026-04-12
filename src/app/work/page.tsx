@@ -1,8 +1,9 @@
-import { getPosts } from "@/app/utils/utils";
-import { Column } from "@/once-ui/components";
+import { Column, Flex, Heading, Text } from "@/once-ui/components";
 import { Projects } from "@/components/work/Projects";
 import { baseURL } from "@/app/resources";
 import { person, work } from "@/app/resources/content";
+
+import styles from "./work-page.module.scss";
 
 export async function generateMetadata() {
   const title = work.title;
@@ -17,12 +18,7 @@ export async function generateMetadata() {
       description,
       type: "website",
       url: `https://${baseURL}/work/`,
-      images: [
-        {
-          url: ogImage,
-          alt: title,
-        },
-      ],
+      images: [{ url: ogImage, alt: title }],
     },
     twitter: {
       card: "summary_large_image",
@@ -34,10 +30,8 @@ export async function generateMetadata() {
 }
 
 export default function Work() {
-  let allProjects = getPosts(["src", "app", "work", "projects"]);
-
   return (
-    <Column maxWidth="m">
+    <Column maxWidth="l" className={styles.page}>
       <script
         type="application/ld+json"
         suppressHydrationWarning
@@ -47,23 +41,41 @@ export default function Work() {
             "@type": "CollectionPage",
             headline: work.title,
             description: work.description,
-            url: `https://${baseURL}/projects`,
-            image: `${baseURL}/og?title=Design%20Projects`,
+            url: `https://${baseURL}/work`,
             author: {
               "@type": "Person",
               name: person.name,
             },
-            hasPart: allProjects.map((project) => ({
+            hasPart: work.featuredProjects.map((project) => ({
               "@type": "CreativeWork",
-              headline: project.metadata.title,
-              description: project.metadata.summary,
-              url: `https://${baseURL}/projects/${project.slug}`,
-              image: `${baseURL}/${project.metadata.image}`,
+              headline: project.name,
+              description: project.summary,
+              url: `https://${baseURL}/work/${project.slug}`,
             })),
           }),
         }}
       />
-      <Projects />
+
+      <div className={styles.hero}>
+        <Flex mobileDirection="column" fillWidth gap="l">
+          <Column flex={4} gap="12">
+            <Text className={styles.sectionLabel}>Selected work</Text>
+            <Heading as="h1" variant="display-strong-l">
+              Product case studies across mobile apps, platform operations, and compliance workflows.
+            </Heading>
+          </Column>
+          <Column flex={6} gap="12">
+            <Text variant="body-default-l" onBackground="neutral-medium">
+              {work.intro}
+            </Text>
+            <Text variant="body-default-m" onBackground="neutral-medium">
+              The featured projects below are arranged intentionally to show the full system: tutor-facing mobile experiences, student booking flows, internal admin tooling, and verification orchestration.
+            </Text>
+          </Column>
+        </Flex>
+      </div>
+
+      <Projects slugs={work.featuredProjectSlugs} />
     </Column>
   );
 }

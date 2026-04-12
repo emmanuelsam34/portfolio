@@ -1,0 +1,73 @@
+.hero {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(18rem, 0.9fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  padding: clamp(1rem, 2vw, 1.5rem) 0 0;
+}
+
+.heroCopy {
+  padding: clamp(1rem, 3vw, 2rem);
+}
+
+.heroTitle {
+  max-width: 12ch;
+}
+
+.lead {
+  max-width: 28ch;
+}
+
+.subline {
+  max-width: 62ch;
+}
+
+.heroAside {
+  justify-content: flex-end;
+}
+
+.identityCard,
+.statementCard,
+.credibilityPanel,
+.specialtyRow {
+  border: 1px solid var(--neutral-border-medium);
+  border-radius: var(--radius-l);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(240, 247, 255, 0.9)),
+    var(--page-background);
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+}
+
+.identityCard,
+.statementCard,
+.specialtyRow {
+  padding: 1.25rem;
+}
+
+.section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.sectionHeader {
+  padding: 0 0.5rem;
+}
+
+.sectionLabel {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.74rem;
+  color: var(--neutral-on-background-medium);
+}
+
+.credibilityPanel {
+  padding: clamp(1.5rem, 3vw, 2rem);
+}
+
+@media (--m) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+}

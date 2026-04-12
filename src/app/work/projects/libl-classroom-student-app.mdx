@@ -1,0 +1,57 @@
+---
+title: "LIBL Classroom Student App"
+publishedAt: "2026-04-12"
+summary: "A student-facing mobile experience for tutor discovery, booking, negotiation, payments, chat, and virtual learning sessions."
+images:
+  - "/images/gallery/img-03.jpg"
+  - "/images/gallery/img-04.jpg"
+  - "/images/gallery/img-05.jpg"
+tag:
+  - "Mobile Platform"
+  - "Student Experience"
+team:
+  - name: "Emmanuel Agbedejobi"
+    role: "Mobile + Platform Engineer"
+    avatar: "/images/emma.JPG"
+    linkedIn: "https://www.linkedin.com/in/emmanuel-samuel-agbedejobi/"
+---
+
+## Overview
+
+The LIBL Classroom Student App is the student-facing side of the tutoring platform. It supports the full journey from finding a tutor to booking a class, negotiating rates, paying, chatting, and attending sessions.
+
+## Product Scope
+
+This product had to make a complicated service feel straightforward. Students needed a booking flow that could handle subject selection, availability, virtual or physical sessions, communication with tutors, and payment steps without making the experience feel operationally heavy.
+
+Because the student app is part of the same ecosystem as the tutor app and admin dashboard, every flow also had downstream implications for scheduling, tutor management, and platform operations.
+
+## Key Features
+
+- Tutor discovery and matching
+- Multi-step booking flow
+- Dynamic pricing and negotiation support
+- Integrated payments and invoicing
+- Chat and communication workflows
+- Virtual session support through Whereby
+
+## Architecture / Integrations
+
+The app uses Expo, React Native, TypeScript, Tamagui, Appwrite, React Query, and supporting integrations such as Paystack and Whereby. The README also references AI-assisted matching and recommendation logic, alongside notification and booking workflows.
+
+From a systems perspective, the app acts as a customer-facing surface on top of shared booking, messaging, and payment infrastructure. That meant product decisions in the mobile interface needed to stay aligned with the operational realities of the wider platform.
+
+## My Focus
+
+My contribution was centered on translating platform complexity into a usable student experience. That included the booking journey, connected service integrations, and the product patterns needed to move users from discovery to attendance while keeping the rest of the system in sync.
+
+## Technical Stack
+
+- Expo and React Native
+- TypeScript
+- Tamagui
+- Appwrite
+- React Query
+- Paystack
+- Whereby
+- AI-assisted platform integrations

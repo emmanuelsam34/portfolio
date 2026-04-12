@@ -11,6 +11,18 @@
     mask-size: 100% 100%;
 }
 
+.navShell {
+    box-shadow: 0 18px 44px rgba(15, 23, 42, 0.08);
+}
+
+.identity,
+.role {
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--neutral-on-background-medium);
+}
+
 @media (--s) {
     .position {
         top: auto;
@@ -21,5 +33,9 @@
     .mask {
         transform: rotate(180deg);
         bottom: 0;
+    }
+
+    .role {
+        display: none;
     }
 }

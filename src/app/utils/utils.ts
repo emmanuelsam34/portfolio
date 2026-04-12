@@ -15,7 +15,7 @@ type Metadata = {
   summary: string;
   image?: string;
   images: string[];
-  tag?: string;
+  tag?: string | string[];
   team: Team[];
   link?: string;
 };
@@ -69,4 +69,8 @@ function getMDXData(dir: string) {
 export function getPosts(customPath = ["", "", "", ""]) {
   const postsDir = path.join(process.cwd(), ...customPath);
   return getMDXData(postsDir);
+}
+
+export function getPostBySlug(customPath = ["", "", "", ""], slug: string) {
+  return getPosts(customPath).find((post) => post.slug === slug);
 }

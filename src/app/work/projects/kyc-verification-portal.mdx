@@ -1,0 +1,54 @@
+---
+title: "KYC Verification Portal"
+publishedAt: "2026-04-12"
+summary: "A verification orchestration portal built around Didit hosted flows, signed verification tokens, webhook handling, and Appwrite-backed tutor status updates."
+images:
+  - "/images/gallery/img-09.jpg"
+  - "/images/gallery/img-10.jpg"
+  - "/images/gallery/img-11.jpg"
+tag:
+  - "Compliance System"
+  - "Verification Workflow"
+team:
+  - name: "Emmanuel Agbedejobi"
+    role: "Mobile + Platform Engineer"
+    avatar: "/images/emma.JPG"
+    linkedIn: "https://www.linkedin.com/in/emmanuel-samuel-agbedejobi/"
+---
+
+## Overview
+
+The KYC Verification Portal is a productized verification workflow for tutors. It replaces a more fragile custom verification approach with a hosted identity flow and a more dependable orchestration model.
+
+## Product Scope
+
+The portal supports a very specific but high-value part of the platform: confirming tutor identity in a way that is easier for users and more trustworthy for the business. It needed to accept tutor context securely, launch a hosted verification session, process verification outcomes, and feed those results back into platform state.
+
+## Key Features
+
+- Verification session orchestration
+- Hosted identity flow redirection
+- Signed token validation
+- Webhook-driven status updates
+- Attempt management and verification lifecycle tracking
+- Email notifications tied to verification outcomes
+
+## Architecture / Integrations
+
+The implementation uses React, Vite, TypeScript, Appwrite, Didit, Resend, and Vercel serverless functions. According to the local README, the architecture validates verification tokens, creates Didit sessions, receives webhook events, verifies HMAC signatures, and updates tutor records inside Appwrite.
+
+This makes the portal an orchestration layer rather than a simple frontend. Its job is to coordinate a compliance-sensitive workflow across external identity services, backend state, and product-facing outcomes for tutors and admins.
+
+## My Focus
+
+My focus was on making verification more reliable and operationally safer by shifting from a brittle custom pipeline to a dedicated provider-backed flow. That meant designing around trust, request validation, webhook integrity, and clear status transitions instead of just document upload screens.
+
+## Technical Stack
+
+- React
+- Vite
+- TypeScript
+- Appwrite
+- Didit
+- Resend
+- Vercel Functions

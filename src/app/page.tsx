@@ -1,12 +1,10 @@
-import React from "react";
-
-import { Heading, Flex, Text, Button, Avatar, RevealFx, Arrow, Column } from "@/once-ui/components";
+import { Avatar, Button, Column, Flex, Heading, Line, Tag, Text } from "@/once-ui/components";
 import { Projects } from "@/components/work/Projects";
 
-import { baseURL, routes } from "@/app/resources";
-import { home, about, person, newsletter } from "@/app/resources/content";
-import { Mailchimp } from "@/components";
-import { Posts } from "@/components/blog/Posts";
+import { baseURL } from "@/app/resources";
+import { home, person, work } from "@/app/resources/content";
+
+import styles from "./home.module.scss";
 
 export async function generateMetadata() {
   const title = home.title;
@@ -39,7 +37,7 @@ export async function generateMetadata() {
 
 export default function Home() {
   return (
-    <Column maxWidth="m" gap="xl" horizontal="center">
+    <Column maxWidth="l" gap="xl" horizontal="center">
       <script
         type="application/ld+json"
         suppressHydrationWarning
@@ -51,69 +49,124 @@ export default function Home() {
             description: home.description,
             url: `https://${baseURL}`,
             image: `${baseURL}/og?title=${encodeURIComponent(home.title)}`,
-            publisher: {
+            about: {
               "@type": "Person",
               name: person.name,
-              image: {
-                "@type": "ImageObject",
-                url: `${baseURL}${person.avatar}`,
-              },
+              jobTitle: person.role,
             },
           }),
         }}
       />
-      <Column fillWidth paddingY="l" gap="m">
-        <Column maxWidth="s">
-          <RevealFx translateY="4" fillWidth horizontal="start" paddingBottom="m">
-            <Heading wrap="balance" variant="display-strong-l">
-              {home.headline}
-            </Heading>
-          </RevealFx>
-          <RevealFx translateY="8" delay={0.2} fillWidth horizontal="start" paddingBottom="m">
-            <Text wrap="balance" onBackground="neutral-weak" variant="heading-default-xl">
-              {home.subline}
-            </Text>
-          </RevealFx>
-          <RevealFx translateY="12" delay={0.4} horizontal="start">
-            <Button
-              id="about"
-              data-border="rounded"
-              href="/about"
-              variant="secondary"
-              size="m"
-              arrowIcon
-            >
-              <Flex gap="8" vertical="center">
-                {about.avatar.display && (
-                  <Avatar
-                    style={{ marginLeft: "-0.75rem", marginRight: "0.25rem" }}
-                    src={person.avatar}
-                    size="m"
-                  />
-                )}
-                {about.title}
-              </Flex>
+
+      <section className={styles.hero}>
+        <Column gap="20" className={styles.heroCopy}>
+          <Flex gap="8" wrap>
+            <Tag variant="brand" size="s">
+              {home.eyebrow}
+            </Tag>
+            <Tag variant="neutral" size="s">
+              {person.location}
+            </Tag>
+          </Flex>
+          <Heading as="h1" variant="display-strong-xl" className={styles.heroTitle}>
+            {home.headline}
+          </Heading>
+          <Text variant="heading-default-xl" onBackground="neutral-weak" className={styles.lead}>
+            {home.intro}
+          </Text>
+          <Text variant="body-default-l" onBackground="neutral-medium" className={styles.subline}>
+            {home.subline}
+          </Text>
+          <Flex gap="16" wrap>
+            <Button id="selected-work" href={home.primaryCta.href} variant="primary" size="m" arrowIcon>
+              {home.primaryCta.label}
             </Button>
-          </RevealFx>
+            <Button href={home.secondaryCta.href} variant="secondary" size="m">
+              {home.secondaryCta.label}
+            </Button>
+          </Flex>
         </Column>
-      </Column>
-      <RevealFx translateY="16" delay={0.6}>
-        <Projects range={[1, 1]} />
-      </RevealFx>
-      {routes["/blog"] && (
-        <Flex fillWidth gap="24" mobileDirection="column">
-          <Flex flex={1} paddingLeft="l">
-            <Heading as="h2" variant="display-strong-xs" wrap="balance">
-              Latest from the blog
+
+        <Column className={styles.heroAside} gap="20">
+          <Flex className={styles.identityCard} gap="16" vertical="center">
+            <Avatar src={person.avatar} size="l" />
+            <Column gap="4">
+              <Text variant="heading-strong-l">{person.name}</Text>
+              <Text variant="body-default-s" onBackground="neutral-weak">
+                {person.role}
+              </Text>
+            </Column>
+          </Flex>
+          <div className={styles.statementCard}>
+            <Text variant="body-default-m" onBackground="neutral-strong">
+              {person.tagline}
+            </Text>
+          </div>
+          <div className={styles.statementCard}>
+            <Text variant="body-default-s" onBackground="neutral-medium">
+              {person.availability}
+            </Text>
+          </div>
+        </Column>
+      </section>
+
+      <section className={styles.section}>
+        <Flex mobileDirection="column" fillWidth gap="l">
+          <Column flex={4} gap="12">
+            <Text className={styles.sectionLabel}>What I build</Text>
+            <Heading as="h2" variant="display-strong-s">
+              Product systems that connect customer experience with operational reality.
             </Heading>
-          </Flex>
-          <Flex flex={3} paddingX="20">
-            <Posts range={[1, 2]} columns="2" />
-          </Flex>
+          </Column>
+          <Column flex={6} gap="12">
+            {home.specialties.map((item) => (
+              <div key={item} className={styles.specialtyRow}>
+                <Text variant="heading-default-s">{item}</Text>
+              </div>
+            ))}
+          </Column>
         </Flex>
-      )}
-      <Projects range={[2]} />
-      {newsletter.display && <Mailchimp newsletter={newsletter} />}
+      </section>
+
+      <section className={styles.section}>
+        <Flex mobileDirection="column" fillWidth gap="l" className={styles.sectionHeader}>
+          <Column flex={4} gap="12">
+            <Text className={styles.sectionLabel}>Selected work</Text>
+            <Heading as="h2" variant="display-strong-s">
+              Four recent projects that show how I work across mobile, platform, and verification layers.
+            </Heading>
+          </Column>
+          <Column flex={6} gap="12">
+            <Text variant="body-default-m" onBackground="neutral-medium">
+              {work.intro}
+            </Text>
+          </Column>
+        </Flex>
+        <Projects slugs={work.featuredProjectSlugs} />
+      </section>
+
+      <section className={styles.section}>
+        <div className={styles.credibilityPanel}>
+          <Flex mobileDirection="column" gap="l" fillWidth>
+            <Column flex={4} gap="12">
+              <Text className={styles.sectionLabel}>Why this portfolio is structured this way</Text>
+              <Heading as="h2" variant="display-strong-s">
+                The strongest signal in my work is not a single interface. It is how the pieces fit together.
+              </Heading>
+            </Column>
+            <Column flex={6} gap="16">
+              {home.credibility.map((item) => (
+                <Column key={item} gap="12">
+                  <Text variant="body-default-m" onBackground="neutral-strong">
+                    {item}
+                  </Text>
+                  <Line />
+                </Column>
+              ))}
+            </Column>
+          </Flex>
+        </div>
+      </section>
     </Column>
   );
 }

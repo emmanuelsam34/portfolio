@@ -4,55 +4,53 @@ const routes = {
   "/": true,
   "/about": true,
   "/work": true,
-  "/blog": true,
+  "/blog": false,
 };
 
 // Enable password protection on selected routes
 // Set password in pages/api/authenticate.ts
-const protectedRoutes = {
-  "/work/automate-design-handovers-with-a-figma-to-code-pipeline": true,
-};
+const protectedRoutes = {};
 
 const style = {
-  theme: "dark", // dark | light
-  neutral: "gray", // sand | gray | slate
-  brand: "emerald", // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan
-  accent: "orange", // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan
+  theme: "light", // dark | light
+  neutral: "sand", // sand | gray | slate
+  brand: "blue", // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan
+  accent: "cyan", // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan
   solid: "contrast", // color | contrast
   solidStyle: "flat", // flat | plastic
-  border: "playful", // rounded | playful | conservative
-  surface: "translucent", // filled | translucent
-  transition: "all", // all | micro | macro
+  border: "conservative", // rounded | playful | conservative
+  surface: "filled", // filled | translucent
+  transition: "micro", // all | micro | macro
 };
 
 const effects = {
   mask: {
-    cursor: true,
+    cursor: false,
     x: 0,
     y: 0,
-    radius: 75,
+    radius: 0,
   },
   gradient: {
     display: true,
-    x: 50,
+    x: 70,
     y: 0,
-    width: 100,
-    height: 100,
-    tilt: 0,
-    colorStart: "brand-background-strong",
+    width: 80,
+    height: 70,
+    tilt: -8,
+    colorStart: "brand-background-medium",
     colorEnd: "static-transparent",
-    opacity: 50,
+    opacity: 30,
   },
   dots: {
-    display: true,
+    display: false,
     size: 2,
     color: "brand-on-background-weak",
-    opacity: 20,
+    opacity: 0,
   },
   lines: {
-    display: false,
+    display: true,
     color: "neutral-alpha-weak",
-    opacity: 100,
+    opacity: 40,
   },
   grid: {
     display: false,
@@ -62,8 +60,8 @@ const effects = {
 };
 
 const display = {
-  location: true,
-  time: true,
+  location: false,
+  time: false,
 };
 
 const mailchimp = {
