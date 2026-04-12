@@ -1,4 +1,4 @@
-import { Avatar, Button, Column, Flex, Heading, Tag, Text } from "@/once-ui/components";
+import { Avatar, Button, Column, Flex, Heading, LetterFx, RevealFx, SmartImage, Grid, Text } from "@/once-ui/components";
 
 import { baseURL } from "@/app/resources";
 import { about, person, social } from "@/app/resources/content";
@@ -50,33 +50,18 @@ export default function About() {
 
       <div className={styles.hero}>
         <Flex mobileDirection="column" gap="l" fillWidth>
-          <Column flex={4} gap="16">
-            <Text className={styles.sectionLabel}>About</Text>
+          <Column flex={4} gap="24">
             <Avatar src={person.avatar} size="xl" />
-            <Heading as="h1" variant="display-strong-l">
-              {person.name}
-            </Heading>
-            <Text variant="heading-default-l" onBackground="neutral-weak">
-              {person.role}
-            </Text>
-            <Text variant="body-default-m" onBackground="neutral-medium">
-              {about.intro.description}
-            </Text>
-          </Column>
-          <Column flex={6} gap="16">
-            {about.profile.map((paragraph) => (
-              <Text key={paragraph} variant="body-default-l" onBackground="neutral-strong">
-                {paragraph}
+            <Column gap="8">
+              <Heading as="h1" variant="display-strong-l">
+                <LetterFx trigger="instant">
+                  {person.name}
+                </LetterFx>
+              </Heading>
+              <Text variant="heading-default-l" onBackground="neutral-weak">
+                {person.role}
               </Text>
-            ))}
-            <Flex gap="12" wrap>
-              <Tag variant="brand" size="s">
-                {person.location}
-              </Tag>
-              <Tag variant="neutral" size="s">
-                {person.availability}
-              </Tag>
-            </Flex>
+            </Column>
             <Flex gap="12" wrap>
               {about.calendar.display && (
                 <Button href={about.calendar.link} variant="primary" size="m">
@@ -87,6 +72,18 @@ export default function About() {
                 <Button key={item.name} href={item.link} variant="secondary" size="s" prefixIcon={item.icon}>
                   {item.name}
                 </Button>
+              ))}
+            </Flex>
+          </Column>
+          <Column flex={6} gap="24">
+            <Text variant="body-default-l" onBackground="neutral-medium">
+              {about.intro.description}
+            </Text>
+            <Flex gap="12" direction="column">
+              {about.profile.map((paragraph) => (
+                <Text key={paragraph} variant="body-default-l" onBackground="neutral-strong">
+                  {paragraph}
+                </Text>
               ))}
             </Flex>
           </Column>

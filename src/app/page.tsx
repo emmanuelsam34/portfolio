@@ -1,8 +1,10 @@
-import { Avatar, Button, Column, Flex, Heading, Line, Tag, Text } from "@/once-ui/components";
+import { Avatar, Button, Column, Flex, Grid, Heading, LetterFx, Line, RevealFx, SmartImage, Tag, Text, TiltFx } from "@/once-ui/components";
 import { Projects } from "@/components/work/Projects";
 
 import { baseURL } from "@/app/resources";
-import { home, person, work } from "@/app/resources/content";
+import { home, person, work, social, about } from "@/app/resources/content";
+
+// Force re-save to fix ReferenceError: about is not defined
 
 import styles from "./home.module.scss";
 
@@ -58,115 +60,187 @@ export default function Home() {
         }}
       />
 
-      <section className={styles.hero}>
-        <Column gap="20" className={styles.heroCopy}>
-          <Flex gap="8" wrap>
-            <Tag variant="brand" size="s">
-              {home.eyebrow}
-            </Tag>
-            <Tag variant="neutral" size="s">
-              {person.location}
-            </Tag>
-          </Flex>
-          <Heading as="h1" variant="display-strong-xl" className={styles.heroTitle}>
-            {home.headline}
+      <Column fillWidth gap="24" vertical="center" horizontal="center" paddingY="l" className={styles.hero}>
+        <Flex
+          paddingX="12"
+          paddingY="4"
+          radius="full"
+          border="neutral-alpha-medium"
+          background="neutral-alpha-weak"
+          vertical="center"
+          gap="8"
+        >
+          <Text variant="body-default-xs" onBackground="brand-strong">Emmanuel</Text>
+          <Line vert height="12" />
+          <Text variant="body-default-xs" onBackground="neutral-weak">Agbedejobi</Text>
+        </Flex>
+
+        <Column gap="12" horizontal="center">
+          <Heading as="h1" variant="display-strong-xl" align="center">
+            <LetterFx trigger="instant">
+              Building connected product experiences.
+            </LetterFx>
           </Heading>
-          <Text variant="heading-default-xl" onBackground="neutral-weak" className={styles.lead}>
+          <Text variant="heading-default-xl" onBackground="neutral-weak" className={styles.heroIntro} align="center">
             {home.intro}
           </Text>
-          <Text variant="body-default-l" onBackground="neutral-medium" className={styles.subline}>
-            {home.subline}
-          </Text>
-          <Flex gap="16" wrap>
-            <Button id="selected-work" href={home.primaryCta.href} variant="primary" size="m" arrowIcon>
-              {home.primaryCta.label}
-            </Button>
-            <Button href={home.secondaryCta.href} variant="secondary" size="m">
-              {home.secondaryCta.label}
-            </Button>
-          </Flex>
         </Column>
 
-        <Column className={styles.heroAside} gap="20">
-          <Flex className={styles.identityCard} gap="16" vertical="center">
-            <Avatar src={person.avatar} size="l" />
-            <Column gap="4">
-              <Text variant="heading-strong-l">{person.name}</Text>
-              <Text variant="body-default-s" onBackground="neutral-weak">
-                {person.role}
-              </Text>
-            </Column>
+        <Button href="/about" variant="secondary" size="s" className={styles.identityButton} style={{ borderRadius: '100px' }}>
+          <Flex gap="8" vertical="center">
+            <Avatar src={person.avatar} size="s" />
+            <Text variant="body-default-s">About – {person.name}</Text>
           </Flex>
-          <div className={styles.statementCard}>
-            <Text variant="body-default-m" onBackground="neutral-strong">
-              {person.tagline}
-            </Text>
-          </div>
-          <div className={styles.statementCard}>
-            <Text variant="body-default-s" onBackground="neutral-medium">
+        </Button>
+
+
+      </Column>
+
+      <Flex fillWidth gap="xl" mobileDirection="column">
+        <Column flex={7} gap="l">
+          <Flex vertical="center" gap="12">
+            <Text className={styles.sectionLabel}>Selected Work</Text>
+          </Flex>
+          <RevealFx delay={0.2} fillWidth>
+            <Projects slugs={work.featuredProjectSlugs} />
+          </RevealFx>
+        </Column>
+
+        <Grid gap="l" className={styles.aside} mobileColumns={1} style={{ flex: 3 }}>
+          <RevealFx delay={0.4} fillWidth>
+            <Flex className={styles.asideCard} direction="column" gap="16">
+              <Text className={styles.sectionLabel}>About</Text>
+              <Text variant="body-default-m" onBackground="neutral-strong">
+                {person.tagline}
+              </Text>
+            </Flex>
+          </RevealFx>
+
+          <RevealFx delay={0.5} fillWidth>
+            <Flex className={styles.asideCard} direction="column" gap="16">
+              <Text className={styles.sectionLabel}>Focus</Text>
+              <Flex gap="8" wrap>
+                {home.specialties.map((item) => (
+                  <Tag key={item} variant="neutral" size="s">
+                    {item}
+                  </Tag>
+                ))}
+              </Flex>
+            </Flex>
+          </RevealFx>
+
+          <RevealFx delay={0.6} fillWidth>
+            <Flex className={styles.asideCard} direction="column" gap="12">
+              <Text className={styles.sectionLabel}>Gallery</Text>
+              <Grid columns={2} gap="8">
+                {["/images/gallery/tutor-app.png", "/images/gallery/student-app.png", "/images/gallery/admin-dashboard.png", "/images/gallery/verification-platform.png"].map((src, i) => (
+                  <SmartImage
+                    key={i}
+                    src={src}
+                    alt="Gallery"
+                    aspectRatio="1 / 1"
+                    radius="m"
+                  />
+                ))}
+              </Grid>
+            </Flex>
+          </RevealFx>
+        </Grid>
+      </Flex>
+
+      <Line />
+
+      <Flex as="section" fillWidth direction="column" gap="l" paddingY="xl">
+        <Column gap="12">
+          <Text className={styles.sectionLabel}>System Architecture & Quality</Text>
+          <Heading as="h2" variant="display-strong-s">
+            Building for scale and reliability.
+          </Heading>
+        </Column>
+        <Grid columns={3} mobileColumns={1} gap="m">
+          {about.capabilities.groups.map((group, i) => (
+            <RevealFx key={group.title} delay={0.1 * i} fillWidth>
+              <Flex className={styles.asideCard} direction="column" gap="16" fillWidth>
+                <Text variant="heading-strong-m">{group.title}</Text>
+                <Column as="ul" gap="8">
+                  {group.items.map((item) => (
+                    <Text as="li" key={item} variant="body-default-s" onBackground="neutral-weak">
+                      {item}
+                    </Text>
+                  ))}
+                </Column>
+              </Flex>
+            </RevealFx>
+          ))}
+        </Grid>
+      </Flex>
+
+      <Line />
+
+      <Flex as="section" fillWidth direction="column" gap="l" paddingY="xl">
+        <Column gap="12">
+          <Text className={styles.sectionLabel}>Technical Stack</Text>
+          <Heading as="h2" variant="display-strong-s">
+            Tools of the trade.
+          </Heading>
+        </Column>
+        <Grid columns={4} mobileColumns={2} gap="m">
+          {about.technical.skills.map((skill, i) => (
+            <RevealFx key={skill.title} delay={0.05 * i} fillWidth>
+              <Flex className={styles.asideCard} direction="column" gap="12" fillWidth>
+                <Text variant="label-strong-m" onBackground="neutral-strong">{skill.title}</Text>
+                <Text variant="body-default-xs" onBackground="neutral-weak">
+                  {skill.description}
+                </Text>
+              </Flex>
+            </RevealFx>
+          ))}
+        </Grid>
+      </Flex>
+
+      <Line />
+
+      <Flex as="footer" fillWidth direction="column" gap="l" paddingY="xl">
+        <Flex fillWidth mobileDirection="column" gap="xl" vertical="center">
+          <Column gap="12" flex={6}>
+            <Text className={styles.sectionLabel}>Let's connect</Text>
+            <Heading as="h2" variant="display-strong-s">
+              Available for the right opportunity.
+            </Heading>
+            <Text variant="body-default-m" onBackground="neutral-weak">
               {person.availability}
             </Text>
-          </div>
-        </Column>
-      </section>
-
-      <section className={styles.section}>
-        <Flex mobileDirection="column" fillWidth gap="l">
-          <Column flex={4} gap="12">
-            <Text className={styles.sectionLabel}>What I build</Text>
-            <Heading as="h2" variant="display-strong-s">
-              Product systems that connect customer experience with operational reality.
-            </Heading>
           </Column>
-          <Column flex={6} gap="12">
-            {home.specialties.map((item) => (
-              <div key={item} className={styles.specialtyRow}>
-                <Text variant="heading-default-s">{item}</Text>
-              </div>
-            ))}
-          </Column>
-        </Flex>
-      </section>
-
-      <section className={styles.section}>
-        <Flex mobileDirection="column" fillWidth gap="l" className={styles.sectionHeader}>
-          <Column flex={4} gap="12">
-            <Text className={styles.sectionLabel}>Selected work</Text>
-            <Heading as="h2" variant="display-strong-s">
-              Four recent projects that show how I work across mobile, platform, and verification layers.
-            </Heading>
-          </Column>
-          <Column flex={6} gap="12">
-            <Text variant="body-default-m" onBackground="neutral-medium">
-              {work.intro}
-            </Text>
-          </Column>
-        </Flex>
-        <Projects slugs={work.featuredProjectSlugs} />
-      </section>
-
-      <section className={styles.section}>
-        <div className={styles.credibilityPanel}>
-          <Flex mobileDirection="column" gap="l" fillWidth>
-            <Column flex={4} gap="12">
-              <Text className={styles.sectionLabel}>Why this portfolio is structured this way</Text>
-              <Heading as="h2" variant="display-strong-s">
-                The strongest signal in my work is not a single interface. It is how the pieces fit together.
-              </Heading>
-            </Column>
-            <Column flex={6} gap="16">
-              {home.credibility.map((item) => (
-                <Column key={item} gap="12">
-                  <Text variant="body-default-m" onBackground="neutral-strong">
-                    {item}
-                  </Text>
-                  <Line />
-                </Column>
+          <Column flex={4} gap="16">
+            <Flex gap="12" wrap>
+              <Button href={`mailto:${person.email}`} variant="primary" size="m" arrowIcon id="contact-email">
+                Send an email
+              </Button>
+              <Button href="/about" variant="secondary" size="m">
+                Read more about me
+              </Button>
+            </Flex>
+            <Flex gap="12" wrap>
+              {social.map((item) => (
+                <Button key={item.name} href={item.link} variant="tertiary" size="s" prefixIcon={item.icon}>
+                  {item.name}
+                </Button>
               ))}
-            </Column>
-          </Flex>
-        </div>
-      </section>
+            </Flex>
+          </Column>
+        </Flex>
+        <Line />
+        <Flex fillWidth mobileDirection="column" gap="8" vertical="center" horizontal="space-between">
+          <Text variant="body-default-xs" onBackground="neutral-weak">
+            &copy; {new Date().getFullYear()} {person.name}. All rights reserved.
+          </Text>
+          <Text variant="body-default-xs" onBackground="neutral-weak">
+            {person.role} &middot; {person.location}
+          </Text>
+        </Flex>
+      </Flex>
+
+      <Line />
     </Column>
   );
 }

@@ -1,17 +1,17 @@
 .hero {
   width: 100%;
-  display: grid;
-  grid-template-columns: minmax(0, 1.8fr) minmax(18rem, 0.9fr);
-  gap: clamp(1.5rem, 4vw, 3rem);
-  padding: clamp(1rem, 2vw, 1.5rem) 0 0;
 }
 
 .heroCopy {
-  padding: clamp(1rem, 3vw, 2rem);
+  padding: 0;
 }
 
 .heroTitle {
-  max-width: 12ch;
+  max-width: 20ch;
+}
+
+.heroIntro {
+  max-width: 50ch;
 }
 
 .lead {
@@ -26,22 +26,46 @@
   justify-content: flex-end;
 }
 
-.identityCard,
-.statementCard,
-.credibilityPanel,
-.specialtyRow {
-  border: 1px solid var(--neutral-border-medium);
+.asideCard {
+  border: 1px solid var(--neutral-alpha-medium);
   border-radius: var(--radius-l);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(240, 247, 255, 0.9)),
-    var(--page-background);
-  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+  background: var(--surface-background);
+  backdrop-filter: var(--backdrop-filter);
+  padding: 1.5rem;
+  width: 100%;
 }
 
-.identityCard,
-.statementCard,
-.specialtyRow {
-  padding: 1.25rem;
+.sectionLabel {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--neutral-on-background-weak);
+}
+
+.mainVisualCentered {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--neutral-alpha-medium);
+  border-radius: var(--radius-l);
+  overflow: hidden;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.4);
+  margin-top: 1rem;
+}
+
+.identityButton {
+  padding: 0.25rem 0.5rem !important;
+  height: auto !important;
+}
+
+.aside {
+  position: sticky;
+  top: 6rem;
+  height: fit-content;
+}
+
+.galleryCard {
+  overflow: hidden;
 }
 
 .section {

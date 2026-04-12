@@ -6,7 +6,6 @@ import classNames from "classnames";
 import { Footer, Header, RouteGuard } from "@/components";
 import { baseURL, effects, style } from "@/app/resources";
 
-import localFont from "next/font/local";
 
 import { person, home } from "@/app/resources/content";
 import { Background, Column, Flex, ToastProvider } from "@/once-ui/components";
@@ -38,34 +37,27 @@ export async function generateMetadata() {
   };
 }
 
-const primary = localFont({
+import { Inter, Outfit, Source_Code_Pro } from "next/font/google";
+
+const primary = Inter({
   variable: "--font-primary",
-  src: "../../public/fonts/Inter.ttf",
-  display: "swap"
+  subsets: ["latin"],
+  display: "swap",
 });
 
-type FontConfig = {
-  variable: string;
-};
-
-/*
-	Replace with code for secondary and tertiary fonts
-	from https://once-ui.com/customize
-*/
-const secondary = localFont({
+const secondary = Outfit({
   variable: "--font-secondary",
-  src: "../../public/fonts/Inter.ttf",
+  subsets: ["latin"],
   display: "swap",
 });
-const tertiary: FontConfig | undefined = undefined;
-/*
- */
 
-const code = localFont({
+const code = Source_Code_Pro({
   variable: "--font-code",
-  src: "../../public/fonts/Inter.ttf",
+  subsets: ["latin"],
   display: "swap",
 });
+
+const tertiary = undefined;
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -89,7 +81,6 @@ export default async function RootLayout({ children }: RootLayoutProps) {
       className={classNames(
         primary.variable,
         secondary ? secondary.variable : "",
-        tertiary ? tertiary.variable : "",
         code.variable,
       )}
     >

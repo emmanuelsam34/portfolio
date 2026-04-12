@@ -35,7 +35,7 @@ The portal supports a very specific but high-value part of the platform: confirm
 
 ## Architecture / Integrations
 
-The implementation uses React, Vite, TypeScript, Appwrite, Didit, Resend, and Vercel serverless functions. According to the local README, the architecture validates verification tokens, creates Didit sessions, receives webhook events, verifies HMAC signatures, and updates tutor records inside Appwrite.
+The implementation uses React, Vite, TypeScript, Appwrite, Didit, Resend, and Vercel serverless functions. The architecture validates verification tokens, creates Didit sessions, receives webhook events, verifies HMAC signatures, and updates tutor records inside Appwrite.
 
 This makes the portal an orchestration layer rather than a simple frontend. Its job is to coordinate a compliance-sensitive workflow across external identity services, backend state, and product-facing outcomes for tutors and admins.
 

@@ -59,7 +59,7 @@ const featuredProjects = [
       "Payout and verification readiness",
     ],
     repoPathLabel: "LIBL-Classroom-Tutor-App/LIBL-Classroom-tutor-app",
-    images: ["/images/cover.png", "/images/gallery/img-01.jpg", "/images/gallery/img-02.jpg"],
+    images: ["/images/gallery/tutor-app.png"],
   },
   {
     slug: "libl-classroom-student-app",
@@ -83,7 +83,7 @@ const featuredProjects = [
       "Chat and session management",
     ],
     repoPathLabel: "Student-App-LIBL-Classroom/LIBL-Classroom-student-app",
-    images: ["/images/gallery/img-03.jpg", "/images/gallery/img-04.jpg", "/images/gallery/img-05.jpg"],
+    images: ["/images/gallery/student-app.png"],
   },
   {
     slug: "libl-classroom-admin-dashboard",
@@ -107,7 +107,7 @@ const featuredProjects = [
       "Financial operations and payouts",
     ],
     repoPathLabel: "libl-classroom-admin",
-    images: ["/images/gallery/img-06.jpg", "/images/gallery/img-07.jpg", "/images/gallery/img-08.jpg"],
+    images: ["/images/gallery/admin-dashboard.png"],
   },
   {
     slug: "kyc-verification-portal",
@@ -131,7 +131,7 @@ const featuredProjects = [
       "Status tracking and notification flows",
     ],
     repoPathLabel: "kyc-verification-portal",
-    images: ["/images/gallery/img-09.jpg", "/images/gallery/img-10.jpg", "/images/gallery/img-11.jpg"],
+    images: ["/images/gallery/verification-platform.png"],
   },
 ];
 
@@ -158,8 +158,8 @@ const home = {
   },
   specialties: [
     "React Native and Expo product development",
-    "Web dashboards and internal platform tooling",
-    "Appwrite-backed product systems",
+    "QA Engineering and automated testing systems",
+    "System Architecture and platform design",
     "Payments, verification, and workflow integrations",
   ],
   credibility: [
@@ -236,11 +236,11 @@ const about = {
         ],
       },
       {
-        title: "Integrations and systems",
+        title: "QA and system architecture",
         items: [
-          "Appwrite-backed product services and serverless workflows",
-          "Didit KYC, Paystack, Whereby, Resend, and AI integration patterns",
-          "Workflow orchestration across customer-facing and internal product surfaces",
+          "End-to-end automated testing for mobile and web",
+          "Scalable system architecture for connected products",
+          "Workflow orchestration and technical risk mitigation",
         ],
       },
     ],

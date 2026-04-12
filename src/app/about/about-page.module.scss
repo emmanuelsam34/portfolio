@@ -9,18 +9,11 @@
 .panel,
 .timelineItem,
 .capabilityCard {
-  border: 1px solid var(--neutral-border-medium);
+  border: 1px solid var(--neutral-alpha-medium);
   border-radius: var(--radius-l);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(244, 248, 252, 0.92)),
-    var(--page-background);
-  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
-}
-
-.hero,
-.panel,
-.timelineItem,
-.capabilityCard {
+  background: var(--surface-background);
+  backdrop-filter: var(--backdrop-filter);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.24);
   padding: clamp(1.25rem, 3vw, 2rem);
 }
 
@@ -33,7 +26,11 @@
 
 .timeline {
   display: grid;
-  gap: 1rem;
+  gap: 1.5rem;
+}
+
+.galleryGrid {
+  width: 100%;
 }
 
 .list {

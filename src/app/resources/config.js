@@ -12,50 +12,50 @@ const routes = {
 const protectedRoutes = {};
 
 const style = {
-  theme: "light", // dark | light
-  neutral: "sand", // sand | gray | slate
-  brand: "blue", // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan
+  theme: "dark", // dark | light
+  neutral: "gray", // sand | gray | slate
+  brand: "indigo", // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan
   accent: "cyan", // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan
   solid: "contrast", // color | contrast
-  solidStyle: "flat", // flat | plastic
-  border: "conservative", // rounded | playful | conservative
-  surface: "filled", // filled | translucent
-  transition: "micro", // all | micro | macro
+  solidStyle: "plastic", // flat | plastic
+  border: "rounded", // rounded | playful | conservative
+  surface: "translucent", // filled | translucent
+  transition: "all", // all | micro | macro
 };
 
 const effects = {
   mask: {
-    cursor: false,
+    cursor: true,
     x: 0,
     y: 0,
-    radius: 0,
+    radius: 75,
   },
   gradient: {
     display: true,
-    x: 70,
+    x: 50,
     y: 0,
-    width: 80,
-    height: 70,
-    tilt: -8,
-    colorStart: "brand-background-medium",
+    width: 100,
+    height: 100,
+    tilt: 0,
+    colorStart: "brand-background-strong",
     colorEnd: "static-transparent",
-    opacity: 30,
+    opacity: 50,
   },
   dots: {
-    display: false,
+    display: true,
     size: 2,
     color: "brand-on-background-weak",
-    opacity: 0,
+    opacity: 20,
   },
   lines: {
-    display: true,
+    display: false,
     color: "neutral-alpha-weak",
     opacity: 40,
   },
   grid: {
-    display: false,
+    display: true,
     color: "neutral-alpha-weak",
-    opacity: 100,
+    opacity: 50,
   },
 };
 

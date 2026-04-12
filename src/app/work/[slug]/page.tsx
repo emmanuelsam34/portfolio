@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { CustomMDX } from "@/components/mdx";
 import ScrollToHash from "@/components/ScrollToHash";
 import { getPosts } from "@/app/utils/utils";
-import { Button, Column, Flex, SmartImage, Tag, Text, Heading } from "@/once-ui/components";
+import { Button, Column, Flex, SmartImage, Tag, Text, Heading, RevealFx, LetterFx, TiltFx } from "@/once-ui/components";
 import { baseURL } from "@/app/resources";
 import { person, work } from "@/app/resources/content";
 
@@ -114,7 +114,9 @@ export default function Project({ params }: WorkParams) {
                 </Tag>
               </Flex>
               <Heading as="h1" variant="display-strong-l">
-                {project.name}
+                <LetterFx trigger="instant">
+                  {project.name}
+                </LetterFx>
               </Heading>
               <Text variant="heading-default-l" onBackground="neutral-weak">
                 {project.tagline}
@@ -152,15 +154,19 @@ export default function Project({ params }: WorkParams) {
         </Column>
       </div>
 
-      {post.metadata.images.length > 0 && (
-        <SmartImage
-          priority
-          aspectRatio="16 / 9"
-          radius="l"
-          alt={project.name}
-          src={post.metadata.images[0]}
-        />
-      )}
+      <RevealFx speed="slow" fillWidth>
+        {post.metadata.images.length > 0 && (
+          <TiltFx>
+            <SmartImage
+              priority
+              aspectRatio="16 / 9"
+              radius="l"
+              alt={project.name}
+              src={post.metadata.images[0]}
+            />
+          </TiltFx>
+        )}
+      </RevealFx>
 
       <Column style={{ margin: "auto" }} as="article" maxWidth="s">
         <CustomMDX source={post.content} />

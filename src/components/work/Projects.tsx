@@ -1,5 +1,5 @@
 import { getPosts } from "@/app/utils/utils";
-import { Column } from "@/once-ui/components";
+import { Grid } from "@/once-ui/components";
 import { ProjectCard } from "@/components";
 import { work } from "@/app/resources/content";
 
@@ -28,7 +28,7 @@ export function Projects({ slugs }: ProjectsProps) {
     .filter((entry): entry is { post: (typeof allPosts)[number]; project: (typeof work.featuredProjects)[number] } => Boolean(entry));
 
   return (
-    <Column fillWidth gap="xl">
+    <Grid columns={2} mobileColumns={1} fillWidth gap="m">
       {orderedProjects.map((entry, index) => (
         <ProjectCard
           priority={index < 2}
@@ -46,6 +46,6 @@ export function Projects({ slugs }: ProjectsProps) {
           link={entry.post.metadata.link || entry.project.link || ""}
         />
       ))}
-    </Column>
+    </Grid>
   );
 }

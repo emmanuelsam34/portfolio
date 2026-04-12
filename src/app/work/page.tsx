@@ -57,18 +57,18 @@ export default function Work() {
       />
 
       <div className={styles.hero}>
-        <Flex mobileDirection="column" fillWidth gap="l">
-          <Column flex={4} gap="12">
+        <Flex mobileDirection="column" fillWidth gap="xl" vertical="center">
+          <Column flex={5} gap="16">
             <Text className={styles.sectionLabel}>Selected work</Text>
-            <Heading as="h1" variant="display-strong-l">
+            <Heading as="h1" variant="display-strong-s">
               Product case studies across mobile apps, platform operations, and compliance workflows.
             </Heading>
           </Column>
-          <Column flex={6} gap="12">
+          <Column flex={7} gap="16">
             <Text variant="body-default-l" onBackground="neutral-medium">
               {work.intro}
             </Text>
-            <Text variant="body-default-m" onBackground="neutral-medium">
+            <Text variant="body-default-m" onBackground="neutral-weak">
               The featured projects below are arranged intentionally to show the full system: tutor-facing mobile experiences, student booking flows, internal admin tooling, and verification orchestration.
             </Text>
           </Column>
