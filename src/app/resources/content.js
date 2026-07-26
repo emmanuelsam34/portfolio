@@ -46,7 +46,7 @@ const featuredProjects = [
     platform: "Mobile Platform",
     status: "Active product",
     year: "2026",
-    stack: ["Expo", "React Native", "TypeScript", "Appwrite", "Tamagui", "OpenRouter", "Paystack", "Whereby"],
+    stack: ["Expo", "React Native", "TypeScript", "Appwrite", "Tamagui", "OpenRouter", "Paystack", "BigBlueButton"],
     responsibilities: [
       "Built mobile product flows for tutor onboarding, booking management, messaging, payouts, and session operations.",
       "Worked across Appwrite-backed services and integrations for notifications, payment flows, AI features, and verification.",
@@ -54,7 +54,7 @@ const featuredProjects = [
     ],
     highlights: [
       "AI-assisted quiz and assignment generation",
-      "Whereby video session support",
+      "BigBlueButton live class sessions",
       "Push notifications and session reminders",
       "Payout and verification readiness",
     ],
@@ -70,7 +70,7 @@ const featuredProjects = [
     platform: "Mobile Platform",
     status: "Active product",
     year: "2026",
-    stack: ["Expo", "React Native", "TypeScript", "Appwrite", "Tamagui", "React Query", "Paystack", "Whereby"],
+    stack: ["Expo", "React Native", "TypeScript", "Appwrite", "Tamagui", "React Query", "Paystack", "BigBlueButton"],
     responsibilities: [
       "Implemented multi-step booking and class management experiences for students across virtual and physical tutoring flows.",
       "Integrated payments, scheduling, messaging, and notification touchpoints with the shared platform backend.",
@@ -309,7 +309,7 @@ const about = {
       },
       {
         title: "Integrations",
-        description: "Paystack, Whereby, Didit, Resend, OpenRouter, Google Gemini",
+        description: "Paystack, BigBlueButton, Didit, Resend, OpenRouter, Google Gemini",
       },
     ],
   },
