@@ -152,7 +152,7 @@ export default function Home() {
 
       <Flex as="section" fillWidth direction="column" gap="l" paddingY="xl">
         <Column gap="12">
-          <Text className={styles.sectionLabel}>System Architecture & Quality</Text>
+          <Text className={styles.sectionLabel}>Architecture, Infrastructure & Quality</Text>
           <Heading as="h2" variant="display-strong-s">
             Building for scale and reliability.
           </Heading>

@@ -4,8 +4,8 @@ const person = {
   get name() {
     return `${this.firstName} ${this.lastName}`;
   },
-  role: "Mobile + Platform Engineer",
-  tagline: "I design and ship connected products across mobile, web, and backend systems.",
+  role: "Mobile, Platform & Infrastructure Engineer",
+  tagline: "I design, ship, and operate connected products — from mobile apps to the infrastructure they run on.",
   avatar: "/images/emma.JPG",
   location: "Lagos, Nigeria",
   timeZone: "Africa/Lagos",
@@ -187,11 +187,11 @@ const home = {
   label: "Home",
   title: `${person.name} | ${person.role}`,
   description:
-    "Portfolio of Emmanuel Agbedejobi, a mobile and platform engineer building connected products across React Native, web platforms, backend integrations, payments, and verification systems.",
-  eyebrow: "Mobile, platform, and product systems",
-  headline: "I build the software layer behind real products, from mobile apps to internal operations.",
+    "Portfolio of Emmanuel Agbedejobi, a mobile, platform, and infrastructure engineer building connected products across React Native, web platforms, backend integrations, payments, verification systems, and self-hosted infrastructure.",
+  eyebrow: "Mobile, platform, and infrastructure systems",
+  headline: "I build and operate the software layer behind real products, from mobile apps to production infrastructure.",
   intro:
-    "I work across the product stack: React Native apps, platform dashboards, integrations, payments, verification flows, and the systems that keep them connected.",
+    "I work across the full stack of a product: React Native apps, platform dashboards, integrations, payments, verification flows, and the servers, monitoring, and deployment infrastructure that keep them running.",
   subline:
     "My recent work spans the LIBL tutoring ecosystem — including its self-hosted live-class infrastructure — a KYC verification portal, and end-to-end client builds like the Eleglam Cakes website, combining frontend craft with the backend, infrastructure, and integration work required to ship dependable products.",
   primaryCta: {
@@ -204,12 +204,14 @@ const home = {
   },
   specialties: [
     "React Native and Expo product development",
+    "Self-hosted infrastructure, deployment, and observability",
     "QA Engineering and automated testing systems",
     "System Architecture and platform design",
     "Payments, verification, and workflow integrations",
   ],
   credibility: [
     "Built connected products across tutor, student, admin, and verification surfaces",
+    "Deploys and operates production infrastructure with monitoring, incident response, and postmortem-driven hardening",
     "Works comfortably across React, Next.js, Vite, Expo, and TypeScript",
     "Strong focus on usable product systems rather than isolated feature builds",
   ],
@@ -219,7 +221,7 @@ const about = {
   label: "About",
   title: "About Emmanuel",
   description:
-    "Mobile and platform engineer focused on building reliable product systems, internal tools, and customer-facing experiences.",
+    "Mobile, platform, and infrastructure engineer focused on building reliable product systems, internal tools, customer-facing experiences, and the infrastructure that runs them.",
   calendar: {
     display: true,
     link: "https://cal.com/emmanuel-agbedejobi",
@@ -229,11 +231,12 @@ const about = {
     display: true,
     title: "Introduction",
     description:
-      "I’m a software engineer with a product mindset. I enjoy working where customer-facing experience meets platform complexity, building the interfaces, workflows, and integrations that make software feel coherent at scale.",
+      "I’m a software engineer with a product mindset whose work has grown to span platform and infrastructure engineering. I enjoy working where customer-facing experience meets platform complexity, building the interfaces, workflows, integrations, and infrastructure that make software feel coherent at scale.",
   },
   profile: [
     "I’m most effective on products that span multiple surfaces, especially when mobile apps, dashboards, and backend workflows all need to behave like one system.",
     "My recent work has focused on tutoring and verification products where scheduling, communication, payments, KYC, and internal operations all intersect.",
+    "That range now extends below the application layer: I design, deploy, and operate production infrastructure — including the self-hosted live-class conferencing stack behind the LIBL platform — with observability, incident response, and postmortem-driven hardening as part of the day-to-day work.",
   ],
   work: {
     display: true,
@@ -282,11 +285,11 @@ const about = {
         ],
       },
       {
-        title: "QA and system architecture",
+        title: "Infrastructure and reliability",
         items: [
-          "End-to-end automated testing for mobile and web",
-          "Scalable system architecture for connected products",
-          "Workflow orchestration and technical risk mitigation",
+          "Self-hosted infrastructure deployment and operations (Linux, nginx, haproxy, Docker)",
+          "Observability, incident response, and postmortem-driven hardening",
+          "End-to-end automated testing and scalable system architecture",
         ],
       },
     ],
@@ -304,8 +307,8 @@ const about = {
         description: "Expo, React Native, Expo Router, Tamagui, mobile state and data flows",
       },
       {
-        title: "Platform",
-        description: "Appwrite, serverless functions, webhook workflows, integration-heavy product systems",
+        title: "Platform & Infra",
+        description: "Appwrite, serverless functions, webhook workflows, Linux, nginx, haproxy, Docker, BigBlueButton, Datadog",
       },
       {
         title: "Integrations",

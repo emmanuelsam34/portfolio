@@ -6,7 +6,7 @@ import { Fade, Flex, Line, ToggleButton } from "@/once-ui/components";
 import styles from "@/components/Header.module.scss";
 
 import { routes } from "@/app/resources";
-import { home, about, work } from "@/app/resources/content";
+import { home, about, work, person } from "@/app/resources/content";
 
 export const Header = () => {
   const pathname = usePathname() ?? "";
@@ -90,7 +90,7 @@ export const Header = () => {
         </Flex>
         <Flex fillWidth horizontal="end" vertical="center" className={styles.role}>
           <Flex hide="s" paddingRight="12">
-            Mobile + Platform Engineer
+            {person.role}
           </Flex>
         </Flex>
       </Flex>
