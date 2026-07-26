@@ -59,7 +59,7 @@ const featuredProjects = [
       "Payout and verification readiness",
     ],
     repoPathLabel: "LIBL-Classroom-Tutor-App/LIBL-Classroom-tutor-app",
-    images: ["/images/gallery/tutor-app.png"],
+    images: ["https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1600&auto=format&fit=crop"],
   },
   {
     slug: "libl-classroom-student-app",
@@ -83,7 +83,7 @@ const featuredProjects = [
       "Chat and session management",
     ],
     repoPathLabel: "Student-App-LIBL-Classroom/LIBL-Classroom-student-app",
-    images: ["/images/gallery/student-app.png"],
+    images: ["https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1600&auto=format&fit=crop"],
   },
   {
     slug: "libl-classroom-admin-dashboard",
@@ -107,7 +107,7 @@ const featuredProjects = [
       "Financial operations and payouts",
     ],
     repoPathLabel: "libl-classroom-admin",
-    images: ["/images/gallery/admin-dashboard.png"],
+    images: ["https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1600&auto=format&fit=crop"],
   },
   {
     slug: "kyc-verification-portal",
@@ -131,7 +131,53 @@ const featuredProjects = [
       "Status tracking and notification flows",
     ],
     repoPathLabel: "kyc-verification-portal",
-    images: ["/images/gallery/verification-platform.png"],
+    images: ["https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=1600&auto=format&fit=crop"],
+  },
+  {
+    slug: "bbb-live-class-infrastructure",
+    name: "Live-Class Infrastructure (BigBlueButton)",
+    tagline: "Self-hosted conferencing infrastructure powering live 1:1 virtual classes for the LIBL platform.",
+    summary:
+      "Architecture, deployment, and operation of a self-hosted BigBlueButton deployment for live tutoring classes: an intent-versus-action booking design, cost-driven provider selection, real incident response, and a Datadog observability build-out.",
+    platform: "Infrastructure",
+    status: "Live in production",
+    year: "2026",
+    stack: ["BigBlueButton 3.0", "Ubuntu 22.04", "nginx", "haproxy", "Docker", "Appwrite Functions", "Datadog", "Let's Encrypt"],
+    responsibilities: [
+      "Designed the live-class architecture: ephemeral-meeting handling via check-in gated creation, server-time enforcement, idempotent state transitions, and a server abstraction ready for load balancing.",
+      "Evaluated cloud providers on cost, latency to Lagos, and CPU guarantees, then deployed BBB to production with a phased, pre-flight-driven runbook.",
+      "Diagnosed and resolved a production 502 outage, then hardened the system with systemd overrides, SSH key auth, and a full Datadog observability stack.",
+    ],
+    highlights: [
+      "Intent vs. action booking architecture",
+      "Root-caused a masked haproxy failure",
+      "Synthetic, process, and SSL monitoring",
+      "Custom BBB metrics via OpenMetrics exporter",
+    ],
+    images: ["https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=1600&auto=format&fit=crop"],
+  },
+  {
+    slug: "eleglam-cakes",
+    name: "Eleglam Cakes Website",
+    tagline: "A bespoke, photo-led marketing site for a made-to-order bakery in Rockwall, Texas.",
+    summary:
+      "An end-to-end design and build for Eleglam Cakes: a custom brand system, hand-built sliders, a filterable gallery with lightbox, and a no-backend order builder, all shipped into a live WordPress and Astra environment with zero paid plugins.",
+    platform: "Client Website",
+    status: "Shipped client build",
+    year: "2026",
+    stack: ["WordPress", "Astra", "Gutenberg", "HTML", "CSS", "Tailwind (CDN)", "JavaScript"],
+    responsibilities: [
+      "Rebuilt an inherited corporate template into a brand-appropriate site for an artisan bakery, from design tokens to page structure.",
+      "Built custom, dependency-light components: hero slider, draggable card rails, filterable gallery, keyboard-accessible lightbox, and an order builder that works with no backend.",
+      "Solved real WordPress and Astra environment issues so bespoke front-end shipped cleanly through Gutenberg without paid plugins.",
+    ],
+    highlights: [
+      "Custom design system and brand palette",
+      "Filterable gallery with accessible lightbox",
+      "No-backend order builder with live summary",
+      "Full-bleed layouts inside a constrained theme",
+    ],
+    images: ["https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=1600&auto=format&fit=crop"],
   },
 ];
 
@@ -147,7 +193,7 @@ const home = {
   intro:
     "I work across the product stack: React Native apps, platform dashboards, integrations, payments, verification flows, and the systems that keep them connected.",
   subline:
-    "My recent work spans the LIBL tutoring ecosystem and a KYC verification portal, combining frontend craft with the backend and integration work required to ship dependable products.",
+    "My recent work spans the LIBL tutoring ecosystem — including its self-hosted live-class infrastructure — a KYC verification portal, and end-to-end client builds like the Eleglam Cakes website, combining frontend craft with the backend, infrastructure, and integration work required to ship dependable products.",
   primaryCta: {
     label: "View selected work",
     href: "/work",
@@ -283,9 +329,9 @@ const work = {
   label: "Work",
   title: "Selected Work",
   description:
-    "Case studies across mobile products, internal platform tooling, and verification workflows.",
+    "Case studies across mobile products, internal platform tooling, verification workflows, and client website builds.",
   intro:
-    "These projects show how I work across product surfaces, from customer-facing mobile experiences to the dashboards and integrations that support them behind the scenes.",
+    "These projects show how I work across product surfaces, from customer-facing mobile experiences and client websites to the dashboards and integrations that support them behind the scenes.",
   featuredProjects,
   featuredProjectSlugs,
 };

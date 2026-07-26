@@ -1,0 +1,77 @@
+---
+title: "Live-Class Infrastructure (BigBlueButton)"
+publishedAt: "2026-07-26"
+summary: "Designing, deploying, and operating self-hosted BigBlueButton conferencing infrastructure for live 1:1 tutoring classes, including a real production incident, postmortem-driven hardening, and a full observability build-out."
+images:
+  - "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=1600&auto=format&fit=crop"
+  - "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?q=80&w=1600&auto=format&fit=crop"
+  - "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1600&auto=format&fit=crop"
+tag:
+  - "Infrastructure"
+  - "Observability"
+team:
+  - name: "Emmanuel Agbedejobi"
+    role: "Mobile + Platform Engineer"
+    avatar: "/images/emma.JPG"
+    linkedIn: "https://www.linkedin.com/in/emmanuel-samuel-agbedejobi/"
+---
+
+## Overview
+
+I designed, deployed, and operate the live-class conferencing infrastructure for the LIBL tutoring platform, where students book tutors and attend virtual classes through a mobile app. The classes run on a self-hosted BigBlueButton (BBB) deployment integrated with the platform's Appwrite backend via BBB's HTTP API. The work spans three phases — architecture design, production deployment, and an incident-driven observability build-out — and the interesting parts aren't the commands, they're the decisions.
+
+## Architecture: Intent vs. Action
+
+BBB meetings are ephemeral: they get garbage-collected roughly a minute after creation if nobody joins, so a class booked on Monday for Friday can't just create its meeting at payment time. I split the system into two concepts — intent, recorded at booking, and action, executed at check-in:
+
+- At payment confirmation, the backend creates a class record with a stable meeting ID and both role passwords generated server-side. No BBB API calls yet.
+- Ten minutes before the scheduled start, a cron job opens a check-in window and both parties get push notifications.
+- Only when both tutor and student have explicitly checked in does the backend call BBB's create API and release join URLs to both apps simultaneously.
+
+This solved three problems at once: no wasted BBB resources on classes that never happen, no "tutor joined, student never came" experiences, and automatic no-show detection with clean signals for refund and penalty logic.
+
+Other load-bearing decisions: every time-based gate is enforced with server time in Appwrite Functions because mobile device clocks are unreliable; join URLs are portable browser links rather than in-app WebViews so tutors can teach from a laptop; application code resolves the BBB host through a server abstraction so a future Scalelite load balancer is a config change, not a code migration; and every state transition is idempotent with optimistic concurrency, so retries converge to correct state.
+
+## Deployment
+
+The pilot needed to be cost-effective while producing good audio quality for Lagos users, so I evaluated AWS af-south-1, Hetzner, DigitalOcean, Contabo, and OVH on latency to Lagos, price, and operational experience. The deciding insight: the latency delta between European and African data centres matters less than instance-type discipline. FreeSWITCH, BBB's audio bridge, is single-thread-sensitive and cannot tolerate CPU-credit throttling — so the hard rule is dedicated vCPU, always, and any provider's shared-vCPU budget tier is a trap regardless of sticker price. I landed on OVH for the pilot.
+
+The install itself is one script invocation; the pre-flight discipline matters more. I wrote and followed a phased runbook — DNS, pre-flight checks, firewall, install, verification, credentials, tutoring defaults, smoke test — because locale mismatches, already-bound ports, or a missing IPv6 loopback are the difference between a smooth install and hours of debugging.
+
+## The Incident
+
+Weeks into stable operation, the class domain started returning 502 Bad Gateway — discovered manually, because there was no monitoring yet. The investigation, after recovering server access through the provider's rescue mode: BBB's health check showed a stream of SSL errors, and the browser's certificate viewer revealed the smoking gun — the site was serving a certificate for the wrong hostname.
+
+The root cause had two layers. A leftover Greenlight nginx config from earlier testing listened on port 443 without binding a specific IP, competing with haproxy, BBB's actual SSL terminator. When the server rebooted, haproxy lost the race for port 443, failed five times in about a second, and hit systemd's default StartLimitBurst=5 — so systemd gave up on it permanently. Greenlight's nginx then "helpfully" answered all HTTPS traffic with the wrong certificate, masking the dead haproxy behind a working TLS handshake instead of an obvious connection-refused.
+
+The fix took three commands once diagnosed: remove the rogue nginx config, restart haproxy, and restart BBB's services in the correct dependency order. Total recovery was minutes; the diagnosis was the work.
+
+## Postmortem-Driven Hardening
+
+- **haproxy systemd override:** Restart=always, RestartSec=10s, StartLimitBurst=0 — so a transient port conflict during boot can never again become a permanent outage. Systemd's defaults encode assumptions that are precisely wrong for services depending on resources that may be briefly unavailable at boot.
+- **SSH key authentication:** the incident began with a password lockout that cost 45 minutes of rescue-mode recovery. Ed25519 keys are now the primary auth path; keys at server creation are part of every new-server checklist.
+- **Debugging habit reinforced:** cheap verification before expensive theorizing. The first hypothesis — expired certificate — was invalidated by a five-second check of the actual cert dates before any time was spent on it.
+
+## Observability Build-Out
+
+The incident happened partly because there was zero monitoring, so I built a Datadog-based observability stack:
+
+- **Synthetic monitoring:** an HTTP check against the BBB API every minute from two geographic locations, and an hourly SSL check that alerts 30 days before expiry and on hostname mismatch — the exact class of failure behind the incident.
+- **Process monitors:** four separate monitors for haproxy, nginx, bbb-web, and FreeSWITCH, each alerting within a minute if the process disappears, with runbook steps embedded in the alert body.
+- **BBB metrics:** the community BigBlueButton exporter running in Docker, scraped by Datadog's OpenMetrics check with an allowlist of BBB metrics only — active meetings, participants by media type, recordings by state, and API latency histograms.
+- **Operations dashboard:** a single-screen view of live BBB state, 24-hour trends, and host metrics, designed as the one screen to glance at for on-call status.
+
+## Results and Honest Limits
+
+Site failures now trigger alerts within one to two minutes, certificate issues alert a month before impact, and capacity planning is a data-driven exercise instead of guesswork. The honest limits: it's still a single BBB server with a designed-but-not-built Scalelite migration path, recordings are disabled until S3 offload is configured, and the monitoring stack's free-tier runway has a planned migration path.
+
+The biggest lesson carried forward: silent success is more dangerous than loud failure. A misconfigured nginx quietly masking a dead haproxy did more damage than an outright failure from day one would have — and monitoring is not a phase-two investment, it's what makes every other engineering decision recoverable.
+
+## Technical Stack
+
+- BigBlueButton 3.0 on Ubuntu 22.04
+- nginx and haproxy
+- Docker
+- Appwrite Functions
+- Datadog (synthetic, process, and OpenMetrics monitoring)
+- Let's Encrypt

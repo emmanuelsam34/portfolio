@@ -40,8 +40,11 @@ export function generateMetadata({ params: { slug } }: WorkParams) {
   }
 
   const { post, project } = bundle;
-  const ogImage = post.metadata.images?.[0]
-    ? `https://${baseURL}${post.metadata.images[0]}`
+  const firstImage = post.metadata.images?.[0];
+  const ogImage = firstImage
+    ? firstImage.startsWith("http")
+      ? firstImage
+      : `https://${baseURL}${firstImage}`
     : `https://${baseURL}/og?title=${encodeURIComponent(project.name)}`;
 
   return {
