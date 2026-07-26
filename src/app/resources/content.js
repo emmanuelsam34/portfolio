@@ -134,6 +134,29 @@ const featuredProjects = [
     images: ["https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=1600&auto=format&fit=crop"],
   },
   {
+    slug: "bbb-live-class-infrastructure",
+    name: "Live-Class Infrastructure (BigBlueButton)",
+    tagline: "Self-hosted conferencing infrastructure powering live 1:1 virtual classes for the LIBL platform.",
+    summary:
+      "Architecture, deployment, and operation of a self-hosted BigBlueButton deployment for live tutoring classes: an intent-versus-action booking design, cost-driven provider selection, real incident response, and a Datadog observability build-out.",
+    platform: "Infrastructure",
+    status: "Live in production",
+    year: "2026",
+    stack: ["BigBlueButton 3.0", "Ubuntu 22.04", "nginx", "haproxy", "Docker", "Appwrite Functions", "Datadog", "Let's Encrypt"],
+    responsibilities: [
+      "Designed the live-class architecture: ephemeral-meeting handling via check-in gated creation, server-time enforcement, idempotent state transitions, and a server abstraction ready for load balancing.",
+      "Evaluated cloud providers on cost, latency to Lagos, and CPU guarantees, then deployed BBB to production with a phased, pre-flight-driven runbook.",
+      "Diagnosed and resolved a production 502 outage, then hardened the system with systemd overrides, SSH key auth, and a full Datadog observability stack.",
+    ],
+    highlights: [
+      "Intent vs. action booking architecture",
+      "Root-caused a masked haproxy failure",
+      "Synthetic, process, and SSL monitoring",
+      "Custom BBB metrics via OpenMetrics exporter",
+    ],
+    images: ["https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=1600&auto=format&fit=crop"],
+  },
+  {
     slug: "eleglam-cakes",
     name: "Eleglam Cakes Website",
     tagline: "A bespoke, photo-led marketing site for a made-to-order bakery in Rockwall, Texas.",
@@ -170,7 +193,7 @@ const home = {
   intro:
     "I work across the product stack: React Native apps, platform dashboards, integrations, payments, verification flows, and the systems that keep them connected.",
   subline:
-    "My recent work spans the LIBL tutoring ecosystem, a KYC verification portal, and end-to-end client builds like the Eleglam Cakes website, combining frontend craft with the backend and integration work required to ship dependable products.",
+    "My recent work spans the LIBL tutoring ecosystem — including its self-hosted live-class infrastructure — a KYC verification portal, and end-to-end client builds like the Eleglam Cakes website, combining frontend craft with the backend, infrastructure, and integration work required to ship dependable products.",
   primaryCta: {
     label: "View selected work",
     href: "/work",
