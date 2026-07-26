@@ -133,11 +133,11 @@ export default function Home() {
             <Flex className={styles.asideCard} direction="column" gap="12">
               <Text className={styles.sectionLabel}>Gallery</Text>
               <Grid columns={2} gap="8">
-                {["/images/gallery/tutor-app.png", "/images/gallery/student-app.png", "/images/gallery/admin-dashboard.png", "/images/gallery/verification-platform.png"].map((src, i) => (
+                {work.featuredProjects.slice(0, 4).map((project, i) => (
                   <SmartImage
                     key={i}
-                    src={src}
-                    alt="Gallery"
+                    src={project.images[0]}
+                    alt={project.name}
                     aspectRatio="1 / 1"
                     radius="m"
                   />

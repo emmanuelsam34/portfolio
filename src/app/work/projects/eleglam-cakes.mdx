@@ -1,0 +1,60 @@
+---
+title: "Eleglam Cakes Website"
+publishedAt: "2026-07-26"
+summary: "An end-to-end website design and build for a made-to-order bakery in Rockwall, Texas: custom brand system, hand-built interactive components, and a no-backend order flow shipped into a live WordPress and Astra environment."
+images:
+  - "https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=1600&auto=format&fit=crop"
+  - "https://images.unsplash.com/photo-1486427944299-d1955d23e34d?q=80&w=1600&auto=format&fit=crop"
+  - "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?q=80&w=1600&auto=format&fit=crop"
+  - "https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=1600&auto=format&fit=crop"
+tag:
+  - "Client Website"
+  - "WordPress"
+team:
+  - name: "Emmanuel Agbedejobi"
+    role: "Mobile + Platform Engineer"
+    avatar: "/images/emma.JPG"
+    linkedIn: "https://www.linkedin.com/in/emmanuel-samuel-agbedejobi/"
+---
+
+## Overview
+
+Eleglam Cakes is a made-to-order bakery in Rockwall, Texas. I designed and built their complete marketing site solo — Home, Cakes, About, and Order/Contact — taking it from a borrowed corporate template to a bespoke, photo-led site that reflects the business. Every page is responsive, accessible, and runs without a single paid plugin.
+
+## The Starting Point
+
+The brief began with an existing template built for a technology consultancy: a blue and orange corporate aesthetic with a section structure about software services and IT support that had nothing to do with a bakery. The job was not to recolour it but to rethink what a cake company's website actually needs to do, and rebuild from there.
+
+A bakery site has two jobs a corporate site does not: it has to make the reader want the product, and it has to prove the maker can actually deliver. Those two goals shaped every decision that followed.
+
+## What I Built
+
+- A brand and design system fit for an artisan food business: buttercream cream, cocoa brown, and raspberry accents, with Fraunces for display headings and Karla for body, all wired through a consistent CSS custom property token set that makes the site trivial to re-theme.
+- A photo-led homepage with a full-screen hero slider (Ken-Burns motion, cross-fades, autoplay, swipe support), draggable snap-scrolling card rails built from scratch in vanilla JavaScript, and a CSS-only "cake cross-section" signature piece.
+- A Cakes page that sells and proves: a lazy-loaded portrait process video in a 9:16 frame, a filterable gallery across the bakery's real ranges with a keyboard-accessible lightbox that steps through only the currently-filtered images, and a servings guide.
+- An About page localised to Rockwall County and the wider Dallas area, with a story section, delivery-area map, and accordion FAQ.
+- An order builder that works with zero backend: interactive option-pills compose a live-updating summary, then hand off to the customer's own email or messaging app, with past-date guarding and a clean upgrade path to a real form backend later.
+
+## Engineering in a Real WordPress Environment
+
+Building bespoke front-end into a live WordPress and Astra install surfaces problems that don't exist in a clean sandbox:
+
+- True full-bleed sections inside a constrained theme, via a small layout routine that measures each section's real offset from the viewport edge and corrects it at runtime, with a CSS fallback so there is no flash before the script runs.
+- A guarded routine that walks the wrapper chain and neutralises theme-injected spacing above the content without over-reaching.
+- A scoped specificity reset so custom cards, filter chips, and form controls win against Astra's bare element styles without affecting any other button on the site.
+- JavaScript hardened against WordPress content filtering, which encodes ampersands and strips backslashes in block content — the scripts avoid both so the code runs reliably through the editor.
+
+## Outcome
+
+A complete, four-page, client-ready website that looks like the business it represents, is fully responsive and keyboard-accessible with reduced-motion support, runs on zero paid plugins, captures real customer enquiries from day one, and is documented for handover with every real-world detail clearly marked for the client.
+
+## My Focus
+
+Design starts from what the business needs to prove, not from the template you inherit. The strongest decisions — leading with photography, showing the process video, putting a servings table where the objections are — came from asking what a cake buyer actually needs. And "client-ready" includes the environment, not just the design: a meaningful share of the work was making bespoke components coexist cleanly with WordPress and Astra, which is exactly the part that separates a mockup from a site that ships.
+
+## Technical Stack
+
+- WordPress with the Astra theme
+- Custom HTML, CSS, and JavaScript delivered through Gutenberg blocks
+- Tailwind (CDN)
+- Vanilla JavaScript, no carousel or form libraries
