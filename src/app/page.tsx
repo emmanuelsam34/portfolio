@@ -78,7 +78,7 @@ export default function Home() {
         <Column gap="12" horizontal="center">
           <Heading as="h1" variant="display-strong-xl" align="center">
             <LetterFx trigger="instant">
-              Building connected product experiences.
+              {home.headline}
             </LetterFx>
           </Heading>
           <Text variant="heading-default-xl" onBackground="neutral-weak" className={styles.heroIntro} align="center">
