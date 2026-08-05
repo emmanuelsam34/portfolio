@@ -110,6 +110,30 @@ const featuredProjects = [
     images: ["https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1600&auto=format&fit=crop"],
   },
   {
+    slug: "libl-classroom-desktop",
+    name: "LIBL Classroom Desktop App",
+    tagline: "A cross-platform Electron app that brings LIBL's live virtual classes to the desktop.",
+    summary:
+      "An isolated Electron desktop app for students and tutors to check in and join live BigBlueButton classes from macOS and Windows, talking to the same Appwrite backend as the mobile apps and packaged for distribution via CI.",
+    platform: "Desktop Platform",
+    status: "Active product",
+    year: "2026",
+    stack: ["Electron", "Vite", "TypeScript", "Appwrite", "BigBlueButton", "GitHub Actions"],
+    responsibilities: [
+      "Built a standalone desktop client outside the Expo/EAS pipeline that reuses the shared Appwrite backend for auth, sessions, and class data.",
+      "Implemented time-windowed class check-in enforced in the Africa/Lagos timezone and embedded BBB join via an Electron webview with a browser fallback.",
+      "Set up cross-platform packaging and a tag-triggered GitHub Actions workflow to produce signed-optional macOS and Windows installers for testers.",
+    ],
+    highlights: [
+      "Shared Appwrite backend with the mobile apps",
+      "30-minute check-in window enforcement",
+      "Embedded BBB join via Electron webview",
+      "CI-built macOS and Windows installers",
+    ],
+    repoPathLabel: "libl-classroom-desktop",
+    images: ["https://images.unsplash.com/photo-1587440871875-191322ee64b0?q=80&w=1600&auto=format&fit=crop"],
+  },
+  {
     slug: "kyc-verification-portal",
     name: "KYC Verification Portal",
     tagline: "A verification orchestration layer for secure tutor onboarding and compliance.",

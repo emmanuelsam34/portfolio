@@ -1,0 +1,56 @@
+---
+title: "LIBL Classroom Desktop App"
+publishedAt: "2026-07-26"
+summary: "A cross-platform Electron desktop app that lets students and tutors check in and join live BigBlueButton classes from macOS and Windows, sharing the same Appwrite backend as the LIBL mobile apps."
+images:
+  - "https://images.unsplash.com/photo-1587440871875-191322ee64b0?q=80&w=1600&auto=format&fit=crop"
+  - "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1600&auto=format&fit=crop"
+  - "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1600&auto=format&fit=crop"
+tag:
+  - "Desktop Platform"
+  - "Electron"
+team:
+  - name: "Emmanuel Agbedejobi"
+    role: "Mobile, Platform & Infrastructure Engineer"
+    avatar: "/images/emma.JPG"
+    linkedIn: "https://www.linkedin.com/in/emmanuel-samuel-agbedejobi/"
+---
+
+## Overview
+
+The LIBL Classroom Desktop App extends the tutoring platform to macOS and Windows, giving students and tutors a dedicated desktop client for attending live virtual classes. It is deliberately isolated from the Expo/EAS mobile build, but it talks to the same Appwrite backend as the mobile apps — so accounts, sessions, and class data stay consistent across every surface.
+
+## Product Scope
+
+The desktop app focuses on the moment that matters most for a virtual class: getting the right person into the right session at the right time. Users sign in with their existing Appwrite email and password — no separate registration — and both student and tutor accounts are supported. From there the app lists their live, scheduled, and upcoming virtual sessions and gets them into the class.
+
+## Key Features
+
+- Sign-in with existing Appwrite credentials, accepting both student and tutor accounts
+- A unified list of live, scheduled, and upcoming virtual sessions
+- Check-in gated to the 30-minute window before class, enforced in the Africa/Lagos timezone through the shared check-in flow
+- BigBlueButton join embedded directly in an Electron webview, with a browser fallback when embedding isn't available
+- Copy-to-clipboard for the meeting link
+
+## Architecture / Integrations
+
+The app is built with Electron, Vite, and TypeScript, reusing the same Appwrite project as the mobile apps by mapping the parent Expo environment variables into the desktop client. Registering a dedicated Web platform in the Appwrite console keeps auth and API calls authorized for the desktop origin without loosening the mobile configuration.
+
+Desktop login intentionally creates a new, independent Appwrite session — logging out only ends the desktop session, leaving mobile sessions untouched — which keeps the two clients cleanly separated while still backed by one source of truth.
+
+## Distribution
+
+Cross-platform installers are produced through electron-builder: a `.dmg` for macOS and an `.exe` for Windows. A tag-triggered GitHub Actions workflow builds both targets in CI, so cutting a release is a matter of pushing a `desktop-v*` tag rather than building by hand on two machines. Unsigned builds are distributed to testers with clear guidance for getting past the one-time OS security prompt.
+
+## My Focus
+
+My focus was extending an existing mobile-first product onto the desktop without forking its backend or its identity model. That meant reusing the Appwrite platform deliberately, mirroring the check-in and join logic so behavior stays consistent with the mobile experience, and setting up repeatable cross-platform packaging so the app could actually reach testers on both operating systems.
+
+## Technical Stack
+
+- Electron
+- Vite
+- TypeScript
+- Appwrite
+- BigBlueButton
+- GitHub Actions (electron-builder)
