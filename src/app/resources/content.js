@@ -213,9 +213,9 @@ const home = {
   description:
     "Portfolio of Emmanuel Agbedejobi, a mobile, platform, and infrastructure engineer building connected products across React Native, web platforms, backend integrations, payments, verification systems, and self-hosted infrastructure.",
   eyebrow: "Mobile, platform, and infrastructure systems",
-  headline: "I build and operate the software layer behind real products, from mobile apps to production infrastructure.",
+  headline: "I build and operate products, from mobile apps to infrastructure.",
   intro:
-    "I work across the full stack of a product: React Native apps, platform dashboards, integrations, payments, verification flows, and the servers, monitoring, and deployment infrastructure that keep them running.",
+    "React Native apps, platform dashboards, integrations, and the infrastructure that keeps them running.",
   subline:
     "My recent work spans the LIBL tutoring ecosystem — including its self-hosted live-class infrastructure — a KYC verification portal, and end-to-end client builds like the Eleglam Cakes website, combining frontend craft with the backend, infrastructure, and integration work required to ship dependable products.",
   primaryCta: {
