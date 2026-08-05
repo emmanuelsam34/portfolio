@@ -180,6 +180,10 @@ const featuredProjects = [
     ],
     images: ["https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=1600&auto=format&fit=crop"],
   },
+  // Eleglam Cakes entry temporarily hidden from the work section and homepage.
+  // Uncomment this block to restore it (the case study MDX at
+  // src/app/work/projects/eleglam-cakes.mdx is left in place).
+  /*
   {
     slug: "eleglam-cakes",
     name: "Eleglam Cakes Website",
@@ -203,6 +207,7 @@ const featuredProjects = [
     ],
     images: ["https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=1600&auto=format&fit=crop"],
   },
+  */
 ];
 
 const featuredProjectSlugs = featuredProjects.map((project) => project.slug);
