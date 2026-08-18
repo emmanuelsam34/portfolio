@@ -1,5 +1,6 @@
 import React, { ReactNode } from "react";
 import { remark } from "remark";
+import remarkGfm from "remark-gfm";
 import remarkHtml from "remark-html";
 
 import { SmartImage, SmartLink, Text } from "@/once-ui/components";
@@ -9,7 +10,10 @@ import { SmartImageProps } from "@/once-ui/components/SmartImage";
 // ---------- Simple markdown renderer (replaces next-mdx-remote/rsc) ----------
 
 async function markdownToHtml(source: string): Promise<string> {
-  const result = await remark().use(remarkHtml, { sanitize: false }).process(source);
+  const result = await remark()
+    .use(remarkGfm)
+    .use(remarkHtml, { sanitize: false })
+    .process(source);
   return result.toString();
 }
 
