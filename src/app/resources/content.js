@@ -251,6 +251,39 @@ const featuredProjects = [
     ],
     images: ["https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1600&auto=format&fit=crop"],
   },
+  {
+    slug: "digital-asset-tracking-system",
+    name: "Digital Asset Tracking System",
+    tagline: "An enterprise hardware lifecycle and custody tracking system built on Frappe and ERPNext.",
+    summary:
+      "A digital transformation of enterprise asset allocation on Frappe/ERPNext: orthogonal custody-versus-condition modeling, double-signed custody handovers, departed-custodian bypass logic, and concurrency locks extending native Asset and Asset Movement DocTypes.",
+    platform: "ERP & Workflow System",
+    status: "Production design & build",
+    year: "2026",
+    stack: [
+      "Frappe Framework",
+      "ERPNext",
+      "Python (Server Scripts & Hooks)",
+      "JavaScript (Client Scripts & Canvas API)",
+      "DocType Workflows",
+      "Notification Engine",
+    ],
+    responsibilities: [
+      "Architected the dual-status model decoupling asset custody status (accountability) from condition flags (operational state).",
+      "Designed the double-sided signed movement workflow (Issue, Return, Reassign) enforcing receipt and release signature gates.",
+      "Engineered the PMO Lead departed-custodian release bypass mechanism with mandatory auditable justifications.",
+      "Implemented concurrency locking and single-asset constraints to eliminate race conditions and preserve 1:1 signature accountability.",
+      "Configured multi-mode signature capture (in-person HTML5 canvas and remote authenticated portal sign-off).",
+    ],
+    highlights: [
+      "Orthogonal custody vs. condition status architecture",
+      "Double-sided signed chain of custody (Issue, Return, Reassign)",
+      "Departed-custodian release bypass with mandatory audit trail",
+      "Single-asset integrity rules and concurrency asset locking",
+      "Extends native ERPNext Asset & Asset Movement DocTypes cleanly",
+    ],
+    images: ["https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1600&auto=format&fit=crop"],
+  },
   // Eleglam Cakes entry temporarily hidden from the work section and homepage.
   // Uncomment this block to restore it (the case study MDX at
   // src/app/work/projects/eleglam-cakes.mdx is left in place).

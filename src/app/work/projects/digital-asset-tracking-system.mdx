@@ -1,0 +1,132 @@
+---
+title: "Digital Asset Tracking System (DATS)"
+publishedAt: "2026-08-18"
+summary: "Extending native Frappe and ERPNext asset primitives into an auditable digital custody and lifecycle engine: orthogonal custody-vs-condition state modeling, double-sided signed handovers, departed-custodian bypass workflows, and immutable chain-of-custody tracking."
+images:
+  - "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1600&auto=format&fit=crop"
+  - "https://images.unsplash.com/photo-1587837073080-448bc6a2329b?q=80&w=1600&auto=format&fit=crop"
+  - "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1600&auto=format&fit=crop"
+tag:
+  - "ERP Platform"
+  - "Asset Lifecycle"
+  - "Workflow Architecture"
+team:
+  - name: "Emmanuel Agbedejobi"
+    role: "Mobile, Platform & Infrastructure Engineer"
+    avatar: "/images/emma.JPG"
+    linkedIn: "https://www.linkedin.com/in/emmanuel-samuel-agbedejobi/"
+---
+
+## Overview
+
+The **Digital Asset Tracking System (DATS)** is an enterprise asset lifecycle and custody management system built on **Frappe and ERPNext**. It replaced a vulnerable, paper/PDF-based equipment allocation routine with an auditable system of record that tracks hardware from initial inventory load through assignment, double-signed handovers, repair cycles, reassignment, and final retirement.
+
+Rather than building a disconnected custom tracker, the solution intentionally builds upon native ERPNext DocTypes (`Asset` and `Asset Movement`). This design preserves standard depreciation, reporting, and accounting links while introducing the governance features Frappe lacks out of the box: **captured digital signatures (in-person canvas and remote portal)**, **orthogonal custody-versus-condition state machines**, and **tamper-evident approval workflows**.
+
+---
+
+## Architectural Philosophy: Extending Native Primitives
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                        ERPNext Native Foundation                       │
+│    Asset (Financials, Depreciation, Item Master, Cost Center)          │
+│    Asset Movement (Historical Movement Log, Physical Location)         │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │ Extended With
+┌───────────────────────────────────▼────────────────────────────────────┐
+│                    DATS Governance & Lifecycle Engine                  │
+├────────────────────────────────────────────────────────────────────────┤
+│ • Orthogonal Dual-Status Model (Custody Status vs. Condition Flag)     │
+│ • Double-Sided Chain of Custody (Release Signature + Receipt Signature)│
+│ • Departed-Custodian Bypass Engine (PMO Lead Emergency Authority)      │
+│ • Single-Asset Signature Integrity Guards                              │
+│ • Asset Concurrency Locking during Open Movements                      │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+By augmenting native DocTypes with custom fields, validation hooks, and stateful workflows, the organization avoided duplicate data entry, preserved the ERPNext upgrade path, and ensured asset accounting remained synchronized with physical custody.
+
+---
+
+## Core Architectural Innovations
+
+### 1. Orthogonal Dual-Status Modeling
+
+Traditional asset registers frequently conflate *custody* (who is responsible) with *condition* (operational health). When a laptop is sent for repair, naive systems reassign it to "Maintenance", erasing the accountable custodian.
+
+DATS decouples these concerns into three independent dimensions:
+
+| Dimension | Managed On | Definition & Scope |
+| :--- | :--- | :--- |
+| **Asset Custody Status** | `Asset` (Durable) | Defines accountability: `Unassigned`, `Pending Assignment`, `Assigned`, `Pending Return`, `Returned`, `Pending Reassignment`, `Lost/Missing (stores)`, `Retired/Disposed`. |
+| **Asset Condition Flag** | `Asset` (Durable) | Defines physical state: `In Service`, `Under Repair`, `Lost while assigned`. Updated via repair orders or inspection flags without altering custody. |
+| **Movement Approval State** | `Asset Movement` (Transient) | Tracks the active handover paperwork: `Draft` → `Pending Approval` → `Pending Release` → `Pending Receipt` → `Completed` / `Rejected`. |
+
+An asset can exist as *"Assigned to John Doe / Under Repair"*—preserving custodian accountability even while physical hardware sits with external repair vendors.
+
+```
+┌──────────────┐     Issue Movement (Single Sign)      ┌──────────────┐
+│  Unassigned  ├──────────────────────────────────────►│   Assigned   │
+│  (In Stores) │◄──────────────────────────────────────┤ (Custodian)  │
+└──────┬───────┘      Return Movement (Double Sign)    └──────┬───────┘
+       ▲                                                      │
+       │                                                      │ Reassign
+       │               Reassign Movement (Double Sign)        │ (A → B)
+       └──────────────────────────────────────────────────────┘
+```
+
+---
+
+### 2. The Three Signed Movement Workflows
+
+Every custody transition maps to an immutable, state-gated `Asset Movement` document:
+
+1. **Issue (First Assignment)**:
+   - Initiated by the Project Coordinator → Approved by PMO Lead → Signed upon receipt by Employee.
+   - Custody transitions to `Assigned`.
+2. **Return (Employee Offboarding)**:
+   - Outgoing Custodian A signs physical release and records condition → Receiver/IT inspects and signs receipt.
+   - Dual signatures eliminate disputes over post-return damage. Custody transitions to `Returned → Unassigned`.
+3. **Reassignment (Direct Transfer A → B)**:
+   - Custodian A signs release → Custodian B inspects and signs acceptance.
+   - Custody transfers directly to B upon completion.
+
+---
+
+### 3. Departed-Custodian Release Bypass
+
+Offboarding workflows frequently deadlock when an exiting employee separates without signing asset release forms.
+
+To prevent orphan inventory without faking signatures:
+- The system provides a **PMO Lead Release Bypass** (`custom_release_bypass = 1`).
+- The PMO Lead executes release on behalf of the departed employee with a mandatory, auditable justification note (e.g., *"Custodian separated; asset recovered by department manager"*).
+- The incoming receiver (or stores inspector) still signs normally, ensuring the receipt half of the audit trail remains intact.
+
+---
+
+### 4. Operational Guardrails & Defensive Controls
+
+- **Single-Asset Integrity Constraint**: Enforces exactly one asset per movement document (`1 movement = 1 asset = 1 person`). Cohort bulk issues are rejected to prevent diluted signature accountability.
+- **Post-Release Rejection Recovery**: If an incoming custodian rejects an asset after the outgoing custodian has signed release, custody automatically reverts to Custodian A while the failure is investigated (preventing assets from disappearing into limbo).
+- **Concurrency Asset Locking**: An open, unsubmitted movement temporarily locks the asset. Concurrent movement requests or repair tickets are blocked until the active transaction completes or cancels.
+- **Charger & Accessory Bundling**: Peripherals (chargers, docks, adapters) are tracked as child accessory lines against the primary serialized laptop record, preventing micro-movement clutter while holding custodians accountable for bundled hardware.
+- **Immutability of Submitted Records**: Upon final completion (`docstatus = 1`), movement records become strictly read-only across all roles. Corrections require explicit, auditable reversing movements.
+
+---
+
+### 5. Multi-Mode Signature Capture
+
+The signature layer accommodates both physical office handovers and distributed remote teams:
+- **In-Person Mode**: Renders an HTML5 drawing canvas directly on the coordinator's device at physical handover.
+- **Remote Mode**: Dispatches an automated Workflow Action alert linking the employee directly to their authenticated ERP portal to review specifications, attest condition, and sign digitally.
+- Stamped signature images are embedded directly into the immutable document record.
+
+---
+
+## Technical Stack
+
+- **Platform**: Frappe Framework v14, ERPNext v14
+- **Languages**: Python (Server Scripts / Hooks / Validation Engine), JavaScript (Custom Client Scripts / Canvas API)
+- **Data & Workflow Primitives**: Custom Fields on `Asset` & `Asset Movement`, DocType Workflows, Notification Engine, Scheduled Background Jobs (3-Day Acknowledgement Daemons)
+- **Governance**: Multi-Role RBAC, Dual-Sided Digital Signatures, Immutable Movement Ledgers
