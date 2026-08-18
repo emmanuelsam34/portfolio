@@ -37,15 +37,15 @@ export async function generateMetadata() {
   };
 }
 
-import { Inter, Outfit, Source_Code_Pro } from "next/font/google";
+import { Anek_Latin, Source_Code_Pro } from "next/font/google";
 
-const primary = Inter({
+const primary = Anek_Latin({
   variable: "--font-primary",
   subsets: ["latin"],
   display: "swap",
 });
 
-const secondary = Outfit({
+const secondary = Anek_Latin({
   variable: "--font-secondary",
   subsets: ["latin"],
   display: "swap",

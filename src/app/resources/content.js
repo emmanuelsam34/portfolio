@@ -110,6 +110,43 @@ const featuredProjects = [
     images: ["https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1600&auto=format&fit=crop"],
   },
   {
+    slug: "libl-online-school-enrollment-portal",
+    name: "LIBL Online School Enrollment Portal",
+    tagline: "End-to-end enrollment, Paystack settlement, soft-proctored placement exams, and automated admissions.",
+    summary:
+      "A full-stack enrollment platform featuring a hexagonal architecture monorepo, in-browser multi-modal soft proctoring (audio, vision, behavior, network) with Web Worker heartbeats, idempotent Paystack payment processing, and stateless on-demand PDF admission letters.",
+    platform: "Web Platform",
+    status: "Active platform",
+    year: "2026",
+    stack: [
+      "TypeScript",
+      "React",
+      "Vite",
+      "Node.js",
+      "Appwrite",
+      "Paystack",
+      "MediaPipe (WASM)",
+      "Web Workers",
+      "pdf-lib",
+      "Vercel",
+    ],
+    responsibilities: [
+      "Architected a strict hexagonal monorepo isolating pure domain logic (@libl/core) from infrastructure adapters and cloud dependencies.",
+      "Engineered an in-browser soft-proctoring pipeline fusing 4 detection engines (MediaPipe face tracking, acoustic speech analysis, DOM/tab heuristics, network probing) with a Web Worker clock.",
+      "Implemented a server-authoritative penalty mechanism with dynamic question bank reshuffling and server-side scoring.",
+      "Designed idempotent Paystack payment routines with HMAC-SHA512 verification, regional catchment fee tiering, and dynamic PDF letter generation via pdf-lib.",
+    ],
+    highlights: [
+      "Hexagonal domain-driven monorepo (@libl/core, infra, api)",
+      "4-engine soft proctoring with Web Worker background sampling",
+      "Idempotent payment settlement with raw HMAC-SHA512 validation",
+      "Stateless on-demand PDF admission letter generation",
+      "Catchment-based fee tiering with immutable offer freezing",
+    ],
+    repoPathLabel: "LIBL Online School Enrollment Portal",
+    images: ["https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=1600&auto=format&fit=crop"],
+  },
+  {
     slug: "libl-classroom-desktop",
     name: "LIBL Classroom Desktop App",
     tagline: "A cross-platform Electron app that brings LIBL's live virtual classes to the desktop.",
@@ -180,6 +217,40 @@ const featuredProjects = [
     ],
     images: ["https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=1600&auto=format&fit=crop"],
   },
+  {
+    slug: "enterprise-digital-appraisal-system",
+    name: "Enterprise Digital Appraisal System",
+    tagline: "An automated, auditable performance appraisal workflow engine on ERPNext and Frappe.",
+    summary:
+      "A complete digital transformation of an enterprise quarterly performance appraisal system on Frappe/ERPNext: weighted ceiling scoring, multi-tier digital signatures with snapshot declarations, actor-scoped state machines, and complete audit logging under strict zero-CLI constraints.",
+    platform: "ERP & Workflow System",
+    status: "Production design & build",
+    year: "2026",
+    stack: [
+      "Frappe Framework",
+      "ERPNext",
+      "Python (Server Scripts)",
+      "JavaScript",
+      "DocType Workflows",
+      "REST APIs",
+      "Notification Engine",
+    ],
+    responsibilities: [
+      "Architected the 7-state appraisal lifecycle workflow separating state machines, Python validation rules, event-driven alerts, and presentation layers.",
+      "Engineered dynamic actor-scoping rules combining flat Frappe roles with record-level manager hierarchy validation.",
+      "Built 'weight-as-ceiling' scoring models with independent self-scoring, manager scoring, and attributable per-KPA disciplinary deductions.",
+      "Implemented legally defensible 3-tier digital signatures with immutable declaration text snapshotting.",
+      "Designed automated objective carry-forward mechanisms seeding subsequent appraisal cycles.",
+    ],
+    highlights: [
+      "7-state role & actor-scoped appraisal workflow",
+      "Weight-as-ceiling dual scoring with attributable deductions",
+      "3-tier digital signatures with immutable declaration snapshots",
+      "Automated objective carry-forward to next-quarter cycles",
+      "100% UI/API delivery within zero-CLI constraints",
+    ],
+    images: ["https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1600&auto=format&fit=crop"],
+  },
   // Eleglam Cakes entry temporarily hidden from the work section and homepage.
   // Uncomment this block to restore it (the case study MDX at
   // src/app/work/projects/eleglam-cakes.mdx is left in place).
@@ -222,7 +293,7 @@ const home = {
   intro:
     "React Native apps, platform dashboards, integrations, and the infrastructure that keeps them running.",
   subline:
-    "My recent work spans the LIBL tutoring ecosystem — including its self-hosted live-class infrastructure — a KYC verification portal, and end-to-end client builds like the Eleglam Cakes website, combining frontend craft with the backend, infrastructure, and integration work required to ship dependable products.",
+    "My recent work spans the LIBL education ecosystem — including its online school enrollment portal, mobile tutoring apps, and self-hosted live-class infrastructure — alongside verification workflows and client builds, combining frontend craft with backend domain architecture and distributed systems.",
   primaryCta: {
     label: "View selected work",
     href: "/work",
@@ -337,7 +408,7 @@ const about = {
       },
       {
         title: "Platform & Infra",
-        description: "Appwrite, serverless functions, webhook workflows, Linux, nginx, haproxy, Docker, BigBlueButton, Datadog",
+        description: "Appwrite, Frappe / ERPNext, serverless functions, webhook workflows, Linux, nginx, haproxy, Docker, BigBlueButton, Datadog",
       },
       {
         title: "Integrations",

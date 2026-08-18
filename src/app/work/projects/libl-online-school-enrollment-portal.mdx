@@ -1,0 +1,158 @@
+---
+title: "LIBL Online School Enrollment Portal"
+publishedAt: "2026-08-18"
+summary: "An end-to-end online secondary school enrollment platform featuring hexagonal architecture, in-browser multi-modal soft proctoring (audio, vision, behavior, network), idempotent Paystack payment processing, and stateless on-demand PDF admission letters."
+images:
+  - "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=1600&auto=format&fit=crop"
+  - "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1600&auto=format&fit=crop"
+  - "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1600&auto=format&fit=crop"
+tag:
+  - "Web Platform"
+  - "Distributed Systems"
+  - "Proctoring Engine"
+team:
+  - name: "Emmanuel Agbedejobi"
+    role: "Mobile, Platform & Infrastructure Engineer"
+    avatar: "/images/emma.JPG"
+    linkedIn: "https://www.linkedin.com/in/emmanuel-samuel-agbedejobi/"
+---
+
+## Overview
+
+The **LIBL Online School Enrollment Portal** is a full-stack platform that manages the entire admissions lifecycle for LIBL Academy’s Online Secondary School. It takes prospective students through account creation, Paystack registration fee settlement, a soft-proctored placement examination drawn from curated question banks across academic tracks (JSS1 through SS2 Arts, Science, and Commercial), automated server-side scoring, regional catchment-tiered fee resolution, instant PDF admission letter generation, and tuition clearance into final enrolled standing.
+
+Beyond the student experience, the system provides an invite-only Super Admin and Admissions Office console for reviewing candidate timelines, auditing proctoring violation logs, extending acceptance deadlines, configuring academic sessions, and editing examination question banks.
+
+---
+
+## Architectural Philosophy: Strict Hexagonal Monorepo
+
+To guarantee long-term maintainability, portability, and fast test feedback, the system is organized as a monorepo following strict **Hexagonal Architecture (Ports & Adapters)** principles:
+
+```
+packages/core        Pure Domain Layer (Entities, State Machines, Services,
+                     Catchment Rules, Scoring, Violation Pipeline)
+                     ↳ 0% cloud/browser/Node.js dependencies; 100% unit-tested.
+       ▲
+       │ (implements ports)
+packages/infra       Adapters Layer (Appwrite Repositories, Paystack Gateway,
+                     Brevo Mailer, pdf-lib Document Renderer, DI Container)
+       ▲
+       │
+packages/api         Application Router (Normalized Request/Response,
+                     Declarative RBAC: public, user, admin, superadmin)
+       ▲
+   ┌───┴────────────────────────────┐
+api/ (Vercel Serverless BFF)        functions/ (Appwrite Function Bundles)
+   ▲
+frontend/ (React + Vite SPA with Web Worker Invigilation & Admin Console)
+```
+
+### Inward Dependency Rule
+- **`packages/core`** defines domain entities (`Enrollment`, `ExamAttempt`, `QuestionBank`), business state machines (`EnrollmentStatus`, `AdmissionStatus`), and interfaces (ports) for repositories, mailers, payment gateways, clocks, and document renderers. It has zero external dependencies, enabling lightning-fast in-memory unit testing without spinning up cloud emulators or databases.
+- **`packages/infra`** implements these ports against Appwrite Cloud, Paystack, Brevo, and `pdf-lib`, wiring them together via a central dependency injection container.
+- **`packages/api`** defines a portable route table. The exact same application routes run as a Vercel Serverless BFF (`/api/[[...path]].ts`) or as compiled Appwrite Cloud Functions without altering business logic.
+
+---
+
+## The Soft-Proctoring Subsystem: 4 Engines, 1 Shared Penalty Pipeline
+
+Cheating prevention in browser-based assessments is often handled either via invasive native software or naive frontend alerts. The portal adopts a resilient **soft-proctoring architecture**: four client-side observation engines monitor candidate behavior and stream typed signals to a server-side penalty pipeline.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    In-Browser Engines                           │
+│  Behaviour Engine │ Audio Engine │ Vision Engine │ Network      │
+└─────────┬─────────┴──────┬───────┴───────┬───────┴──────┬───────┘
+          │                │               │              │
+          └────────────────┴───────┬───────┴──────────────┘
+                                   │ Event + Client UUID
+                                   ▼
+                        useProctor Queue
+                        (sessionStorage retries)
+                                   │
+                                   ▼
+                      POST /api/exam/proctor-event
+                                   │
+                                   ▼
+                        ViolationPipeline
+               (Grace Checks → Cooldown → Swap Penalty)
+                                   │
+                                   ▼
+           Current Question Replaced Server-Side; Answer Voided
+```
+
+### The 4 Observation Engines
+
+1. **Behaviour Engine**:
+   - Captures `visibilitychange`, `pagehide`, `freeze`/`resume`, copy/paste attempts, and fullscreen exits.
+   - Utilizes per-type debouncing so a window blur cannot swallow a tab switch.
+2. **Audio Engine**:
+   - Calibrates an ambient room noise baseline in decibels upon entry.
+   - Uses a 50% tripwire meter against excess room noise.
+   - Evaluates spectral speech-band energy ratios ($\ge 0.32$), pitch tracking, and zero-crossing rates (ZCR) to distinguish human speech from ambient fan or AC hum.
+3. **Vision Engine**:
+   - Fuses MediaPipe BlazeFace (running entirely locally via WASM/TFLite), the browser's native `FaceDetector`, and a skin-presence fallback.
+   - Enforces active DOM video rendering and measures head yaw/pose to detect when a candidate reads off-screen materials (`LOOK_AWAY`).
+   - Automatically recovers dead or interrupted camera tracks.
+4. **Network Engine**:
+   - Performs periodic background `HEAD` probes against the origin rather than relying on naive `navigator.onLine` status.
+   - Any disconnect lasting longer than 4 seconds triggers a penalty upon reconnection.
+
+### Web Worker Heartbeat
+Browsers throttle `requestAnimationFrame` and timers in background tabs. To ensure monitoring remains active when a student tabs away, a dedicated **Web Worker heartbeat** keeps sample ticks firing, catching background speech and triggering instant catch-up pulses on return.
+
+### Server-Side Penalty Enforcement
+Client engines **observe but never decide**. When an event reaches `ExamService.reportViolation`, the server verifies the event's client-minted UUID (idempotency key), applies grace windows and cooldowns, and executes a penalty:
+- The question currently on screen is replaced with an unseen item from the remaining bank.
+- The candidate's active answer for that slot is forfeited.
+- The server-authoritative exam clock **never pauses**.
+
+---
+
+## Financial Integrity & Catchment Fee Model
+
+Handling student payments across unstable network environments requires strict correctness guarantees:
+
+### Idempotent Dual Settlement
+Paystack payment completion is reported both through browser redirect callbacks and asynchronous webhook payloads. Both entry points funnel into a single idempotent settlement routine keyed on the payment reference. Webhook signatures are verified using **HMAC-SHA512 over the raw request buffer** before body parsing.
+
+### Catchment-Based Regional Fee Tiering
+Tuition fees reflect Nigerian geopolitical zones to balance accessibility with operational costs:
+
+| Tier | Amount | Region Coverage |
+| :--- | :--- | :--- |
+| **Tier A** | ₦40,000 | 19 Northern states (excl. FCT), Abia, Ekiti |
+| **Tier B** | ₦50,000 | Anambra, Bayelsa, Cross River, Delta, Ebonyi, Edo, Enugu, Imo, Ogun, Ondo, Osun, Oyo *(Default Fallback)* |
+| **Tier C** | ₦70,000 | Lagos, Rivers, FCT, Akwa Ibom |
+
+To eliminate financial drift, the candidate’s fee tier is **permanently frozen onto the enrollment record at the time the admission offer is generated**. Changes to student profiles or global configurations can never alter an already issued offer or invoice.
+
+---
+
+## Stateless On-Demand PDF Admission Letter Generation
+
+Rather than generating binary files, uploading them to cloud buckets, and managing signed expiring URLs, admission letters are generated **on-the-fly as pure deterministic functions of enrollment state**:
+
+- **Technology**: Implemented with `pdf-lib` (pure JavaScript, zero Node.js binary bindings, zero headless browser requirements).
+- **Portability**: Bundles effortlessly into both Vercel serverless functions and single-file Appwrite Function bundles.
+- **Zero Storage Leakage**: Letters are rendered dynamically when requested via `/api/enrollment/:id/letter` or attached to Brevo transactional emails, eliminating stale PDF artifacts when administrators extend deadlines.
+
+---
+
+## Key Technical Decisions & Takeaways
+
+1. **Deterministic Examination State**: Appwrite lacks atomic compare-and-set operations. Examination attempts use deterministic document IDs (`enrollmentId:attemptNo`) paired with unique database indexes, transforming collision errors into atomic locking primitives.
+2. **Server-Owned Clock**: `expiresAt` timestamps are computed and stored server-side. The client countdown reflects `expiresAt - now` adjusted by a measured server clock offset, completely mitigating local device time tampering.
+3. **Defense-in-Depth Authorization**: The browser Appwrite client is restricted strictly to authentication sessions. All database mutations require the backend server API key, preventing direct client collection tampering.
+4. **Exhaustive Type Safety**: Payment dispatch routines enforce TypeScript `never` exhaustiveness checks, ensuring any unhandled payment purpose throws an immediate compilation and runtime error.
+
+---
+
+## Technical Stack
+
+- **Frontend**: React 18, Vite, TypeScript, SCSS Modules, Web Workers
+- **Invigilation & ML**: MediaPipe BlazeFace (WASM / TFLite), Web Audio API (Spectral / FFT Analysis), Canvas API
+- **Backend & Domain**: Node.js, TypeScript, Hexagonal Architecture (`@libl/core`, `@libl/infra`, `@libl/api`)
+- **Infrastructure & Cloud**: Appwrite Cloud (Auth, Databases, Teams), Vercel Serverless BFF
+- **Integrations**: Paystack (Payments & Webhooks), Brevo (Transactional Email), `pdf-lib` (Document Synthesis)

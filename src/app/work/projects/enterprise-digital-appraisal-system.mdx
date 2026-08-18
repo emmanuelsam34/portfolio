@@ -1,0 +1,146 @@
+---
+title: "Enterprise Digital Appraisal System (EDAS)"
+publishedAt: "2026-08-18"
+summary: "Designing and delivering an end-to-end quarterly performance appraisal workflow on ERPNext and Frappe: role-tailored weighted scoring, multi-tier digital signatures with snapshot declarations, actor-scoped state machines, and complete audit trails within a strict zero-CLI constraint."
+images:
+  - "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1600&auto=format&fit=crop"
+  - "https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=1600&auto=format&fit=crop"
+  - "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1600&auto=format&fit=crop"
+tag:
+  - "ERP Platform"
+  - "Workflow Automation"
+  - "Systems Architecture"
+team:
+  - name: "Emmanuel Agbedejobi"
+    role: "Mobile, Platform & Infrastructure Engineer"
+    avatar: "/images/emma.JPG"
+    linkedIn: "https://www.linkedin.com/in/emmanuel-samuel-agbedejobi/"
+---
+
+## Overview
+
+The **Enterprise Digital Appraisal System (EDAS)** replaced a manual, document-based quarterly performance review process across an enterprise ERPNext and Frappe environment. The project converted fragmented Word and PDF appraisal forms into a fully automated, auditable, and rule-enforced digital workflow—preserving the organization's multi-tier scoring rules and sign-off sequence while eliminating manual bottlenecks, scoring errors, and untracked evaluations.
+
+A major architectural constraint: **zero bench or server CLI access**. The entire solution was engineered cleanly within Frappe's user interface and REST API primitives using custom DocTypes, stateful workflows, sandboxed Python Server Scripts, and event-driven notifications without touching server-level controller code.
+
+---
+
+## The Challenge & Constraints
+
+The existing paper-based appraisal model suffered from critical governance and operational vulnerabilities:
+1. **Unenforced Ceiling Rules**: Scores frequently exceeded Key Performance Area (KPA) weights due to manual spreadsheet calculations.
+2. **Template Drift & Silent Overwrites**: In-flight reviews lacked snapshotting; changes to master templates mid-cycle silently altered active evaluations.
+3. **Legal Attestation Gaps**: Signatures did not capture the exact declaration text agreed upon at the time of signing.
+4. **Untracked Disciplinary Deductions**: Points were deducted arbitrarily without an attributable actor log or timestamp.
+5. **No System-Enforced Scoping**: Frappe's native appraisal module assumes flat roles, which would allow any manager to approve any employee's appraisal across departments.
+
+---
+
+## Architectural Architecture & Engine Division
+
+To deliver a maintainable, high-integrity system without custom Python app installations, the architecture separates responsibilities across four distinct layers:
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                        Frappe Architecture                             │
+├───────────────────┬────────────────────────────────────────────────────┤
+│ Workflow Engine   │ State Machine: Owns the 7 lifecycle states,         │
+│                   │ role-gated transitions, and actor scope checks.     │
+├───────────────────┼────────────────────────────────────────────────────┤
+│ Server Scripts    │ Rules & Validation Engine: Score caps, deductions, │
+│                   │ declaration stamping, template snapshotting.       │
+├───────────────────┼────────────────────────────────────────────────────┤
+│ Notifications     │ Event Dispatcher: Value-change email alerts with   │
+│                   │ duplicate guards and deep record routing.          │
+├───────────────────┼────────────────────────────────────────────────────┤
+│ Client Scripts    │ Presentation: Visual cues and non-business UX      │
+│                   │ enhancements only.                                 │
+└───────────────────┴────────────────────────────────────────────────────┘
+```
+
+```
+  HR                   LINE MANAGER              EMPLOYEE                HR
+   │                        │                       │                     │
+ Configure              Kickoff & Send              │                     │
+ Template ─────────────────►│                       │                     │
+                            └──────────────────────►│                     │
+                                               Self-Scores &              │
+                                                 Evidence                 │
+                            ┌───────────────────────┘                     │
+                       LM Scoring &                                       │
+                         Comments                                         │
+                            │                                             │
+                      Review Required? ── yes ──► Meeting ──► Held        │
+                            │                                             │
+                       Agreed Goals &                                     │
+                        LM Signature                                      │
+                            └──────────────────────►│                     │
+                                               Acknowledge &              │
+                                                Signature                 │
+                                                    └────────────────────►│
+                                                                   HR Review Session?
+                                                                    ── yes ──► Held
+                                                                          │
+                                                                   Final Comment &
+                                                                    HR Signature
+                                                                          │
+                                                                     COMPLETED
+```
+
+---
+
+## Key Technical Decisions & Innovations
+
+### 1. Dynamic Actor Scoping
+Frappe workflow transitions natively gate on global user roles, which lack contextual record ownership. A flat `Line Manager` role would allow any manager in the company to sign off on any employee's review.
+
+To solve this without creating dozens of department-specific roles:
+- The system resolves the employee's hierarchical reporting line (`reports_to`) at kickoff and writes `lm_user` and `employee_user` onto the appraisal record.
+- Every workflow transition combines a single custom role (`zLM_manager`) with a record-level Python condition:
+  ```python
+  role: zLM_manager
+  condition: frappe.session.user == doc.lm_user
+  ```
+This ensures managers can only interact with their direct reports while allowing employees who are also managers to seamlessly hold both roles without permission leaks.
+
+### 2. "Weight as Ceiling" Scoring & Double-Band Evaluation
+Unlike standard averaging models, the enterprise model treats each KPA weight as an **attainable point ceiling** (weights sum to 100). 
+
+- **Independent Dual Scoring**: Employees enter self-scores (informational), while Line Managers assign actual scores.
+- **Attributable Disciplinary Deductions**: Deductions are logged in a dedicated child table with timestamps, actor IDs, and justification notes.
+- **Gross vs. Final Banding**: The system computes and displays both pre-deduction and post-deduction rating bands (A: 90–100, B: 80–89.99, C: 70–79.99, D: 50–69.99, F: <50), ensuring a deduction transparently drops an outcome (e.g., from an A to a B) on the official record.
+
+```python
+gross_score     = sum(kpa.lm_score for kpa in doc.kpas)
+total_deduction = sum(d.points for d in doc.deductions)
+final_score     = max(gross_score - total_deduction, 0)
+```
+
+### 3. Immutable Snapshot Declarations & Multi-Tier Signatures
+To guarantee auditability and legal compliance, three separate signatures are captured across the lifecycle:
+1. **Line Manager**: Signs at `Pending Objectives`, covering scores, review remarks, and agreed goals together.
+2. **Employee**: Signs at `Pending Employee Acknowledgement` after reviewing next-quarter targets.
+3. **HR Manager**: Signs at `Pending HR Review` to close the cycle.
+
+**Signature Immutability**: At the exact moment of signing, the full legal declaration text is rendered and permanently stamped into the document. If policy wording is revised later, historical appraisals retain the exact text agreed upon when signed. If an appraisal is returned for rework, existing signatures are automatically purged.
+
+### 4. Automated Goal Carry-Forward
+At the conclusion of an appraisal cycle, agreed next-quarter objectives are automatically transformed into a **Draft Appraisal Template** for the subsequent quarter. HR simply assigns weight distributions to the new KPAs, eliminating redundant manual re-entry across cycles.
+
+---
+
+## Operating in Frappe's Restricted Python Sandbox
+
+Building advanced enterprise logic purely within Frappe's Server Script environment required engineering around specific sandbox boundaries:
+- **String Formatting**: Handled without `.format()` or `%` interpolation due to sandbox restrictions.
+- **Metadata Protection**: Ensured all metadata modifications execute through `frappe.get_doc().save()` rather than direct database updates, avoiding the UI metadata cache desynchronization trap.
+- **Notification Resiliency**: Implemented duplicate-suppression guards (`doc.get_doc_before_save()`) to prevent duplicate email alerts during multi-pass document saves.
+
+---
+
+## Technical Stack
+
+- **Platform**: Frappe Framework v14, ERPNext v14
+- **Languages & Scripting**: Python (Server Scripts / Sandboxed Rules Engine), JavaScript (Presentation Layer)
+- **Data & Workflow Primitives**: Custom DocTypes, Child Tables, DocType Workflows, Event-Driven Notification Engine, REST APIs
+- **Governance**: RBAC, Contextual Actor Scoping, Digital Signatures, Audit Logging
