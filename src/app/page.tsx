@@ -1,10 +1,9 @@
-import { Avatar, Button, Column, Flex, Grid, Heading, LetterFx, Line, RevealFx, SmartImage, Tag, Text, TiltFx } from "@/once-ui/components";
+import Link from "next/link";
+
 import { Projects } from "@/components/work/Projects";
-
+import { Reveal } from "@/components/Reveal";
 import { baseURL } from "@/app/resources";
-import { home, person, work, social, about } from "@/app/resources/content";
-
-// Force re-save to fix ReferenceError: about is not defined
+import { home, person, work, about } from "@/app/resources/content";
 
 import styles from "./home.module.scss";
 
@@ -21,12 +20,7 @@ export async function generateMetadata() {
       description,
       type: "website",
       url: `https://${baseURL}`,
-      images: [
-        {
-          url: ogImage,
-          alt: title,
-        },
-      ],
+      images: [{ url: ogImage, alt: title }],
     },
     twitter: {
       card: "summary_large_image",
@@ -37,9 +31,22 @@ export async function generateMetadata() {
   };
 }
 
+const HOME_PROJECT_COUNT = 4;
+
 export default function Home() {
+  const years = new Date().getFullYear() - about.sinceYear;
+  const platforms = new Set(work.featuredProjects.map((p) => p.platform)).size;
+  const stats = [
+    { value: `${work.featuredProjects.length}`, label: "case studies here" },
+    { value: `${years}+`, label: "years shipping" },
+    { value: `${platforms}`, label: "kinds of platform" },
+  ];
+  const toolkit = about.technical.skills.flatMap((skill) =>
+    skill.description.split(",").map((item) => item.trim()),
+  );
+
   return (
-    <Column maxWidth="l" gap="xl" horizontal="center">
+    <>
       <script
         type="application/ld+json"
         suppressHydrationWarning
@@ -60,187 +67,122 @@ export default function Home() {
         }}
       />
 
-      <Column fillWidth gap="24" vertical="center" horizontal="center" paddingY="l" className={styles.hero}>
-        <Flex
-          paddingX="12"
-          paddingY="4"
-          radius="full"
-          border="neutral-alpha-medium"
-          background="neutral-alpha-weak"
-          vertical="center"
-          gap="8"
-        >
-          <Text variant="body-default-xs" onBackground="brand-strong">Emmanuel</Text>
-          <Line vert height="12" />
-          <Text variant="body-default-xs" onBackground="neutral-weak">Agbedejobi</Text>
-        </Flex>
+      {/* ---------- Hero ---------- */}
+      <section className={`wrap ${styles.hero}`}>
+        <div className={styles.heroCopy}>
+          <span className="eyebrow">{person.role}</span>
+          <h1 className={`display display-xl ${styles.heroTitle}`}>
+            {home.heroLines.map((line) => (
+              <span key={line} className={styles.line}>
+                {line}
+              </span>
+            ))}
+            <span className={styles.line}>
+              <span className="accent-word">{home.heroAccent}</span>
+            </span>
+          </h1>
+          <p className="lede">{home.intro}</p>
+          <div className="btn-row">
+            <a href="#work" className="btn btn-solid">
+              See the work <span aria-hidden="true">↓</span>
+            </a>
+            <a href={`mailto:${person.email}`} className="btn btn-ghost">
+              Say hi
+            </a>
+          </div>
+          <dl className={styles.stats}>
+            {stats.map((stat) => (
+              <div key={stat.label}>
+                <dt>{stat.value}</dt>
+                <dd>{stat.label}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
 
-        <Column gap="12" horizontal="center">
-          <Heading as="h1" variant="display-strong-xl" align="center">
-            <LetterFx trigger="instant">
-              {home.headline}
-            </LetterFx>
-          </Heading>
-          <Text variant="heading-default-xl" onBackground="neutral-weak" className={styles.heroIntro} align="center">
-            {home.intro}
-          </Text>
-        </Column>
+        <div className={styles.heroVisual}>
+          <span className={`hand ${styles.caption}`}>{home.photoCaption}</span>
+          <div className={`sticker ${styles.photo}`}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={person.avatar} alt={person.name} />
+          </div>
+          {home.annotations.map((note, i) => (
+            <span key={note} className={`hand ${styles.note} ${styles[`note${i + 1}`]}`}>
+              ← {note}
+            </span>
+          ))}
+        </div>
+      </section>
 
-        <Button href="/about" variant="secondary" size="s" className={styles.identityButton} style={{ borderRadius: '100px' }}>
-          <Flex gap="8" vertical="center">
-            <Avatar src={person.avatar} size="s" />
-            <Text variant="body-default-s">About – {person.name}</Text>
-          </Flex>
-        </Button>
+      {/* ---------- Selected work ---------- */}
+      <section id="work" className={styles.band}>
+        <div className="wrap">
+          <Reveal className={styles.sectionHead}>
+            <div>
+              <span className="eyebrow">Selected work</span>
+              <h2 className="display display-l">
+                Things I&apos;ve <span className="accent-word">shipped.</span>
+              </h2>
+            </div>
+            <p className="lede">{work.intro}</p>
+          </Reveal>
 
+          <Projects slugs={work.featuredProjectSlugs.slice(0, HOME_PROJECT_COUNT)} />
 
-      </Column>
+          <div className={styles.bandFooter}>
+            <span className={`hand ${styles.scrollNote}`}>there&apos;s more where that came from</span>
+            <Link href="/work" className="btn btn-solid">
+              See all {work.featuredProjects.length} projects <span aria-hidden="true">→</span>
+            </Link>
+          </div>
+        </div>
+      </section>
 
-      <Flex fillWidth gap="xl" mobileDirection="column">
-        <Column flex={7} gap="l">
-          <Flex vertical="center" gap="12">
-            <Text className={styles.sectionLabel}>Selected Work</Text>
-          </Flex>
-          <RevealFx delay={0.2} fillWidth>
-            <Projects slugs={work.featuredProjectSlugs} />
-          </RevealFx>
-        </Column>
-
-        <Grid gap="l" className={styles.aside} mobileColumns={1} style={{ flex: 3 }}>
-          <RevealFx delay={0.4} fillWidth>
-            <Flex className={styles.asideCard} direction="column" gap="16">
-              <Text className={styles.sectionLabel}>About</Text>
-              <Text variant="body-default-m" onBackground="neutral-strong">
-                {person.tagline}
-              </Text>
-            </Flex>
-          </RevealFx>
-
-          <RevealFx delay={0.5} fillWidth>
-            <Flex className={styles.asideCard} direction="column" gap="16">
-              <Text className={styles.sectionLabel}>Focus</Text>
-              <Flex gap="8" wrap>
-                {home.specialties.map((item) => (
-                  <Tag key={item} variant="neutral" size="s">
-                    {item}
-                  </Tag>
-                ))}
-              </Flex>
-            </Flex>
-          </RevealFx>
-
-          <RevealFx delay={0.6} fillWidth>
-            <Flex className={styles.asideCard} direction="column" gap="12">
-              <Text className={styles.sectionLabel}>Gallery</Text>
-              <Grid columns={2} gap="8">
-                {work.featuredProjects.slice(0, 4).map((project, i) => (
-                  <SmartImage
-                    key={i}
-                    src={project.images[0]}
-                    alt={project.name}
-                    aspectRatio="1 / 1"
-                    radius="m"
-                  />
-                ))}
-              </Grid>
-            </Flex>
-          </RevealFx>
-        </Grid>
-      </Flex>
-
-      <Line />
-
-      <Flex as="section" fillWidth direction="column" gap="l" paddingY="xl">
-        <Column gap="12">
-          <Text className={styles.sectionLabel}>Architecture, Infrastructure & Quality</Text>
-          <Heading as="h2" variant="display-strong-s">
-            Building for scale and reliability.
-          </Heading>
-        </Column>
-        <Grid columns={3} mobileColumns={1} gap="m">
+      {/* ---------- What I do ---------- */}
+      <section className={`wrap ${styles.split}`}>
+        <Reveal className={styles.splitHead}>
+          <span className="eyebrow">{about.capabilities.title}</span>
+          <h2 className="display display-l">What I actually do</h2>
+          <span className={`hand ${styles.splitNote}`}>yes, all of it ↴</span>
+        </Reveal>
+        <div className={styles.capabilities}>
           {about.capabilities.groups.map((group, i) => (
-            <RevealFx key={group.title} delay={0.1 * i} fillWidth>
-              <Flex className={styles.asideCard} direction="column" gap="16" fillWidth>
-                <Text variant="heading-strong-m">{group.title}</Text>
-                <Column as="ul" gap="8">
-                  {group.items.map((item) => (
-                    <Text as="li" key={item} variant="body-default-s" onBackground="neutral-weak">
-                      {item}
-                    </Text>
-                  ))}
-                </Column>
-              </Flex>
-            </RevealFx>
+            <Reveal key={group.title} delay={i * 0.1} className={`card ${styles.capability}`}>
+              <span className={styles.capNumber}>0{i + 1}</span>
+              <h3 className="display display-s">{group.title}</h3>
+              <ul>
+                {group.items.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </Reveal>
           ))}
-        </Grid>
-      </Flex>
+        </div>
+      </section>
 
-      <Line />
-
-      <Flex as="section" fillWidth direction="column" gap="l" paddingY="xl">
-        <Column gap="12">
-          <Text className={styles.sectionLabel}>Technical Stack</Text>
-          <Heading as="h2" variant="display-strong-s">
-            Tools of the trade.
-          </Heading>
-        </Column>
-        <Grid columns={4} mobileColumns={2} gap="m">
-          {about.technical.skills.map((skill, i) => (
-            <RevealFx key={skill.title} delay={0.05 * i} fillWidth>
-              <Flex className={styles.asideCard} direction="column" gap="12" fillWidth>
-                <Text variant="label-strong-m" onBackground="neutral-strong">{skill.title}</Text>
-                <Text variant="body-default-xs" onBackground="neutral-weak">
-                  {skill.description}
-                </Text>
-              </Flex>
-            </RevealFx>
-          ))}
-        </Grid>
-      </Flex>
-
-      <Line />
-
-      <Flex as="footer" fillWidth direction="column" gap="l" paddingY="xl">
-        <Flex fillWidth mobileDirection="column" gap="xl" vertical="center">
-          <Column gap="12" flex={6}>
-            <Text className={styles.sectionLabel}>Let's connect</Text>
-            <Heading as="h2" variant="display-strong-s">
-              Available for the right opportunity.
-            </Heading>
-            <Text variant="body-default-m" onBackground="neutral-weak">
-              {person.availability}
-            </Text>
-          </Column>
-          <Column flex={4} gap="16">
-            <Flex gap="12" wrap>
-              <Button href={`mailto:${person.email}`} variant="primary" size="m" arrowIcon id="contact-email">
-                Send an email
-              </Button>
-              <Button href="/about" variant="secondary" size="m">
-                Read more about me
-              </Button>
-            </Flex>
-            <Flex gap="12" wrap>
-              {social.map((item) => (
-                <Button key={item.name} href={item.link} variant="tertiary" size="s" prefixIcon={item.icon}>
-                  {item.name}
-                </Button>
-              ))}
-            </Flex>
-          </Column>
-        </Flex>
-        <Line />
-        <Flex fillWidth mobileDirection="column" gap="8" vertical="center" horizontal="space-between">
-          <Text variant="body-default-xs" onBackground="neutral-weak">
-            &copy; {new Date().getFullYear()} {person.name}. All rights reserved.
-          </Text>
-          <Text variant="body-default-xs" onBackground="neutral-weak">
-            {person.role} &middot; {person.location}
-          </Text>
-        </Flex>
-      </Flex>
-
-      <Line />
-    </Column>
+      {/* ---------- Toolkit ---------- */}
+      <section className={`wrap ${styles.toolkit}`}>
+        <Reveal>
+          <span className="eyebrow">Toolkit</span>
+          <h2 className="display display-m">The stack</h2>
+          <div className={`chips ${styles.toolkitChips}`}>
+            {toolkit.map((item) => (
+              <span key={item} className="chip">
+                {item}
+              </span>
+            ))}
+          </div>
+        </Reveal>
+        <Reveal delay={0.1}>
+          <span className="eyebrow">Specialties</span>
+          <h2 className="display display-m">Good at</h2>
+          <ul className={styles.specialties}>
+            {home.specialties.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </Reveal>
+      </section>
+    </>
   );
 }

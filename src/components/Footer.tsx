@@ -1,4 +1,3 @@
-import { Flex, IconButton, SmartLink, Text } from "@/once-ui/components";
 import { person, social } from "@/app/resources/content";
 import styles from "./Footer.module.scss";
 
@@ -6,53 +5,41 @@ export const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <Flex
-      as="footer"
-      position="relative"
-      fillWidth
-      padding="8"
-      horizontal="center"
-      mobileDirection="column"
-    >
-      <Flex
-        className={styles.mobile}
-        maxWidth="m"
-        paddingY="8"
-        paddingX="16"
-        gap="16"
-        horizontal="space-between"
-        vertical="center"
-      >
-        <Text variant="body-default-s" onBackground="neutral-strong">
-          <Text onBackground="neutral-weak">© {currentYear} /</Text>
-          <Text paddingX="4">{person.name}</Text>
-          <Text onBackground="neutral-weak">
-            / Portfolio built with{" "}
-            <SmartLink
-              style={{ marginLeft: "-0.125rem" }}
-              href="https://once-ui.com/templates/magic-portfolio"
-            >
-              Once UI
-            </SmartLink>
-          </Text>
-        </Text>
-        <Flex gap="16">
-          {social.map(
-            (item) =>
-              item.link && (
-                <IconButton
-                  key={item.name}
-                  href={item.link}
-                  icon={item.icon}
-                  tooltip={item.name}
-                  size="s"
-                  variant="ghost"
-                />
-              ),
-          )}
-        </Flex>
-      </Flex>
-      <Flex height="80" show="s"></Flex>
-    </Flex>
+    <footer className={styles.footer} id="contact">
+      <div className={styles.inner}>
+        <div className={styles.cta}>
+          <span className={styles.eyebrow}>Let&apos;s build something</span>
+          <h2 className={styles.title}>
+            Got a product that
+            <br />
+            needs to <em>hold up?</em>
+          </h2>
+          <p className={styles.copy}>{person.availability}</p>
+          <div className={styles.actions}>
+            <a className={styles.primary} href={`mailto:${person.email}`}>
+              {person.email}
+            </a>
+            <span className={styles.note}>I reply faster than my CI runs</span>
+          </div>
+        </div>
+
+        <div className={styles.bottom}>
+          <span>
+            © {currentYear} {person.name} · {person.location}
+          </span>
+          <ul className={styles.social}>
+            {social
+              .filter((item) => item.link && !item.link.startsWith("mailto:"))
+              .map((item) => (
+                <li key={item.name}>
+                  <a href={item.link} target="_blank" rel="noopener noreferrer">
+                    {item.name}
+                  </a>
+                </li>
+              ))}
+          </ul>
+        </div>
+      </div>
+    </footer>
   );
 };

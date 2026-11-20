@@ -1,27 +1,114 @@
 .card {
-  padding: 1rem;
-  border: 1px solid var(--neutral-alpha-medium);
-  border-radius: var(--radius-l);
-  background: var(--surface-background);
-  backdrop-filter: var(--backdrop-filter);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.24);
-  transition: transform var(--transition-micro-medium);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 0.75rem 0.75rem 1.5rem;
+  border-radius: 28px;
+  background: var(--card);
+  color: var(--ink);
+  text-decoration: none;
+  box-shadow: 0 1px 0 rgba(36, 19, 32, 0.05);
+  transition:
+    transform 0.5s var(--ease),
+    box-shadow 0.5s var(--ease);
 
   &:hover {
-    transform: translateY(-4px);
+    transform: translateY(-6px) rotate(-0.4deg);
+    box-shadow: var(--shadow-soft);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
   }
 }
 
-.media {
+.frame {
+  position: relative;
+  aspect-ratio: 16 / 11;
+  border-radius: 20px;
   overflow: hidden;
+  background: var(--paper-deep);
 }
 
-.list {
-  margin: 0;
-  padding-left: 1rem;
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: saturate(0.85);
+  transition:
+    transform 0.8s var(--ease),
+    filter 0.5s;
 }
 
-.link {
+.card:hover .image {
+  transform: scale(1.05);
+  filter: saturate(1);
+}
+
+.counter {
+  position: absolute;
+  left: 0.9rem;
+  bottom: 0.6rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 2.75rem;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: #fff;
+  text-shadow: 0 2px 16px rgba(36, 19, 32, 0.45);
+
+  small {
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0;
+  }
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0 0.75rem;
+}
+
+.meta {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.title {
   margin: 0;
-  width: fit-content;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-variation-settings: "SOFT" 100;
+  font-size: clamp(1.4rem, 2.2vw, 1.75rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.description {
+  margin: 0;
+  color: var(--ink-soft);
+  line-height: 1.55;
+  font-size: 0.95rem;
+}
+
+.more {
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+
+  span {
+    display: inline-block;
+    transition: transform 0.3s var(--ease);
+  }
+}
+
+.card:hover .more span {
+  transform: translateX(4px);
 }

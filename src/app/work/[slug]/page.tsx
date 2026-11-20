@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { CustomMDX } from "@/components/mdx";
 import ScrollToHash from "@/components/ScrollToHash";
 import { getPosts } from "@/app/utils/utils";
-import { Button, Column, Flex, SmartImage, Tag, Text, Heading, RevealFx, LetterFx, TiltFx } from "@/once-ui/components";
+import Link from "next/link";
 import { baseURL } from "@/app/resources";
 import { person, work } from "@/app/resources/content";
 
@@ -74,9 +74,12 @@ export default function Project({ params }: WorkParams) {
   }
 
   const { post, project } = bundle;
+  const order = work.featuredProjectSlugs;
+  const nextSlug = order[(order.indexOf(project.slug) + 1) % order.length];
+  const next = nextSlug !== project.slug ? work.featuredProjects.find((p) => p.slug === nextSlug) : undefined;
 
   return (
-    <Column as="section" maxWidth="l" horizontal="center" className={styles.page}>
+    <>
       <script
         type="application/ld+json"
         suppressHydrationWarning
@@ -97,84 +100,69 @@ export default function Project({ params }: WorkParams) {
         }}
       />
 
-      <div className={styles.hero}>
-        <Column gap="20">
-          <Button href="/work" variant="tertiary" weight="default" size="s" prefixIcon="chevronLeft">
-            Back to selected work
-          </Button>
+      <section className={`wrap ${styles.hero}`}>
+        <Link href="/work" className={styles.back}>
+          <span aria-hidden="true">←</span> All work
+        </Link>
+        <span className="eyebrow">
+          {project.platform} · {project.year}
+        </span>
+        <h1 className={`display display-l ${styles.title}`}>{project.name}</h1>
+        <p className={`lede ${styles.tagline}`}>{project.tagline}</p>
+      </section>
 
-          <div className={styles.heroGrid}>
-            <Column gap="16">
-              <Flex gap="8" wrap>
-                <Tag variant="neutral" size="s">
-                  {project.platform}
-                </Tag>
-                <Tag variant="brand" size="s">
-                  {project.status}
-                </Tag>
-                <Tag variant="accent" size="s">
-                  {project.year}
-                </Tag>
-              </Flex>
-              <Heading as="h1" variant="display-strong-l">
-                <LetterFx trigger="instant">
-                  {project.name}
-                </LetterFx>
-              </Heading>
-              <Text variant="heading-default-l" onBackground="neutral-weak">
-                {project.tagline}
-              </Text>
-              <Text variant="body-default-l" onBackground="neutral-medium">
-                {project.summary}
-              </Text>
-            </Column>
-
-            <Column gap="12">
-              <div className={styles.metaCard}>
-                <Column gap="8">
-                  <Text className={styles.sectionLabel}>Highlights</Text>
-                  {project.highlights.map((item) => (
-                    <Text key={item} variant="body-default-s" onBackground="neutral-strong">
-                      {item}
-                    </Text>
-                  ))}
-                </Column>
-              </div>
-              <div className={styles.metaCard}>
-                <Column gap="8">
-                  <Text className={styles.sectionLabel}>Core stack</Text>
-                  <Flex gap="8" wrap>
-                    {project.stack.map((item) => (
-                      <Tag key={item} variant="neutral" size="s">
-                        {item}
-                      </Tag>
-                    ))}
-                  </Flex>
-                </Column>
-              </div>
-            </Column>
+      <section className={`wrap ${styles.overview}`}>
+        <div className={styles.summary}>
+          <span className="eyebrow">The brief</span>
+          <p>{project.summary}</p>
+        </div>
+        <aside className={styles.meta}>
+          <div className={`card ${styles.metaCard}`}>
+            <span className="eyebrow">Status</span>
+            <p>{project.status}</p>
           </div>
-        </Column>
-      </div>
+          <div className={`card ${styles.metaCard}`}>
+            <span className="eyebrow">Highlights</span>
+            <ul>
+              {project.highlights.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+          <div className={`card ${styles.metaCard}`}>
+            <span className="eyebrow">Stack</span>
+            <div className="chips">
+              {project.stack.map((item) => (
+                <span key={item} className="chip chip-outline">
+                  {item}
+                </span>
+              ))}
+            </div>
+          </div>
+        </aside>
+      </section>
 
-      <RevealFx speed="slow" fillWidth>
-        {post.metadata.images.length > 0 && (
-          <TiltFx>
-            <SmartImage
-              priority
-              aspectRatio="16 / 9"
-              radius="l"
-              alt={project.name}
-              src={post.metadata.images[0]}
-            />
-          </TiltFx>
-        )}
-      </RevealFx>
+      {project.images.length > 0 && (
+        <section className={`wrap ${styles.cover}`}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={project.images[0]} alt="" />
+        </section>
+      )}
 
-      <Column style={{ margin: "auto" }} as="article" maxWidth="s">
+      <article className={`wrap ${styles.article}`}>
         <CustomMDX source={post.content} />
-      </Column>
+      </article>
+
+      {next && (
+        <section className={`wrap ${styles.next}`}>
+          <span className="hand">up next →</span>
+          <Link href={`/work/${next.slug}`} className={styles.nextLink}>
+            <span className="eyebrow">{next.platform}</span>
+            <span className="display display-m">{next.name}</span>
+          </Link>
+        </section>
+      )}
       <ScrollToHash />
-    </Column>
+    </>
   );
 }

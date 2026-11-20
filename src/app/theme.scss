@@ -1,0 +1,344 @@
+/*
+ * Site theme: warm "paper" palette, chunky soft serif display type,
+ * handwritten annotations, sticker-style imagery and pill buttons.
+ * Every page and component reads these tokens — change the palette here.
+ */
+
+:root {
+  /* Palette */
+  --paper: #f4ebee;
+  --paper-deep: #e8dbe1;
+  --paper-pink: #efc9e4;
+  --card: #fffafc;
+  --ink: #241320;
+  --ink-soft: #6f5a68;
+  --ink-faint: #9b8794;
+  --accent: #a3338a;
+  --accent-soft: #f3d4ea;
+  --sticker-blue: #3d6fe6;
+  --line: rgba(36, 19, 32, 0.14);
+  --line-strong: rgba(36, 19, 32, 0.28);
+
+  /* Type */
+  --font-display: var(--font-secondary), Georgia, serif;
+  --font-body: var(--font-primary), "Helvetica Neue", Arial, sans-serif;
+  --font-hand: var(--font-tertiary), "Bradley Hand", cursive;
+
+  /* Layout */
+  --gutter: clamp(1rem, 4vw, 3rem);
+  --max: 1240px;
+  --radius-card: 22px;
+  --shadow-soft: 0 24px 50px -24px rgba(36, 19, 32, 0.35);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Map Once UI tokens used by MDX content and remaining components */
+  --page-background: var(--paper);
+  --neutral-on-background-strong: var(--ink);
+  --neutral-on-background-medium: var(--ink-soft);
+  --neutral-on-background-weak: var(--ink-soft);
+  --brand-on-background-medium: var(--accent);
+  --brand-on-background-weak: var(--accent);
+  --neutral-alpha-weak: rgba(36, 19, 32, 0.05);
+  --neutral-alpha-medium: var(--line);
+  --font-family-body: var(--font-body);
+  --font-family-heading: var(--font-display);
+}
+
+html {
+  background: var(--paper);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+}
+
+/* Paper grain over everything, never blocks clicks */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.35;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.42 0 0 0 0 0.5 0 0 0 0.22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+a {
+  color: inherit;
+}
+
+/* ---------- Shared primitives ---------- */
+
+.wrap {
+  width: 100%;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding-inline: var(--gutter);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+
+  &::before {
+    content: "✧";
+    color: var(--accent);
+    font-size: 0.85rem;
+    letter-spacing: 0;
+  }
+}
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-variation-settings: "SOFT" 100, "WONK" 0;
+  letter-spacing: -0.025em;
+  line-height: 0.95;
+  color: var(--ink);
+  margin: 0;
+}
+
+.display-xl {
+  font-size: clamp(3.25rem, 8.5vw, 7rem);
+}
+
+.display-l {
+  font-size: clamp(2.5rem, 6vw, 4.75rem);
+}
+
+.display-m {
+  font-size: clamp(2rem, 4.2vw, 3.25rem);
+}
+
+.display-s {
+  font-size: clamp(1.4rem, 2.4vw, 1.85rem);
+  line-height: 1.1;
+}
+
+/* The italic accent word: "making." */
+.accent-word {
+  display: inline-block;
+  color: var(--accent);
+  font-style: italic;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+}
+
+.hand {
+  font-family: var(--font-hand);
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1.1;
+}
+
+.lede {
+  font-size: clamp(1rem, 1.3vw, 1.125rem);
+  line-height: 1.6;
+  color: var(--ink-soft);
+  max-width: 52ch;
+  margin: 0;
+}
+
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.4rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--ink);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-decoration: none;
+  line-height: 1;
+  transition:
+    transform 0.25s var(--ease),
+    background 0.25s var(--ease),
+    color 0.25s var(--ease);
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+}
+
+.btn-solid {
+  background: var(--ink);
+  color: var(--paper);
+
+  &:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+
+  &:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--ink);
+  font-size: 0.8rem;
+  line-height: 1.2;
+  box-shadow: 0 1px 0 rgba(36, 19, 32, 0.06);
+}
+
+.chip-outline {
+  background: transparent;
+  border: 1px solid var(--line-strong);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.card {
+  background: var(--card);
+  border-radius: var(--radius-card);
+  padding: clamp(1.25rem, 2.5vw, 1.75rem);
+  box-shadow: 0 1px 0 rgba(36, 19, 32, 0.05);
+}
+
+/* Photo treated like a die-cut sticker: white rim + coloured outlines */
+.sticker {
+  position: relative;
+  border-radius: 28px;
+  border: 10px solid #fff;
+  box-shadow:
+    0 0 0 5px var(--accent),
+    0 0 0 10px var(--sticker-blue),
+    var(--shadow-soft);
+  overflow: hidden;
+  background: var(--paper-deep);
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+/* Scroll reveal (progressively enhanced by <Reveal/>) */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.9s var(--ease),
+    transform 0.9s var(--ease);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ---------- Case study prose (doubled class beats Once UI's .mdx-content rules) ---------- */
+
+.mdx-content.mdx-content {
+  font-family: var(--font-body);
+  color: var(--ink-soft);
+}
+
+.mdx-content.mdx-content h2 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  color: var(--ink);
+  margin-top: 3rem;
+}
+
+.mdx-content.mdx-content h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--ink);
+}
+
+.mdx-content.mdx-content p,
+.mdx-content.mdx-content li {
+  font-size: 1.0625rem;
+}
+
+.mdx-content.mdx-content a {
+  color: var(--accent);
+}
+
+.mdx-content.mdx-content table {
+  background: var(--card);
+  border-radius: 14px;
+}
+
+.mdx-content.mdx-content pre {
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  border-radius: 14px;
+}
+
+.mdx-content.mdx-content code {
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+
+.mdx-content.mdx-content pre code {
+  color: inherit;
+}

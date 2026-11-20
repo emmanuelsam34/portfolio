@@ -1,4 +1,3 @@
-import { Column, Flex, Heading, Text } from "@/once-ui/components";
 import { Projects } from "@/components/work/Projects";
 import { baseURL } from "@/app/resources";
 import { person, work } from "@/app/resources/content";
@@ -30,8 +29,10 @@ export async function generateMetadata() {
 }
 
 export default function Work() {
+  const platforms = Array.from(new Set(work.featuredProjects.map((p) => p.platform)));
+
   return (
-    <Column maxWidth="l" className={styles.page}>
+    <>
       <script
         type="application/ld+json"
         suppressHydrationWarning
@@ -56,26 +57,33 @@ export default function Work() {
         }}
       />
 
-      <div className={styles.hero}>
-        <Flex mobileDirection="column" fillWidth gap="xl" vertical="center">
-          <Column flex={5} gap="16">
-            <Text className={styles.sectionLabel}>Selected work</Text>
-            <Heading as="h1" variant="display-strong-s">
-              Product case studies across mobile apps, platform operations, and compliance workflows.
-            </Heading>
-          </Column>
-          <Column flex={7} gap="16">
-            <Text variant="body-default-l" onBackground="neutral-medium">
-              {work.intro}
-            </Text>
-            <Text variant="body-default-m" onBackground="neutral-weak">
-              The featured projects below are arranged intentionally to show the full system: tutor-facing mobile experiences, student booking flows, internal admin tooling, and verification orchestration.
-            </Text>
-          </Column>
-        </Flex>
-      </div>
+      <section className={`wrap ${styles.hero}`}>
+        <span className="eyebrow">Work</span>
+        <h1 className="display display-xl">
+          Here&apos;s what
+          <br />
+          I&apos;ve been <span className="accent-word">building.</span>
+        </h1>
+        <div className={styles.heroBottom}>
+          <p className="lede">{work.intro}</p>
+          <div className={styles.platforms}>
+            <span className={`hand ${styles.platformNote}`}>across {platforms.length} kinds of platform</span>
+            <div className="chips">
+              {platforms.map((platform) => (
+                <span key={platform} className="chip">
+                  {platform}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <Projects slugs={work.featuredProjectSlugs} />
-    </Column>
+      <section className={styles.band}>
+        <div className="wrap">
+          <Projects slugs={work.featuredProjectSlugs} />
+        </div>
+      </section>
+    </>
   );
 }
