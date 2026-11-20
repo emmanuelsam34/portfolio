@@ -70,7 +70,10 @@ export default function Home() {
       {/* ---------- Hero ---------- */}
       <section className={`wrap ${styles.hero}`}>
         <div className={styles.heroCopy}>
-          <span className="eyebrow">{person.role}</span>
+          <div className={styles.nameTag}>
+            <span className={styles.name}>{person.name}</span>
+            <span className={styles.role}>{person.role}</span>
+          </div>
           <h1 className={`display display-xl ${styles.heroTitle}`}>
             {home.heroLines.map((line) => (
               <span key={line} className={styles.line}>
@@ -86,7 +89,7 @@ export default function Home() {
             <a href="#work" className="btn btn-solid">
               See the work <span aria-hidden="true">↓</span>
             </a>
-            <a href={`mailto:${person.email}`} className="btn btn-ghost">
+            <a href="#contact" className="btn btn-ghost">
               Say hi
             </a>
           </div>

@@ -11,7 +11,7 @@ import { person } from "@/app/resources/content";
 const navItems = [
   { href: "/work", label: "Work", hint: "Case studies", match: (p: string) => p.startsWith("/work") },
   { href: "/about", label: "About", hint: "Story and CV", match: (p: string) => p.startsWith("/about") },
-  { href: `mailto:${person.email}`, label: "Contact", hint: "Say hi", match: () => false },
+  { href: "#contact", label: "Contact", hint: "Say hi", match: () => false },
 ];
 
 export const Header = () => {

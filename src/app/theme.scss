@@ -5,19 +5,21 @@
  */
 
 :root {
-  /* Palette */
-  --paper: #f4ebee;
-  --paper-deep: #e8dbe1;
-  --paper-pink: #efc9e4;
-  --card: #fffafc;
-  --ink: #241320;
-  --ink-soft: #6f5a68;
-  --ink-faint: #9b8794;
-  --accent: #a3338a;
-  --accent-soft: #f3d4ea;
-  --sticker-blue: #3d6fe6;
-  --line: rgba(36, 19, 32, 0.14);
-  --line-strong: rgba(36, 19, 32, 0.28);
+  /* Palette: warm stone paper, deep navy ink, burnt-orange accent */
+  --paper: #eeebe5;
+  --paper-deep: #dfdbd2;
+  --band: #18222e;
+  --band-soft: #243242;
+  --card: #fbfaf7;
+  --ink: #131a22;
+  --ink-soft: #56606b;
+  --ink-faint: #8a929b;
+  --accent: #c2531c;
+  --accent-soft: #f1dccd;
+  --accent-light: #f2a06a;
+  --sticker-2: #18222e;
+  --line: rgba(19, 26, 34, 0.14);
+  --line-strong: rgba(19, 26, 34, 0.28);
 
   /* Type */
   --font-display: var(--font-secondary), Georgia, serif;
@@ -28,7 +30,7 @@
   --gutter: clamp(1rem, 4vw, 3rem);
   --max: 1240px;
   --radius-card: 22px;
-  --shadow-soft: 0 24px 50px -24px rgba(36, 19, 32, 0.35);
+  --shadow-soft: 0 24px 50px -24px rgba(19, 26, 34, 0.35);
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 
   /* Map Once UI tokens used by MDX content and remaining components */
@@ -38,7 +40,7 @@
   --neutral-on-background-weak: var(--ink-soft);
   --brand-on-background-medium: var(--accent);
   --brand-on-background-weak: var(--accent);
-  --neutral-alpha-weak: rgba(36, 19, 32, 0.05);
+  --neutral-alpha-weak: rgba(19, 26, 34, 0.05);
   --neutral-alpha-medium: var(--line);
   --font-family-body: var(--font-body);
   --font-family-heading: var(--font-display);
@@ -70,7 +72,7 @@ body::before {
   pointer-events: none;
   opacity: 0.35;
   mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.42 0 0 0 0 0.5 0 0 0 0.22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.42 0 0 0 0 0.4 0 0 0 0.22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 ::selection {
@@ -222,7 +224,7 @@ a {
   color: var(--ink);
   font-size: 0.8rem;
   line-height: 1.2;
-  box-shadow: 0 1px 0 rgba(36, 19, 32, 0.06);
+  box-shadow: 0 1px 0 rgba(19, 26, 34, 0.06);
 }
 
 .chip-outline {
@@ -240,7 +242,7 @@ a {
   background: var(--card);
   border-radius: var(--radius-card);
   padding: clamp(1.25rem, 2.5vw, 1.75rem);
-  box-shadow: 0 1px 0 rgba(36, 19, 32, 0.05);
+  box-shadow: 0 1px 0 rgba(19, 26, 34, 0.05);
 }
 
 /* Photo treated like a die-cut sticker: white rim + coloured outlines */
@@ -250,7 +252,7 @@ a {
   border: 10px solid #fff;
   box-shadow:
     0 0 0 5px var(--accent),
-    0 0 0 10px var(--sticker-blue),
+    0 0 0 10px var(--sticker-2),
     var(--shadow-soft);
   overflow: hidden;
   background: var(--paper-deep);
@@ -341,4 +343,8 @@ a {
 
 .mdx-content.mdx-content pre code {
   color: inherit;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
 }
