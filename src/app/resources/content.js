@@ -323,6 +323,13 @@ const home = {
     "Portfolio of Emmanuel Agbedejobi, a mobile, platform, and infrastructure engineer building connected products across React Native, web platforms, backend integrations, payments, verification systems, and self-hosted infrastructure.",
   eyebrow: "Mobile, platform, and infrastructure systems",
   headline: "I build and operate products, from mobile apps to infrastructure.",
+  // Big hero heading: plain lines, then one accent word in italic magenta
+  heroLines: ["I build apps", "& run what"],
+  heroAccent: "powers them.",
+  heroNote: "yes, the servers too",
+  // Handwritten labels pointing at the photo
+  annotations: ["ships the apps", "runs the servers", "answers the 2am pager"],
+  photoCaption: "Lagos, probably debugging",
   intro:
     "React Native apps, platform dashboards, integrations, and the infrastructure that keeps them running.",
   subline:
@@ -360,6 +367,14 @@ const about = {
     link: "https://cal.com/emmanuel-agbedejobi",
     label: "Schedule a conversation",
   },
+  // Quick facts shown as small cards under the About hero
+  facts: [
+    { label: "Based in", value: "Lagos, Nigeria" },
+    { label: "Building since", value: "2018" },
+    { label: "Right now", value: "AmpliViral Digital Solutions" },
+    { label: "Focus", value: "Mobile, platform & infrastructure" },
+  ],
+  sinceYear: 2018,
   intro: {
     display: true,
     title: "Introduction",

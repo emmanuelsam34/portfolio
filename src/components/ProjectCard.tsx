@@ -1,71 +1,71 @@
-"use client";
-
-import { Column, Flex, Heading, RevealFx, SmartImage, SmartLink, Tag, Text, TiltFx } from "@/once-ui/components";
+import Link from "next/link";
 
 import styles from "./ProjectCard.module.scss";
 
 interface ProjectCardProps {
   href: string;
+  index: number;
+  total: number;
   priority?: boolean;
   images: string[];
   title: string;
   description: string;
-  summary?: string;
   platform?: string;
-  status?: string;
   year?: string;
   stack?: string[];
-  highlights?: string[];
-  link?: string;
 }
+
+const pad = (n: number) => String(n).padStart(2, "0");
 
 export const ProjectCard: React.FC<ProjectCardProps> = ({
   href,
+  index,
+  total,
   priority = false,
   images = [],
   title,
   description,
-  summary,
   platform,
-  status,
   year,
   stack = [],
-  highlights = [],
-  link,
 }) => {
   const previewImage = images[0];
-  const previewHighlights = highlights.slice(0, 3);
-  const previewStack = stack.slice(0, 4);
 
   return (
-    <Column className={styles.card} fillWidth gap="m">
-      <SmartLink href={href} fillWidth>
-        <TiltFx flex={1}>
-          {previewImage && (
-            <SmartImage
-              priority={priority}
-              className={styles.media}
-              aspectRatio="16 / 10"
-              radius="l"
-              alt={title}
-              src={previewImage}
-            />
-          )}
-        </TiltFx>
-      </SmartLink>
-        <Column fillWidth gap="8">
-          <Flex fillWidth horizontal="space-between" vertical="center">
-            <Text variant="heading-strong-l">{title}</Text>
-            {platform && (
-              <Tag variant="neutral" size="s">
-                {platform}
-              </Tag>
-            )}
-          </Flex>
-          <Text variant="body-default-s" onBackground="neutral-weak">
-            {description}
-          </Text>
-        </Column>
-    </Column>
+    <Link href={href} className={styles.card}>
+      <div className={styles.frame}>
+        {previewImage && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={previewImage}
+            alt=""
+            loading={priority ? "eager" : "lazy"}
+            className={styles.image}
+          />
+        )}
+        <span className={styles.counter}>
+          {pad(index + 1)}
+          <small>/{pad(total)}</small>
+        </span>
+      </div>
+
+      <div className={styles.body}>
+        <span className={styles.meta}>
+          {[platform, year].filter(Boolean).join(" · ")}
+        </span>
+        <h3 className={styles.title}>{title}</h3>
+        <p className={styles.description}>{description}</p>
+        <div className="chips">
+          {stack.slice(0, 4).map((item) => (
+            <span key={item} className="chip chip-outline">
+              {item}
+            </span>
+          ))}
+        </div>
+        <span className={styles.more}>
+          Read the case study <span aria-hidden="true">→</span>
+        </span>
+      </div>
+    </Link>
   );
 };

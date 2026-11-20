@@ -1,7 +1,115 @@
-@media (--s) {
-    .mobile {
-        text-align: center;
-        flex-direction: column;
-        align-items: center;
+.footer {
+  background: var(--ink);
+  color: var(--paper);
+  margin-top: clamp(4rem, 10vw, 8rem);
+  border-radius: 36px 36px 0 0;
+}
+
+.inner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 8vw, 6rem) var(--gutter) 2rem;
+}
+
+.cta {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.eyebrow {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--paper-pink);
+
+  &::before {
+    content: "✧ ";
+  }
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-variation-settings: "SOFT" 100;
+  font-size: clamp(2.5rem, 7vw, 5.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.025em;
+
+  em {
+    color: var(--paper-pink);
+    font-variation-settings: "SOFT" 100, "WONK" 1;
+  }
+}
+
+.copy {
+  margin: 0;
+  max-width: 46ch;
+  color: rgba(244, 235, 238, 0.7);
+  line-height: 1.6;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.primary {
+  display: inline-flex;
+  padding: 1rem 1.5rem;
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: none;
+  word-break: break-all;
+  transition: transform 0.25s var(--ease), background 0.25s;
+
+  &:hover {
+    background: var(--paper-pink);
+    transform: translateY(-2px) rotate(-1deg);
+  }
+}
+
+.note {
+  font-family: var(--font-hand);
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--paper-pink);
+  transform: rotate(-3deg);
+}
+
+.bottom {
+  margin-top: clamp(3rem, 7vw, 5rem);
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(244, 235, 238, 0.15);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: rgba(244, 235, 238, 0.6);
+}
+
+.social {
+  display: flex;
+  gap: 1.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  a {
+    color: var(--paper);
+    text-decoration: none;
+    font-weight: 600;
+
+    &:hover {
+      color: var(--paper-pink);
     }
+  }
 }

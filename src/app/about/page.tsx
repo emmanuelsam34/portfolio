@@ -1,7 +1,6 @@
-import { Avatar, Button, Column, Flex, Heading, LetterFx, RevealFx, SmartImage, Grid, Text } from "@/once-ui/components";
-
+import { Reveal } from "@/components/Reveal";
 import { baseURL } from "@/app/resources";
-import { about, person, social } from "@/app/resources/content";
+import { about, home, person, social } from "@/app/resources/content";
 
 import styles from "./about-page.module.scss";
 
@@ -30,8 +29,10 @@ export async function generateMetadata() {
 }
 
 export default function About() {
+  const currentYear = new Date().getFullYear();
+
   return (
-    <Column maxWidth="l" className={styles.page}>
+    <>
       <script
         type="application/ld+json"
         suppressHydrationWarning
@@ -48,150 +49,141 @@ export default function About() {
         }}
       />
 
-      <div className={styles.hero}>
-        <Flex mobileDirection="column" gap="l" fillWidth>
-          <Column flex={4} gap="24">
-            <Avatar src={person.avatar} size="xl" />
-            <Column gap="8">
-              <Heading as="h1" variant="display-strong-l">
-                <LetterFx trigger="instant">
-                  {person.name}
-                </LetterFx>
-              </Heading>
-              <Text variant="heading-default-l" onBackground="neutral-weak">
-                {person.role}
-              </Text>
-            </Column>
-            <Flex gap="12" wrap>
-              {about.calendar.display && (
-                <Button href={about.calendar.link} variant="primary" size="m">
-                  {about.calendar.label}
-                </Button>
-              )}
-              {social.map((item) => (
-                <Button key={item.name} href={item.link} variant="secondary" size="s" prefixIcon={item.icon}>
-                  {item.name}
-                </Button>
-              ))}
-            </Flex>
-          </Column>
-          <Column flex={6} gap="24">
-            <Text variant="body-default-l" onBackground="neutral-medium">
-              {about.intro.description}
-            </Text>
-            <Flex gap="12" direction="column">
-              {about.profile.map((paragraph) => (
-                <Text key={paragraph} variant="body-default-l" onBackground="neutral-strong">
-                  {paragraph}
-                </Text>
-              ))}
-            </Flex>
-          </Column>
-        </Flex>
-      </div>
+      {/* ---------- Hero ---------- */}
+      <section className={`wrap ${styles.hero}`}>
+        <div className={styles.heroCopy}>
+          <span className="eyebrow">About</span>
+          <h1 className="display display-xl">
+            Hi, I&apos;m
+            <br />
+            <span className="accent-word">{person.firstName}.</span>
+          </h1>
+          <p className="lede">{about.intro.description}</p>
 
-      <div className={styles.panel}>
-        <Column gap="16">
-          <Text className={styles.sectionLabel}>{about.work.title}</Text>
-          <Heading as="h2" variant="display-strong-s">
-            Experience shaped by product delivery, platform coordination, and long-lived systems.
-          </Heading>
-          <div className={styles.timeline}>
-            {about.work.experiences.map((experience) => (
-              <div key={`${experience.company}-${experience.role}`} className={styles.timelineItem}>
-                <Flex mobileDirection="column" gap="12" fillWidth>
-                  <Column flex={5} gap="4">
-                    <Text variant="heading-strong-l">{experience.company}</Text>
-                    <Text variant="body-default-s" onBackground="brand-weak">
-                      {experience.role}
-                    </Text>
-                  </Column>
-                  <Column flex={7} gap="12">
-                    <Text variant="body-default-s" onBackground="neutral-weak">
-                      {experience.timeframe}
-                    </Text>
-                    <Column as="ul" gap="8" className={styles.list}>
-                      {experience.achievements.map((item) => (
-                        <Text as="li" key={item} variant="body-default-s" onBackground="neutral-strong">
-                          {item}
-                        </Text>
-                      ))}
-                    </Column>
-                  </Column>
-                </Flex>
+          <dl className={styles.facts}>
+            {about.facts.map((fact) => (
+              <div key={fact.label} className={styles.fact}>
+                <dt>{fact.label}</dt>
+                <dd>{fact.value}</dd>
               </div>
             ))}
-          </div>
-        </Column>
-      </div>
+          </dl>
 
-      <div className={styles.panel}>
-        <Column gap="16">
-          <Text className={styles.sectionLabel}>{about.capabilities.title}</Text>
-          <Heading as="h2" variant="display-strong-s">
-            Where I add the most value.
-          </Heading>
-          <div className={styles.grid}>
-            {about.capabilities.groups.map((group) => (
-              <div key={group.title} className={styles.capabilityCard}>
-                <Column gap="12">
-                  <Text variant="heading-strong-l">{group.title}</Text>
-                  <Column as="ul" gap="8" className={styles.list}>
-                    {group.items.map((item) => (
-                      <Text as="li" key={item} variant="body-default-s" onBackground="neutral-strong">
-                        {item}
-                      </Text>
-                    ))}
-                  </Column>
-                </Column>
-              </div>
-            ))}
-          </div>
-        </Column>
-      </div>
-
-      <div className={styles.panel}>
-        <Column gap="16">
-          <Text className={styles.sectionLabel}>{about.technical.title}</Text>
-          <Heading as="h2" variant="display-strong-s">
-            Core tools I reach for.
-          </Heading>
-          <div className={styles.grid}>
-            {about.technical.skills.map((skill) => (
-              <div key={skill.title} className={styles.capabilityCard}>
-                <Column gap="8">
-                  <Text variant="heading-strong-l">{skill.title}</Text>
-                  <Text variant="body-default-s" onBackground="neutral-medium">
-                    {skill.description}
-                  </Text>
-                </Column>
-              </div>
-            ))}
-          </div>
-        </Column>
-      </div>
-
-      <div className={styles.panel}>
-        <Column gap="12">
-          <Text className={styles.sectionLabel}>{about.contact.title}</Text>
-          <Heading as="h2" variant="display-strong-s">
-            Open to building with teams that care about product quality and systems thinking.
-          </Heading>
-          <Text variant="body-default-m" onBackground="neutral-medium">
-            {about.contact.description}
-          </Text>
-          <Flex gap="12" wrap>
-            <Button href={`mailto:${person.email}`} variant="primary" size="m">
-              Email Emmanuel
-            </Button>
+          <div className="btn-row">
             {about.calendar.display && (
-              <Button href={about.calendar.link} variant="secondary" size="m">
-                Book a call
-              </Button>
+              <a href={about.calendar.link} className="btn btn-solid" target="_blank" rel="noopener noreferrer">
+                {about.calendar.label} <span aria-hidden="true">↗</span>
+              </a>
             )}
-          </Flex>
-        </Column>
-      </div>
-    </Column>
+            <a href="/work" className="btn btn-ghost">
+              See the work
+            </a>
+          </div>
+        </div>
+
+        <div className={styles.heroVisual}>
+          <h2 className={`display display-m ${styles.visualTitle}`}>What I do</h2>
+          <div className={styles.photoWrap}>
+            <div className={`sticker ${styles.photo}`}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={person.avatar} alt={person.name} />
+            </div>
+            {home.annotations.map((note, i) => (
+              <span key={note} className={`hand ${styles.note} ${styles[`note${i + 1}`]}`}>
+                ← {note}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- Story ---------- */}
+      <section className={`wrap ${styles.story}`}>
+        <Reveal>
+          <span className="eyebrow">The longer version</span>
+        </Reveal>
+        <div className={styles.storyBody}>
+          {about.profile.map((paragraph, i) => (
+            <Reveal key={paragraph} delay={i * 0.08} as="p">
+              {paragraph}
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      {/* ---------- Work history ---------- */}
+      <section className={`wrap ${styles.section}`}>
+        <Reveal className={styles.sectionHead}>
+          <div>
+            <span className="eyebrow">Work history</span>
+            <h2 className="display display-l">
+              {about.sinceYear} to now
+            </h2>
+          </div>
+          <p className="lede">
+            {currentYear - about.sinceYear} years, one thread: products that behave like one system.
+          </p>
+        </Reveal>
+
+        <ol className={styles.timeline}>
+          {about.work.experiences.map((experience) => (
+            <Reveal as="li" key={`${experience.company}-${experience.role}`} className={styles.job}>
+              <span className={styles.jobTime}>{experience.timeframe}</span>
+              <div>
+                <h3 className="display display-s">{experience.company}</h3>
+                <span className={styles.jobRole}>{experience.role}</span>
+              </div>
+              <ul className={styles.jobList}>
+                {experience.achievements.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </Reveal>
+          ))}
+        </ol>
+      </section>
+
+      {/* ---------- Toolkit ---------- */}
+      <section className={`wrap ${styles.section}`}>
+        <Reveal>
+          <span className="eyebrow">{about.technical.title}</span>
+          <h2 className={`display display-l ${styles.toolTitle}`}>Tools I reach for</h2>
+        </Reveal>
+        <div className={styles.toolGrid}>
+          {about.technical.skills.map((skill, i) => (
+            <Reveal key={skill.title} delay={i * 0.06} className={`card ${styles.toolCard}`}>
+              <h3 className="display display-s">{skill.title}</h3>
+              <div className="chips">
+                {skill.description.split(",").map((item) => (
+                  <span key={item} className="chip chip-outline">
+                    {item.trim()}
+                  </span>
+                ))}
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      {/* ---------- Elsewhere ---------- */}
+      <section className={`wrap ${styles.section}`}>
+        <Reveal className={styles.elsewhere}>
+          <span className="eyebrow">Elsewhere</span>
+          <div className="chips">
+            {social.map((item) => (
+              <a
+                key={item.name}
+                href={item.link}
+                className="btn btn-ghost"
+                target={item.link.startsWith("mailto:") ? undefined : "_blank"}
+                rel="noopener noreferrer"
+              >
+                {item.name} <span aria-hidden="true">↗</span>
+              </a>
+            ))}
+          </div>
+        </Reveal>
+      </section>
+    </>
   );
 }
