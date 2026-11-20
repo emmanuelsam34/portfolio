@@ -59,7 +59,7 @@ const featuredProjects = [
       "Payout and verification readiness",
     ],
     repoPathLabel: "LIBL-Classroom-Tutor-App/LIBL-Classroom-tutor-app",
-    images: ["https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1600&auto=format&fit=crop"],
+    images: ["https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?q=80&w=1600&auto=format&fit=crop"],
   },
   {
     slug: "libl-classroom-student-app",
@@ -83,7 +83,7 @@ const featuredProjects = [
       "Chat and session management",
     ],
     repoPathLabel: "Student-App-LIBL-Classroom/LIBL-Classroom-student-app",
-    images: ["https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1600&auto=format&fit=crop"],
+    images: ["https://images.unsplash.com/photo-1551650975-87deedd944c3?q=80&w=1600&auto=format&fit=crop"],
   },
   {
     slug: "libl-classroom-admin-dashboard",
@@ -107,7 +107,7 @@ const featuredProjects = [
       "Financial operations and payouts",
     ],
     repoPathLabel: "libl-classroom-admin",
-    images: ["https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1600&auto=format&fit=crop"],
+    images: ["https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1600&auto=format&fit=crop"],
   },
   {
     slug: "libl-online-school-enrollment-portal",
@@ -144,7 +144,7 @@ const featuredProjects = [
       "Catchment-based fee tiering with immutable offer freezing",
     ],
     repoPathLabel: "LIBL Online School Enrollment Portal",
-    images: ["https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=1600&auto=format&fit=crop"],
+    images: ["https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?q=80&w=1600&auto=format&fit=crop"],
   },
   {
     slug: "libl-classroom-desktop",
@@ -168,7 +168,7 @@ const featuredProjects = [
       "CI-built macOS and Windows installers",
     ],
     repoPathLabel: "libl-classroom-desktop",
-    images: ["https://images.unsplash.com/photo-1587440871875-191322ee64b0?q=80&w=1600&auto=format&fit=crop"],
+    images: ["https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?q=80&w=1600&auto=format&fit=crop"],
   },
   {
     slug: "kyc-verification-portal",
@@ -192,7 +192,7 @@ const featuredProjects = [
       "Status tracking and notification flows",
     ],
     repoPathLabel: "kyc-verification-portal",
-    images: ["https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=1600&auto=format&fit=crop"],
+    images: ["https://images.unsplash.com/photo-1633265486064-086b219458ec?q=80&w=1600&auto=format&fit=crop"],
   },
   {
     slug: "bbb-live-class-infrastructure",
@@ -215,7 +215,7 @@ const featuredProjects = [
       "Synthetic, process, and SSL monitoring",
       "Custom BBB metrics via OpenMetrics exporter",
     ],
-    images: ["https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=1600&auto=format&fit=crop"],
+    images: ["https://images.unsplash.com/photo-1520869562399-e772f042f422?q=80&w=1600&auto=format&fit=crop"],
   },
   {
     slug: "enterprise-digital-appraisal-system",
@@ -249,7 +249,7 @@ const featuredProjects = [
       "Automated objective carry-forward to next-quarter cycles",
       "100% UI/API delivery within zero-CLI constraints",
     ],
-    images: ["https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1600&auto=format&fit=crop"],
+    images: ["https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=1600&auto=format&fit=crop"],
   },
   {
     slug: "digital-asset-tracking-system",
@@ -282,7 +282,7 @@ const featuredProjects = [
       "Single-asset integrity rules and concurrency asset locking",
       "Extends native ERPNext Asset & Asset Movement DocTypes cleanly",
     ],
-    images: ["https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1600&auto=format&fit=crop"],
+    images: ["https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=1600&auto=format&fit=crop"],
   },
   // Eleglam Cakes entry temporarily hidden from the work section and homepage.
   // Uncomment this block to restore it (the case study MDX at
