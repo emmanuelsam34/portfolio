@@ -1,4 +1,5 @@
 import { person, social } from "@/app/resources/content";
+import { CopyEmail } from "./CopyEmail";
 import styles from "./Footer.module.scss";
 
 export const Footer = () => {
@@ -19,6 +20,7 @@ export const Footer = () => {
             <a className={styles.primary} href={`mailto:${person.email}`}>
               {person.email}
             </a>
+            <CopyEmail email={person.email} className={styles.copyBtn} />
             <span className={styles.note}>I reply faster than my CI runs</span>
           </div>
         </div>

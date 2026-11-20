@@ -7,7 +7,7 @@
   background: var(--card);
   color: var(--ink);
   text-decoration: none;
-  box-shadow: 0 1px 0 rgba(36, 19, 32, 0.05);
+  box-shadow: 0 1px 0 rgba(19, 26, 34, 0.05);
   transition:
     transform 0.5s var(--ease),
     box-shadow 0.5s var(--ease);
@@ -57,7 +57,7 @@
   line-height: 1;
   letter-spacing: -0.03em;
   color: #fff;
-  text-shadow: 0 2px 16px rgba(36, 19, 32, 0.45);
+  text-shadow: 0 2px 16px rgba(19, 26, 34, 0.45);
 
   small {
     font-size: 1rem;
