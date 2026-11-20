@@ -16,7 +16,8 @@ export function Reveal({ children, as: Tag = "div", className, delay = 0 }: Reve
 
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
+    // Without IntersectionObserver we could never un-hide it, so leave it visible.
+    if (!el || typeof IntersectionObserver === "undefined") return;
     el.classList.add("reveal");
     const observer = new IntersectionObserver(
       (entries) => {
