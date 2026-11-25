@@ -52,6 +52,7 @@ export default function Work() {
     brief: p.summary,
     did: p.responsibilities[0],
     result: p.highlights.slice(0, 3).join(" · "),
+    resultShort: p.highlights.slice(0, 2).join(" · "),
   }));
 
   const stack = Array.from(new Set(projects.flatMap((p) => p.stack)));
