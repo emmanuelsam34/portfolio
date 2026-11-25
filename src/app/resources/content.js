@@ -327,6 +327,14 @@ const home = {
   heroLines: ["I build apps", "& run what"],
   heroAccent: "powers them.",
   heroNote: "yes, the servers too",
+  // Full-screen home hero (left column)
+  greeting: "hi there,",
+  heroLead: "I build apps people rely on, and run the servers under them.",
+  heroBody:
+    "Tutoring platforms, payments, KYC and live classes for LIBL and client teams. Mobile, web, desktop and the infrastructure in between.",
+  // Small card under the phone on the right
+  nowLabel: "Now building",
+  nowTitle: "LIBL Online School enrollment portal",
   // Handwritten labels pointing at the photo
   annotations: ["ships the apps", "runs the servers", "answers the 2am pager"],
   photoCaption: "Lagos, probably debugging",

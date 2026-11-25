@@ -59,7 +59,7 @@ export default function Work() {
 
       <section className={`wrap ${styles.hero}`}>
         <span className="eyebrow">Work</span>
-        <h1 className="display display-xl">
+        <h1 data-split className="display display-xl">
           Here&apos;s what
           <br />
           I&apos;ve been <span className="accent-word">building.</span>
@@ -79,7 +79,7 @@ export default function Work() {
         </div>
       </section>
 
-      <section className={styles.band}>
+      <section className={`${styles.band} crumple-long`}>
         <div className="wrap">
           <Projects slugs={work.featuredProjectSlugs} />
         </div>

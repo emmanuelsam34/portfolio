@@ -1,126 +1,126 @@
 .header {
-  position: sticky;
+  position: fixed !important;
   top: 0;
-  z-index: 50;
-  background: color-mix(in srgb, var(--paper) 82%, transparent);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid transparent;
-}
-
-.inner {
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: 1rem var(--gutter);
+  left: 0;
+  right: 0;
+  z-index: 100 !important;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 12px;
+  padding: 14px var(--gutter);
+  transition: padding 0.4s var(--ease);
 }
 
-.identity {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  text-decoration: none;
-  color: var(--ink);
-}
-
-.mark {
-  display: grid;
-  place-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 50%;
-  background: var(--ink);
-  color: var(--paper);
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1rem;
-  letter-spacing: -0.02em;
-  transition: transform 0.4s var(--ease), background 0.3s;
-}
-
-.identity:hover .mark {
-  transform: rotate(-12deg);
-  background: var(--accent);
-}
-
-.identityText {
-  display: flex;
-  flex-direction: column;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  line-height: 1.5;
-}
-
-.identityRole {
-  color: var(--ink-soft);
-}
-
-.nav {
-  display: flex;
-  gap: clamp(1rem, 3vw, 2.5rem);
-}
-
-.link {
-  display: flex;
-  flex-direction: column;
-  text-decoration: none;
-  color: var(--ink);
-  position: relative;
-  padding-bottom: 0.25rem;
-}
-
-.hint {
-  font-size: 0.6rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-  transition: color 0.25s;
-}
-
-.label {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.15rem;
-  letter-spacing: -0.01em;
-}
-
-.link::after {
-  content: "";
+.bg {
   position: absolute;
-  left: 0;
-  bottom: 0;
-  height: 2px;
-  width: 100%;
-  background: var(--accent);
-  border-radius: 2px;
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.35s var(--ease);
+  inset: 0;
+  background: var(--paper-2);
+  opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
+  box-shadow: 0 10px 24px -20px rgba(0, 0, 0, 0.5);
 }
 
-.link:hover::after,
-.active::after {
-  transform: scaleX(1);
+.scrolled {
+  padding-block: 8px;
+
+  .bg {
+    opacity: 0.94;
+  }
 }
 
-.link:hover .hint,
-.active .hint {
+.logo {
+  position: relative;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-variation-settings: "SOFT" 100, "WONK" 1, "opsz" 144;
+  font-size: 28px;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-decoration: none;
+  color: var(--ink);
+  transition: transform 0.5s var(--ease);
+
+  &:hover {
+    transform: rotate(-4deg);
+  }
+}
+
+.dot {
   color: var(--accent);
 }
 
-@media (max-width: 640px) {
-  .identityText,
-  .hint {
-    display: none;
+.pill {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 99px;
+  background: var(--card);
+  box-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.04),
+    0 12px 28px -16px rgba(0, 0, 0, 0.4),
+    inset 0 0 0 1px var(--line);
+}
+
+.link {
+  height: 38px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  border-radius: 99px;
+  font: 700 14px / 1 var(--font-body);
+  text-decoration: none;
+  color: var(--ink);
+  transition: background 0.3s;
+
+  &:hover {
+    background: var(--paper);
+  }
+}
+
+.active {
+  background: var(--brand-soft);
+}
+
+.cta {
+  height: 38px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 99px;
+  background: var(--ink);
+  color: var(--paper-2);
+  font: 700 14px / 1 var(--font-body);
+  text-decoration: none;
+  transition: background 0.3s, color 0.3s;
+
+  svg {
+    width: 14px;
+    height: 14px;
+    transition: transform 0.4s var(--ease);
   }
 
-  .label {
-    font-size: 1rem;
+  &:hover {
+    background: var(--accent);
+
+    svg {
+      transform: rotate(-45deg);
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .logo {
+    font-size: 24px;
+  }
+
+  .link,
+  .cta {
+    padding: 0 12px;
+    font-size: 13px;
   }
 }

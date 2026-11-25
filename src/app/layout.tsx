@@ -6,6 +6,7 @@ import classNames from "classnames";
 import { Caveat, Figtree, Fraunces, Source_Code_Pro } from "next/font/google";
 
 import { Footer, Header, RouteGuard } from "@/components";
+import { Motion } from "@/components/Motion";
 import { baseURL, style } from "@/app/resources";
 import { person, home } from "@/app/resources/content";
 
@@ -83,11 +84,14 @@ export default function RootLayout({ children }: RootLayoutProps) {
       className={classNames(primary.variable, secondary.variable, tertiary.variable, code.variable)}
     >
       <body>
+        <div className="paper" aria-hidden="true" />
+        <div className="grain" aria-hidden="true" />
         <Header />
         <main style={{ flex: 1, position: "relative" }}>
           <RouteGuard>{children}</RouteGuard>
         </main>
         <Footer />
+        <Motion word={person.firstName.toUpperCase()} />
       </body>
     </html>
   );

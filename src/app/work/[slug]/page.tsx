@@ -107,7 +107,7 @@ export default function Project({ params }: WorkParams) {
         <span className="eyebrow">
           {project.platform} · {project.year}
         </span>
-        <h1 className={`display display-l ${styles.title}`}>{project.name}</h1>
+        <h1 data-split className={`display display-l ${styles.title}`}>{project.name}</h1>
         <p className={`lede ${styles.tagline}`}>{project.tagline}</p>
       </section>
 
