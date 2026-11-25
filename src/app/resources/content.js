@@ -493,6 +493,55 @@ const work = {
     "These projects show how I work across product surfaces, from customer-facing mobile experiences and client websites to the dashboards and integrations that support them behind the scenes.",
   featuredProjects,
   featuredProjectSlugs,
+  // Hero (left column)
+  heroLead:
+    "Hi. This is where the builds live: mobile apps, the dashboards behind them, a proctored exam platform, KYC, and the servers that keep live classes running. I designed most of them and I still keep most of them running.",
+  heroNote: "a few of them, anyway",
+  // The pinned reel
+  reelHint: "keep scrolling, it flips itself",
+  // "By the numbers" feature. Every figure here comes from the case studies.
+  numbers: {
+    eyebrow: "LIBL, by the numbers",
+    title: "What happened when I built a whole school's stack",
+    body: [
+      "LIBL needed tutors, students and admins on the same page, plus live classes that don't drop. So I built every surface: two mobile apps, a desktop app, an admin dashboard, an enrollment portal and the conferencing servers under them.",
+      "The part I'm proudest of: it all runs on one backend, so a booking made on a phone shows up everywhere else straight away.",
+    ],
+    phones: ["libl-classroom-tutor-app", "libl-classroom-student-app"],
+    stats: [
+      { value: "6", label: "LIBL products in this portfolio, from mobile to infrastructure" },
+      { value: "4", label: "platforms: mobile, web, desktop and self-hosted servers" },
+      { value: "4", label: "detection engines in the enrollment exam's soft proctoring" },
+      { value: "30", label: "minute check-in window enforced for live classes" },
+      { value: "1", label: "shared Appwrite backend behind every app", wide: "libl-classroom-admin-dashboard" },
+    ],
+  },
+  // "Things you can hire me for"
+  services: {
+    note: "yes, all of it",
+    groups: [
+      {
+        title: "Build",
+        label: "product",
+        items: [
+          { name: "Mobile apps", detail: "Expo and React Native apps with booking, chat, payments and push notifications." },
+          { name: "Web platforms and dashboards", detail: "Admin tools, portals and internal dashboards in React, Next.js and Vite." },
+          { name: "Payments and verification", detail: "Paystack settlement, KYC flows, signed webhooks and the audit trail behind them." },
+          { name: "Desktop apps", detail: "Electron clients that share a backend with your mobile and web apps." },
+        ],
+      },
+      {
+        title: "Run",
+        label: "platform",
+        items: [
+          { name: "Self-hosted infrastructure", detail: "Linux, nginx, haproxy and Docker, deployed and operated in production." },
+          { name: "Observability and incidents", detail: "Monitoring, on-call, incident response and postmortem-driven hardening." },
+          { name: "Testing and QA", detail: "End-to-end automated tests and release checks that catch problems before users do." },
+          { name: "System architecture", detail: "Domain-driven monorepos and integrations designed to grow without rewrites." },
+        ],
+      },
+    ],
+  },
 };
 
 const newsletter = {
