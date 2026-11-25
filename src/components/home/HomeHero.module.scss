@@ -12,6 +12,47 @@
 }
 
 /* Torn-paper name */
+.nameWrap {
+  position: relative;
+  z-index: 3; /* letters and the hand sit above the photo */
+}
+
+/* The dragging hand: hidden until the phone animation shows it */
+.grabber {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 5; /* in front of the letters it is holding */
+  width: 46px;
+  opacity: 0;
+  pointer-events: none;
+  transform-origin: 30% 20%;
+  filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.28));
+
+  svg {
+    display: block;
+    width: 100%;
+    fill: var(--card);
+    stroke: var(--ink);
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+}
+
+@media (max-width: 560px) {
+  .grabber {
+    display: block;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grabber {
+    display: none !important;
+  }
+}
+
 .name {
   position: relative;
   z-index: 1;
