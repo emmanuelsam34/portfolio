@@ -7,8 +7,9 @@ import { Caveat, Figtree, Fraunces, Source_Code_Pro } from "next/font/google";
 
 import { Footer, Header, RouteGuard } from "@/components";
 import { Motion } from "@/components/Motion";
+import { SiteChrome } from "@/components/SiteChrome";
 import { baseURL, style } from "@/app/resources";
-import { person, home } from "@/app/resources/content";
+import { person, home, social } from "@/app/resources/content";
 
 export async function generateMetadata() {
   return {
@@ -90,7 +91,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <main style={{ flex: 1, position: "relative" }}>
           <RouteGuard>{children}</RouteGuard>
         </main>
-        <Footer />
+        <SiteChrome
+          footer={<Footer />}
+          email={person.email}
+          availability={person.availability}
+          socials={social.map(({ name, link }) => ({ name, link }))}
+        />
         <Motion word={person.firstName.toUpperCase()} />
       </body>
     </html>
