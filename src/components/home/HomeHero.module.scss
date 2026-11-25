@@ -1,0 +1,469 @@
+/* One full-screen composition, like the reference home page */
+.hero {
+  position: relative;
+  z-index: 2;
+  height: min(100svh, 1100px);
+  min-height: 680px;
+  margin-top: -76px; /* sit under the fixed header */
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: 82px var(--gutter) 18px;
+}
+
+/* Torn-paper name */
+.name {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  gap: clamp(4px, 0.7vw, 10px);
+
+  :global(.scrap) {
+    width: clamp(48px, 8.4vw, 140px);
+    font-size: clamp(40px, 7vw, 116px);
+  }
+}
+
+.mid {
+  position: relative;
+  width: 100%;
+  max-width: 1600px;
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: end;
+  gap: clamp(16px, 3vw, 50px);
+  min-height: 0;
+}
+
+/* Left: greeting and intro */
+.intro {
+  position: relative;
+  z-index: 3;
+  align-self: center;
+  max-width: 370px;
+
+  p {
+    margin: 14px 0 0;
+    color: var(--ink-soft);
+    font-size: 16px;
+    line-height: 1.55;
+  }
+
+  b {
+    color: var(--ink);
+  }
+}
+
+.greeting {
+  display: inline-block;
+  font-size: clamp(30px, 2.8vw, 42px);
+  transform: rotate(-5deg);
+}
+
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 22px;
+
+  :global(.btn) {
+    height: 46px;
+    padding: 0 20px;
+  }
+}
+
+/* Centre: portrait sticker, tilted, overlapping the name */
+.cut {
+  position: relative;
+  z-index: 2;
+  align-self: end;
+  height: calc(100% + min(7vh, 70px));
+  max-height: min(62vh, 700px);
+  margin-top: max(-7vh, -70px);
+  margin-bottom: 6px;
+  aspect-ratio: 4 / 5;
+  rotate: -3deg;
+}
+
+.photo {
+  height: 100%;
+  border-width: 12px;
+  border-radius: 30px;
+  box-shadow:
+    0 0 0 1px rgba(24, 34, 46, 0.08),
+    0 34px 46px -16px rgba(24, 34, 46, 0.45);
+}
+
+.noteWrap {
+  position: absolute;
+  left: calc(100% + 34px);
+  top: 4%;
+  rotate: 3deg;
+
+  :global(.hand) {
+    display: block;
+    font-size: 26px;
+    white-space: nowrap;
+    transform: rotate(-4deg);
+  }
+
+  :global(.scribble) {
+    position: relative;
+    margin: 2px 0 0 -10px;
+  }
+}
+
+/* Right: phone card cycling project shots + "now building" chip */
+.side {
+  position: relative;
+  z-index: 3;
+  align-self: center;
+  justify-self: end;
+  display: grid;
+  gap: 14px;
+  justify-items: end;
+}
+
+.clip {
+  position: relative;
+  display: block;
+  width: clamp(130px, 11vw, 176px);
+  aspect-ratio: 9 / 16;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 5px var(--card),
+    0 24px 40px -20px rgba(0, 0, 0, 0.5);
+  rotate: 4deg;
+  background: var(--ink);
+  transition: rotate 0.6s var(--ease);
+
+  &:hover {
+    rotate: 0deg;
+  }
+
+  img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    scale: 1.08;
+    transition:
+      opacity 0.8s ease,
+      scale 2.6s linear;
+  }
+
+  img.on {
+    opacity: 1;
+    scale: 1;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(10, 14, 20, 0.75), transparent 45%);
+  }
+}
+
+.clipTag {
+  position: absolute;
+  z-index: 1;
+  left: 8px;
+  top: 8px;
+  padding: 6px 9px 5px 8px;
+  border-radius: 99px;
+  background: var(--card);
+  color: var(--ink);
+  font: 700 9px / 1 var(--font-body);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+
+  &::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    background: var(--accent);
+    -webkit-mask: var(--star) center / contain no-repeat;
+    mask: var(--star) center / contain no-repeat;
+  }
+}
+
+.clipName {
+  position: absolute;
+  z-index: 1;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  color: #fff;
+  font: 700 12px / 1.25 var(--font-body);
+}
+
+.now {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px 10px 10px;
+  border-radius: 16px;
+  background: var(--card);
+  box-shadow:
+    0 14px 30px -18px rgba(0, 0, 0, 0.35),
+    inset 0 0 0 1px var(--line);
+  max-width: 270px;
+
+  small {
+    display: block;
+    font: 700 9px / 1 var(--font-body);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 5px;
+  }
+
+  b {
+    display: block;
+    font-size: 14px;
+    line-height: 1.2;
+  }
+}
+
+.eq {
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: 10px;
+  background: var(--ink);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 3px;
+  padding-bottom: 11px;
+
+  i {
+    width: 4px;
+    height: 16px;
+    border-radius: 2px;
+    background: var(--accent-light);
+    transform-origin: bottom;
+    animation: eq 1s ease-in-out infinite;
+
+    &:nth-child(2) {
+      animation-delay: -0.35s;
+      background: var(--brand);
+    }
+
+    &:nth-child(3) {
+      animation-delay: -0.7s;
+    }
+  }
+}
+
+@keyframes eq {
+  0%,
+  100% {
+    transform: scaleY(0.3);
+  }
+
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+/* Bottom: three door cards */
+.doors {
+  position: relative;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.door {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 16px;
+  background: var(--card);
+  color: var(--ink);
+  text-decoration: none;
+  box-shadow:
+    0 18px 30px -24px rgba(0, 0, 0, 0.4),
+    inset 0 0 0 1px var(--line);
+  transition: transform 0.5s var(--ease);
+
+  &:hover {
+    transform: translateY(-5px) rotate(-1deg);
+  }
+
+  &:hover .doorGo {
+    background: var(--ink);
+    color: var(--paper-2);
+    transform: rotate(-45deg);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+}
+
+.doorPic {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex: none;
+  background: var(--brand-soft);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 20%;
+  }
+}
+
+.doorStar::after {
+  content: "";
+  position: absolute;
+  inset: 13px;
+  background: var(--ink);
+  -webkit-mask: var(--star) center / contain no-repeat;
+  mask: var(--star) center / contain no-repeat;
+}
+
+.doorTxt {
+  flex: 1;
+  min-width: 0;
+
+  small {
+    display: block;
+    font: 700 10px / 1 var(--font-body);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  b {
+    display: block;
+    margin-top: 5px;
+    font: 700 26px / 1 var(--font-display);
+    font-variation-settings: "SOFT" 100, "WONK" 1, "opsz" 144;
+    letter-spacing: -0.01em;
+  }
+}
+
+.doorGo {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  box-shadow: inset 0 0 0 1.5px var(--line-strong);
+  transition:
+    background 0.3s,
+    color 0.3s,
+    transform 0.5s var(--ease);
+
+  svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* ---------- Tablet and phone: stack, like the reference ---------- */
+
+@media (max-width: 1180px) {
+  .noteWrap {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero {
+    height: auto;
+    min-height: 100svh;
+    padding-top: 80px;
+    padding-bottom: 32px;
+    grid-template-rows: auto auto auto;
+  }
+
+  .name {
+    :global(.scrap) {
+      width: 11vw;
+      font-size: 9vw;
+    }
+  }
+
+  .mid {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 0;
+  }
+
+  .cut {
+    order: 1;
+    height: 46vh;
+    max-height: none;
+    margin: 18px 0 0;
+  }
+
+  .side {
+    position: absolute;
+    right: 0;
+    top: 36%;
+    order: 2;
+  }
+
+  .clip {
+    width: 26vw;
+    max-width: 150px;
+  }
+
+  .now {
+    display: none;
+  }
+
+  .intro {
+    order: 3;
+    max-width: 520px;
+    text-align: center;
+    padding: 26px 0 18px;
+  }
+
+  .ctas {
+    justify-content: center;
+  }
+
+  .doors {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cut {
+    height: 42vh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eq i {
+    animation: none;
+    transform: scaleY(0.7);
+  }
+}

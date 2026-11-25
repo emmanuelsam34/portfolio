@@ -1,55 +1,58 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import classNames from "classnames";
 
 import styles from "@/components/Header.module.scss";
-import { routes } from "@/app/resources";
 import { person } from "@/app/resources/content";
 
 const navItems = [
-  { href: "/work", label: "Work", hint: "Case studies", match: (p: string) => p.startsWith("/work") },
-  { href: "/about", label: "About", hint: "Story and CV", match: (p: string) => p.startsWith("/about") },
-  { href: "#contact", label: "Contact", hint: "Say hi", match: () => false },
+  { href: "/work", label: "Work", match: (p: string) => p.startsWith("/work") },
+  { href: "/about", label: "About", match: (p: string) => p.startsWith("/about") },
 ];
 
 export const Header = () => {
   const pathname = usePathname() ?? "";
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <header className={styles.header}>
-      <div className={styles.inner}>
-        <Link href="/" className={styles.identity} aria-label={`${person.name}, home`}>
-          <span className={styles.mark} aria-hidden="true">
-            {person.firstName[0]}
-            {person.lastName[0]}
-          </span>
-          <span className={styles.identityText}>
-            <span>{person.name}</span>
-            <span className={styles.identityRole}>Engineer, {person.location.split(",")[0]}</span>
-          </span>
-        </Link>
+    <header className={classNames(styles.header, scrolled && styles.scrolled)}>
+      <span className={styles.bg} aria-hidden="true" />
+      <Link href="/" className={styles.logo} aria-label={`${person.name}, home`}>
+        {person.firstName.toLowerCase()}
+        <span className={styles.dot}>.</span>
+      </Link>
 
-        <nav className={styles.nav} aria-label="Main">
-          {navItems
-            .filter((item) => !item.href.startsWith("/") || routes[item.href as keyof typeof routes])
-            .map((item) => {
-              const active = item.match(pathname);
-              return (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  className={classNames(styles.link, active && styles.active)}
-                  aria-current={active ? "page" : undefined}
-                >
-                  <span className={styles.hint}>{item.hint}</span>
-                  <span className={styles.label}>{item.label}</span>
-                </a>
-              );
-            })}
-        </nav>
-      </div>
+      <nav className={styles.pill} aria-label="Main">
+        {navItems.map((item) => {
+          const active = item.match(pathname);
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={classNames(styles.link, active && styles.active)}
+              aria-current={active ? "page" : undefined}
+            >
+              {item.label}
+            </Link>
+          );
+        })}
+        <a href="#contact" className={styles.cta}>
+          Say hi
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        </a>
+      </nav>
     </header>
   );
 };

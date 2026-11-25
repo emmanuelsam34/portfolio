@@ -53,7 +53,7 @@ export default function About() {
       <section className={`wrap ${styles.hero}`}>
         <div className={styles.heroCopy}>
           <span className="eyebrow">About</span>
-          <h1 className="display display-xl">
+          <h1 data-split className="display display-l">
             Hi, I&apos;m
             <br />
             <span className="accent-word">{person.firstName}.</span>
@@ -116,7 +116,7 @@ export default function About() {
         <Reveal className={styles.sectionHead}>
           <div>
             <span className="eyebrow">Work history</span>
-            <h2 className="display display-l">
+            <h2 data-split className="display display-l">
               {about.sinceYear} to now
             </h2>
           </div>
