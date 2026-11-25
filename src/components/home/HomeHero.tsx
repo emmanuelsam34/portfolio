@@ -24,6 +24,8 @@ interface HomeHeroProps {
   nowLabel: string;
   nowTitle: string;
   workThumb: string;
+  /** A right hand photo with a transparent background; it is mirrored for the left side. Falls back to a drawn hand. */
+  handSrc?: string;
 }
 
 const Arrow = () => (
@@ -65,58 +67,79 @@ export function HomeHero(props: HomeHeroProps) {
 
       gsap.to(`.${styles.cut}`, { y: -8, duration: 3.2, ease: "sine.inOut", yoyo: true, repeat: -1, delay: 2 });
 
-      // Phones: a hand grabs the last letter and drags the name left and right.
-      // Letters trail behind it (stagger from the grabbed end) and tilt with the pull,
-      // then spring back with an elastic wobble when it lets go.
+      // Phones: two hands, one from each side, play tug-of-war with the name.
+      // The left hand grips the first letter, the right hand the last. Each pull
+      // drags the letters toward the puller (staggered from its end, tilting with
+      // the strain) and drags the other hand along. Then both let go and the
+      // letters spring back with an elastic wobble.
       const mm = gsap.matchMedia();
       mm.add("(max-width: 560px)", () => {
-        const hand = el.querySelector<HTMLElement>(`.${styles.grabber}`);
-        if (!hand || !scraps.length) return;
+        const right = el.querySelector<HTMLElement>(`.${styles.grabber}[data-side="right"]`);
+        const left = el.querySelector<HTMLElement>(`.${styles.grabber}[data-side="left"]`);
+        const nameBox = el.querySelector<HTMLElement>(`.${styles.nameWrap}`);
+        if (!right || !left || !nameBox || scraps.length < 2) return;
+        const first = scraps[0];
         const last = scraps[scraps.length - 1];
-        // resting tilt of each letter, read once the entrance has settled
+        const n = scraps.length;
         let base: number[] = scraps.map(() => 0);
-        const pull = (dx: number, tilt: number, duration: number) => ({
+
+        // Letters lean toward whoever is pulling; the nearer a letter is to the puller, the sooner and harder it moves
+        const tug = (dx: number, from: "start" | "end", duration: number) => ({
           x: dx,
-          rotate: (i: number) => base[i] + tilt * (0.4 + (i / scraps.length) * 0.6),
+          rotate: (i: number) => {
+            const nearness = from === "end" ? i / (n - 1) : 1 - i / (n - 1);
+            return base[i] + Math.sign(dx) * (3 + nearness * 9);
+          },
           duration,
-          ease: "power2.inOut",
-          stagger: { each: 0.035, from: "end" as const },
+          ease: "power3.inOut",
+          stagger: { each: 0.03, from },
         });
-        // park the hand just right of the last letter
-        const nameBox = el.querySelector<HTMLElement>(`.${styles.nameWrap}`)!;
+
+        // Park each hand on its letter's outer edge (measured once the letters have settled)
         const place = () => {
-          const lb = last.getBoundingClientRect();
           const wb = nameBox.getBoundingClientRect();
-          gsap.set(hand, { left: lb.left - wb.left + lb.width * 0.55, top: lb.top - wb.top + lb.height * 0.35 });
+          const lb = last.getBoundingClientRect();
+          const fb = first.getBoundingClientRect();
+          gsap.set(right, { left: lb.right - wb.left - 18, top: lb.top - wb.top + lb.height * 0.2 });
+          gsap.set(left, { left: fb.left - wb.left - right.offsetWidth + 18, top: fb.top - wb.top + fb.height * 0.2 });
         };
         window.addEventListener("resize", place);
 
-        const tl = gsap.timeline({ repeat: -1, repeatDelay: 2.6, delay: 2.4 });
+        const tl = gsap.timeline({ repeat: -1, repeatDelay: 2.4, delay: 2.4 });
         tl.call(() => {
           if (!base.some(Boolean)) base = scraps.map((s) => Number(gsap.getProperty(s, "rotate")) || 0);
-          place(); // letters have settled: grip the last one
+          place();
         })
-          .fromTo(hand, { opacity: 0, x: 60, y: 30, rotate: 20, scale: 1 }, { opacity: 1, x: 0, y: 0, rotate: -10, duration: 0.6, ease: "power3.out" })
-          .to(hand, { scale: 0.86, rotate: -18, duration: 0.15, ease: "power2.in" }) // grab
-          .addLabel("drag")
-          .to(hand, { x: -46, rotate: -24, duration: 0.55, ease: "power2.inOut" }, "drag")
-          .to(scraps, pull(-42, -11, 0.55), "drag")
-          .addLabel("back")
-          .to(hand, { x: 34, rotate: -4, duration: 0.7, ease: "power2.inOut" }, "back")
-          .to(scraps, pull(30, 8, 0.7), "back")
-          .addLabel("let")
-          .to(hand, { x: 8, rotate: -12, duration: 0.35, ease: "power1.inOut" }, "let")
-          .to(scraps, pull(6, 2, 0.35), "let")
-          .to(hand, { scale: 1, rotate: 4, duration: 0.15 }) // release
+          // both hands reach in from their own side and grab
+          .fromTo(right, { opacity: 0, x: 70, y: 16, rotate: 18, scale: 1 }, { opacity: 1, x: 0, y: 0, rotate: -6, duration: 0.55, ease: "power3.out" })
+          .fromTo(left, { opacity: 0, x: -70, y: 16, rotate: -18, scale: 1 }, { opacity: 1, x: 0, y: 0, rotate: 6, duration: 0.55, ease: "power3.out" }, "<0.12")
+          .to([right, left], { scale: 0.88, duration: 0.14, ease: "power2.in" })
+          // round 1: right pulls, left is dragged along
+          .addLabel("r1")
+          .to(scraps, tug(26, "end", 0.5), "r1")
+          .to(right, { x: 30, rotate: -12, duration: 0.5, ease: "power3.inOut" }, "r1")
+          .to(left, { x: 22, rotate: 14, duration: 0.5, ease: "power3.inOut" }, "r1+=0.06")
+          // round 2: left yanks it back, harder
+          .addLabel("r2")
+          .to(scraps, tug(-34, "start", 0.45), "r2")
+          .to(left, { x: -38, rotate: 16, duration: 0.45, ease: "power3.inOut" }, "r2")
+          .to(right, { x: -26, rotate: -2, duration: 0.45, ease: "power3.inOut" }, "r2+=0.06")
+          // round 3: right wins a quick tug
+          .addLabel("r3")
+          .to(scraps, tug(18, "end", 0.32), "r3")
+          .to(right, { x: 22, rotate: -14, duration: 0.32, ease: "power2.inOut" }, "r3")
+          .to(left, { x: 14, rotate: 10, duration: 0.32, ease: "power2.inOut" }, "r3+=0.05")
+          // round 4: a short stalemate shake
+          .addLabel("r4")
+          .to(scraps, tug(-8, "start", 0.18), "r4")
+          .to(left, { x: -10, duration: 0.18, ease: "power1.inOut" }, "r4")
+          .to(right, { x: -4, duration: 0.18, ease: "power1.inOut" }, "r4")
+          // both let go at once
+          .to([right, left], { scale: 1, duration: 0.12 })
           .addLabel("free")
-          .to(scraps, {
-            x: 0,
-            rotate: (i: number) => base[i],
-            duration: 1.3,
-            ease: "elastic.out(1, 0.35)",
-            stagger: { each: 0.03, from: "end" },
-          }, "free")
-          .to(hand, { x: 70, y: -20, rotate: 24, opacity: 0, duration: 0.5, ease: "power2.in" }, "free+=0.05");
+          .to(scraps, { x: 0, rotate: (i: number) => base[i], duration: 1.3, ease: "elastic.out(1, 0.35)", stagger: { each: 0.025, from: "center" } }, "free")
+          .to(right, { x: 80, y: -14, rotate: 22, opacity: 0, duration: 0.45, ease: "power2.in" }, "free+=0.05")
+          .to(left, { x: -80, y: -14, rotate: -22, opacity: 0, duration: 0.45, ease: "power2.in" }, "free+=0.05");
 
         return () => {
           window.removeEventListener("resize", place);
@@ -167,12 +190,19 @@ export function HomeHero(props: HomeHeroProps) {
       <h1 className="sr-only">{`${props.name}. ${props.lead}`}</h1>
       <div className={styles.nameWrap}>
         <Scraps word={props.name.split(" ")[0].toUpperCase()} seed={3} className={styles.name} />
-        {/* Phones only: a hand that grabs the name and drags it side to side */}
-        <span className={styles.grabber} aria-hidden="true">
-          <svg viewBox="0 0 48 56">
-            <path d="M14 30V12a3.5 3.5 0 0 1 7 0v14M21 24V8a3.5 3.5 0 0 1 7 0v16M28 25V11a3.5 3.5 0 0 1 7 0v15M35 27v-9a3.5 3.5 0 0 1 7 0v16c0 10-7 18-16 18h-2c-6 0-10-3-13-8l-6-10a3.5 3.5 0 0 1 6-4l4 5" />
-          </svg>
-        </span>
+        {/* Phones only: two hands that fight over the name */}
+        {(["left", "right"] as const).map((side) => (
+          <span key={side} className={styles.grabber} data-side={side} aria-hidden="true">
+            {props.handSrc ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={props.handSrc} alt="" />
+            ) : (
+              <svg viewBox="0 0 48 56">
+                <path d="M14 30V12a3.5 3.5 0 0 1 7 0v14M21 24V8a3.5 3.5 0 0 1 7 0v16M28 25V11a3.5 3.5 0 0 1 7 0v15M35 27v-9a3.5 3.5 0 0 1 7 0v16c0 10-7 18-16 18h-2c-6 0-10-3-13-8l-6-10a3.5 3.5 0 0 1 6-4l4 5" />
+              </svg>
+            )}
+          </span>
+        ))}
       </div>
 
       <div className={styles.mid}>

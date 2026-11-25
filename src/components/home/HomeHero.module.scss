@@ -30,6 +30,17 @@
   transform-origin: 30% 20%;
   filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.28));
 
+  /* the left hand is the right hand mirrored */
+  &[data-side="left"] > * {
+    transform: scaleX(-1);
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
   svg {
     display: block;
     width: 100%;
