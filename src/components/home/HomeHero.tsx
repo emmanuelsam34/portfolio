@@ -65,6 +65,66 @@ export function HomeHero(props: HomeHeroProps) {
 
       gsap.to(`.${styles.cut}`, { y: -8, duration: 3.2, ease: "sine.inOut", yoyo: true, repeat: -1, delay: 2 });
 
+      // Phones: a hand grabs the last letter and drags the name left and right.
+      // Letters trail behind it (stagger from the grabbed end) and tilt with the pull,
+      // then spring back with an elastic wobble when it lets go.
+      const mm = gsap.matchMedia();
+      mm.add("(max-width: 560px)", () => {
+        const hand = el.querySelector<HTMLElement>(`.${styles.grabber}`);
+        if (!hand || !scraps.length) return;
+        const last = scraps[scraps.length - 1];
+        // resting tilt of each letter, read once the entrance has settled
+        let base: number[] = scraps.map(() => 0);
+        const pull = (dx: number, tilt: number, duration: number) => ({
+          x: dx,
+          rotate: (i: number) => base[i] + tilt * (0.4 + (i / scraps.length) * 0.6),
+          duration,
+          ease: "power2.inOut",
+          stagger: { each: 0.035, from: "end" as const },
+        });
+        // park the hand just right of the last letter
+        const nameBox = el.querySelector<HTMLElement>(`.${styles.nameWrap}`)!;
+        const place = () => {
+          const lb = last.getBoundingClientRect();
+          const wb = nameBox.getBoundingClientRect();
+          gsap.set(hand, { left: lb.left - wb.left + lb.width * 0.55, top: lb.top - wb.top + lb.height * 0.35 });
+        };
+        window.addEventListener("resize", place);
+
+        const tl = gsap.timeline({ repeat: -1, repeatDelay: 2.6, delay: 2.4 });
+        tl.call(() => {
+          if (!base.some(Boolean)) base = scraps.map((s) => Number(gsap.getProperty(s, "rotate")) || 0);
+          place(); // letters have settled: grip the last one
+        })
+          .fromTo(hand, { opacity: 0, x: 60, y: 30, rotate: 20, scale: 1 }, { opacity: 1, x: 0, y: 0, rotate: -10, duration: 0.6, ease: "power3.out" })
+          .to(hand, { scale: 0.86, rotate: -18, duration: 0.15, ease: "power2.in" }) // grab
+          .addLabel("drag")
+          .to(hand, { x: -46, rotate: -24, duration: 0.55, ease: "power2.inOut" }, "drag")
+          .to(scraps, pull(-42, -11, 0.55), "drag")
+          .addLabel("back")
+          .to(hand, { x: 34, rotate: -4, duration: 0.7, ease: "power2.inOut" }, "back")
+          .to(scraps, pull(30, 8, 0.7), "back")
+          .addLabel("let")
+          .to(hand, { x: 8, rotate: -12, duration: 0.35, ease: "power1.inOut" }, "let")
+          .to(scraps, pull(6, 2, 0.35), "let")
+          .to(hand, { scale: 1, rotate: 4, duration: 0.15 }) // release
+          .addLabel("free")
+          .to(scraps, {
+            x: 0,
+            rotate: (i: number) => base[i],
+            duration: 1.3,
+            ease: "elastic.out(1, 0.35)",
+            stagger: { each: 0.03, from: "end" },
+          }, "free")
+          .to(hand, { x: 70, y: -20, rotate: 24, opacity: 0, duration: 0.5, ease: "power2.in" }, "free+=0.05");
+
+        return () => {
+          window.removeEventListener("resize", place);
+          tl.kill();
+          gsap.set(scraps, { x: 0, rotate: (i: number) => base[i] });
+        };
+      });
+
       // letters wobble like loose paper when hovered
       scraps.forEach((s) =>
         s.addEventListener("pointerenter", () =>
@@ -105,7 +165,15 @@ export function HomeHero(props: HomeHeroProps) {
   return (
     <section ref={root} className={styles.hero}>
       <h1 className="sr-only">{`${props.name}. ${props.lead}`}</h1>
-      <Scraps word={props.name.split(" ")[0].toUpperCase()} seed={3} className={styles.name} />
+      <div className={styles.nameWrap}>
+        <Scraps word={props.name.split(" ")[0].toUpperCase()} seed={3} className={styles.name} />
+        {/* Phones only: a hand that grabs the name and drags it side to side */}
+        <span className={styles.grabber} aria-hidden="true">
+          <svg viewBox="0 0 48 56">
+            <path d="M14 30V12a3.5 3.5 0 0 1 7 0v14M21 24V8a3.5 3.5 0 0 1 7 0v16M28 25V11a3.5 3.5 0 0 1 7 0v15M35 27v-9a3.5 3.5 0 0 1 7 0v16c0 10-7 18-16 18h-2c-6 0-10-3-13-8l-6-10a3.5 3.5 0 0 1 6-4l4 5" />
+          </svg>
+        </span>
+      </div>
 
       <div className={styles.mid}>
         <div className={styles.intro}>
