@@ -1,6 +1,8 @@
 import { Reveal } from "@/components/Reveal";
+import { Timeline } from "@/components/about/Timeline";
+import { Services } from "@/components/shared/Services";
 import { baseURL } from "@/app/resources";
-import { about, home, person, social } from "@/app/resources/content";
+import { about, home, person, social, work } from "@/app/resources/content";
 
 import styles from "./about-page.module.scss";
 
@@ -28,8 +30,23 @@ export async function generateMetadata() {
   };
 }
 
+/* A short curved arrow; the right-hand labels use it mirrored */
+const Arrow = () => (
+  <svg viewBox="0 0 54 20" aria-hidden="true">
+    <path d="M2 10 C 18 2, 34 18, 50 10" />
+    <path d="M50 10 L42 5 M50 10 L43 16" />
+  </svg>
+);
+
 export default function About() {
-  const currentYear = new Date().getFullYear();
+  const years = new Date().getFullYear() - about.sinceYear;
+  const toolkit = about.technical.skills.flatMap((skill) => skill.description.split(",").map((item) => item.trim()));
+  const tagSpots = [
+    { side: "left", top: "30%" },
+    { side: "right", top: "22%" },
+    { side: "left", top: "58%" },
+    { side: "right", top: "52%" },
+  ] as const;
 
   return (
     <>
@@ -50,29 +67,29 @@ export default function About() {
       />
 
       {/* ---------- Hero ---------- */}
-      <section className={`wrap ${styles.hero}`}>
+      <section className={styles.hero}>
         <div className={styles.heroCopy}>
           <span className="eyebrow">About</span>
-          <h1 data-split className="display display-l">
-            Hi, I&apos;m
-            <br />
-            <span className="accent-word">{person.firstName}.</span>
+          <h1 data-split className="display display-xl">
+            Hi, I&apos;m <span className="accent-word">{person.firstName}.</span>
           </h1>
           <p className="lede">{about.intro.description}</p>
-
+          <p className={styles.story}>{about.story}</p>
           <dl className={styles.facts}>
             {about.facts.map((fact) => (
-              <div key={fact.label} className={styles.fact}>
+              <div key={fact.label}>
                 <dt>{fact.label}</dt>
                 <dd>{fact.value}</dd>
               </div>
             ))}
           </dl>
-
           <div className="btn-row">
             {about.calendar.display && (
               <a href={about.calendar.link} className="btn btn-solid" target="_blank" rel="noopener noreferrer">
-                {about.calendar.label} <span aria-hidden="true">↗</span>
+                {about.calendar.label}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                  <path d="M7 17 17 7M8 7h9v9" />
+                </svg>
               </a>
             )}
             <a href="/work" className="btn btn-ghost">
@@ -81,104 +98,68 @@ export default function About() {
           </div>
         </div>
 
-        <div className={styles.heroVisual}>
-          <h2 className={`display display-m ${styles.visualTitle}`}>What I do</h2>
-          <div className={styles.photoWrap}>
-            <div className={`sticker ${styles.photo}`}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={person.avatar} alt={person.name} />
-            </div>
-            {home.annotations.map((note, i) => (
-              <span key={note} className={`hand ${styles.note} ${styles[`note${i + 1}`]}`}>
-                ← {note}
-              </span>
-            ))}
+        <div className={styles.whatido}>
+          <span className={`display display-l ${styles.whatTitle}`}>What I do</span>
+          <div className={`sticker ${styles.whatImg}`}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={person.avatar} alt={person.name} />
           </div>
-        </div>
-      </section>
-
-      {/* ---------- Story ---------- */}
-      <section className={`wrap ${styles.story}`}>
-        <Reveal>
-          <span className="eyebrow">The longer version</span>
-        </Reveal>
-        <div className={styles.storyBody}>
-          {about.profile.map((paragraph, i) => (
-            <Reveal key={paragraph} delay={i * 0.08} as="p">
-              {paragraph}
-            </Reveal>
+          {(about.tags ?? home.annotations).slice(0, 4).map((tag, i) => (
+            <span
+              key={tag}
+              className={`${styles.tag} ${tagSpots[i].side === "right" ? styles.tagRight : ""}`}
+              style={{ top: tagSpots[i].top, animationDelay: `${0.8 + i * 0.15}s` }}
+            >
+              <span className="hand">{tag}</span>
+              <Arrow />
+            </span>
           ))}
         </div>
       </section>
+
+      {/* ---------- The full list of services ---------- */}
+      <Services eyebrow="The full list" title="What I do, properly" note={work.services.note} groups={work.services.groups} />
 
       {/* ---------- Work history ---------- */}
-      <section className={`wrap ${styles.section}`}>
-        <Reveal className={styles.sectionHead}>
-          <div>
-            <span className="eyebrow">Work history</span>
-            <h2 data-split className="display display-l">
-              {about.sinceYear} to now
-            </h2>
-          </div>
-          <p className="lede">
-            {currentYear - about.sinceYear} years, one thread: products that behave like one system.
-          </p>
-        </Reveal>
-
-        <ol className={styles.timeline}>
-          {about.work.experiences.map((experience) => (
-            <Reveal as="li" key={`${experience.company}-${experience.role}`} className={styles.job}>
-              <span className={styles.jobTime}>{experience.timeframe}</span>
-              <div>
-                <h3 className="display display-s">{experience.company}</h3>
-                <span className={styles.jobRole}>{experience.role}</span>
-              </div>
-              <ul className={styles.jobList}>
-                {experience.achievements.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </Reveal>
-          ))}
-        </ol>
-      </section>
+      <Timeline
+        eyebrow="Work history"
+        title={`${about.sinceYear} to now`}
+        lede={`${years} years, one thread: products that behave like one system.`}
+        jobs={about.timeline}
+      />
 
       {/* ---------- Toolkit ---------- */}
-      <section className={`wrap ${styles.section}`}>
+      <section className={styles.cv}>
         <Reveal>
-          <span className="eyebrow">{about.technical.title}</span>
-          <h2 className={`display display-l ${styles.toolTitle}`}>Tools I reach for</h2>
+          <span className="eyebrow">Toolkit</span>
+          <h2 data-split className="display display-m">
+            The stack
+          </h2>
+          <div className={styles.chips}>
+            {toolkit.map((item) => (
+              <span key={item}>{item}</span>
+            ))}
+          </div>
         </Reveal>
-        <div className={styles.toolGrid}>
-          {about.technical.skills.map((skill, i) => (
-            <Reveal key={skill.title} delay={i * 0.06} className={`card ${styles.toolCard}`}>
-              <h3 className="display display-s">{skill.title}</h3>
-              <div className="chips">
-                {skill.description.split(",").map((item) => (
-                  <span key={item} className="chip chip-outline">
-                    {item.trim()}
-                  </span>
-                ))}
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      {/* ---------- Elsewhere ---------- */}
-      <section className={`wrap ${styles.section}`}>
-        <Reveal className={styles.elsewhere}>
-          <span className="eyebrow">Elsewhere</span>
-          <div className="chips">
+        <Reveal delay={0.1}>
+          <span className="eyebrow">Focus</span>
+          <h2 data-split className="display display-m">
+            Good at
+          </h2>
+          <div className={`${styles.chips} ${styles.chipsColumn}`}>
+            {home.specialties.map((item) => (
+              <span key={item}>{item}</span>
+            ))}
+          </div>
+          <div className={styles.elsewhere}>
             {social.map((item) => (
               <a
                 key={item.name}
                 href={item.link}
-                className="btn btn-ghost"
                 target={item.link.startsWith("mailto:") ? undefined : "_blank"}
                 rel="noopener noreferrer"
               >
-                {item.name} <span aria-hidden="true">↗</span>
+                {item.name} ↗
               </a>
             ))}
           </div>

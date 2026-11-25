@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Reveal } from "@/components/Reveal";
 import { TornEdge } from "@/components/TornEdge";
 import { WorkReel, type ReelItem } from "@/components/work/WorkReel";
+import { Services } from "@/components/shared/Services";
 import { baseURL } from "@/app/resources";
 import { about, person, work } from "@/app/resources/content";
 
@@ -228,37 +229,7 @@ export default function Work() {
       </section>
 
       {/* ---------- Services ---------- */}
-      <section className={styles.svc}>
-        <Reveal>
-          <span className="eyebrow">Services</span>
-          <h2 data-split className="display display-l">
-            Things you can hire me for
-          </h2>
-        </Reveal>
-        <span className={`hand ${styles.svcNote}`} aria-hidden="true">
-          {work.services.note}
-          <svg viewBox="0 0 90 60" className="scribble">
-            <path d="M84 6 C 60 4, 30 14, 14 46 M14 46 L 10 30 M14 46 L 30 42" />
-          </svg>
-        </span>
-        <div className={styles.svcCols}>
-          {work.services.groups.map((g, gi) => (
-            <Reveal key={g.title} delay={gi * 0.1} className={styles.svcGroup}>
-              <h3>
-                {g.title}
-                <small>{g.label}</small>
-              </h3>
-              {g.items.map((item, i) => (
-                <div key={item.name} className={styles.svcRow}>
-                  <i>{pad(gi * g.items.length + i + 1)}</i>
-                  <b>{item.name}</b>
-                  <span>{item.detail}</span>
-                </div>
-              ))}
-            </Reveal>
-          ))}
-        </div>
-      </section>
+      <Services eyebrow="Services" title="Things you can hire me for" note={work.services.note} groups={work.services.groups} />
     </>
   );
 }

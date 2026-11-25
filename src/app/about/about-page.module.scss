@@ -1,236 +1,287 @@
 /* ---------- Hero ---------- */
 
 .hero {
+  position: relative;
+  z-index: 2;
+  max-width: 1360px;
+  min-height: min(calc(100svh - 76px), 1000px);
+  margin: 0 auto;
+  padding: 40px var(--gutter) 40px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: clamp(2rem, 5vw, 5rem);
-  padding-top: clamp(2.5rem, 6vw, 5rem);
-  padding-bottom: clamp(3rem, 6vw, 5rem);
-  align-items: start;
+  grid-template-columns: 0.95fr 1.05fr;
+  gap: clamp(24px, 4vw, 70px);
+  align-items: center;
 }
 
 .heroCopy {
   display: flex;
   flex-direction: column;
-  gap: 1.75rem;
+  gap: 22px;
+}
+
+/* "how it started" card with a handwritten tab */
+.story {
+  position: relative;
+  max-width: 540px;
+  margin: 12px 0 0;
+  padding: 22px 20px 18px;
+  border-radius: 16px;
+  background: var(--card);
+  box-shadow: inset 0 0 0 1px var(--line);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+
+  &::before {
+    content: "how it started";
+    position: absolute;
+    top: -14px;
+    left: 16px;
+    padding: 0 6px;
+    background: var(--paper);
+    font: 700 22px / 1 var(--font-hand);
+    color: var(--accent);
+    transform: rotate(-3deg);
+  }
 }
 
 .facts {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.6rem;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  max-width: 540px;
   margin: 0;
-}
 
-.fact {
-  padding: 0.85rem 1rem;
-  border: 1px solid var(--line-strong);
-  border-radius: 14px;
+  div {
+    padding: 12px 14px;
+    border-radius: 14px;
+    box-shadow: inset 0 0 0 1px var(--line-strong);
+    font-size: 14px;
+  }
 
   dt {
-    font-size: 0.62rem;
-    font-weight: 700;
+    margin-bottom: 6px;
+    font: 700 10px / 1 var(--font-body);
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--ink-soft);
   }
 
   dd {
-    margin: 0.3rem 0 0;
-    font-size: 0.92rem;
-    line-height: 1.35;
+    margin: 0;
   }
 }
 
-.heroVisual {
+/* Right: "What I do" over the portrait, with handwritten labels */
+.whatido {
+  position: relative;
+  height: min(80vh, 780px);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
 }
 
-.visualTitle {
-  text-align: center;
-}
-
-.photoWrap {
+.whatTitle {
   position: relative;
-  width: min(100%, 320px);
-}
-
-.photo {
-  aspect-ratio: 4 / 5;
-  transform: rotate(-2deg);
-  transition: transform 0.6s var(--ease);
-
-  &:hover {
-    transform: rotate(1deg) scale(1.02);
-  }
-}
-
-.note {
-  position: absolute;
-  pointer-events: none;
-  font-size: 1.35rem;
+  z-index: 2;
   white-space: nowrap;
+  animation: rise 1.2s var(--ease) both;
 }
 
-.note1 {
-  left: calc(100% + 0.75rem);
-  top: 14%;
+.whatImg {
+  flex: 1;
+  min-height: 0;
+  aspect-ratio: 4 / 5;
+  margin-top: -0.15em;
+  rotate: -2deg;
+  animation:
+    drop 1.5s var(--ease) both 0.15s,
+    float 3.4s ease-in-out infinite alternate 2s;
 }
 
-.note2 {
-  left: calc(100% + 0.75rem);
-  top: 46%;
+@keyframes rise {
+  from {
+    opacity: 0;
+    translate: 0 40px;
+  }
 }
 
-.note3 {
-  left: calc(100% + 0.75rem);
-  top: 70%;
+@keyframes drop {
+  from {
+    opacity: 0;
+    translate: 0 100px;
+    rotate: 5deg;
+  }
 }
 
-/* ---------- Story ---------- */
-
-.story {
-  display: grid;
-  grid-template-columns: minmax(0, 0.35fr) minmax(0, 1fr);
-  gap: 2rem;
-  padding-top: clamp(2rem, 5vw, 4rem);
+@keyframes float {
+  to {
+    translate: 0 -10px;
+  }
 }
 
-.storyBody {
+.tag {
+  position: absolute;
+  z-index: 3;
+  left: 0;
   display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-
-  p {
-    margin: 0;
-    font-family: var(--font-display);
-    font-weight: 400;
-    font-variation-settings: "SOFT" 100;
-    font-size: clamp(1.2rem, 2vw, 1.55rem);
-    line-height: 1.4;
-    letter-spacing: -0.01em;
-    color: var(--ink);
-  }
-}
-
-/* ---------- Sections ---------- */
-
-.section {
-  padding-top: clamp(4rem, 9vw, 8rem);
-}
-
-.sectionHead {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  align-items: end;
-  gap: 2rem;
-  margin-bottom: 2.5rem;
-
-  > div {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-}
-
-.timeline {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  border-top: 1px solid var(--line-strong);
-}
-
-.job {
-  display: grid;
-  grid-template-columns: minmax(0, 0.6fr) minmax(0, 1fr) minmax(0, 1.4fr);
-  gap: 1.5rem;
-  padding: 2rem 0;
-  border-bottom: 1px solid var(--line-strong);
-}
-
-.jobTime {
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  align-items: center;
+  gap: 6px;
   color: var(--accent);
-  padding-top: 0.4rem;
-}
+  animation: tagIn 0.8s var(--ease) both;
 
-.jobRole {
-  display: block;
-  margin-top: 0.4rem;
-  color: var(--ink-soft);
-}
-
-.jobList {
-  margin: 0;
-  padding-left: 1.1rem;
-  color: var(--ink-soft);
-  line-height: 1.6;
-
-  li + li {
-    margin-top: 0.4rem;
+  :global(.hand) {
+    font-size: clamp(20px, 1.9vw, 28px);
+    white-space: nowrap;
+    color: inherit;
   }
 
-  li::marker {
-    color: var(--accent);
+  svg {
+    width: 50px;
+    overflow: visible;
+    animation-delay: inherit; /* pass the label's stagger down to the arrow */
+  }
+
+  path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-dasharray: 60;
+    animation: draw 0.9s ease-out both;
+    animation-delay: inherit;
   }
 }
 
-.toolTitle {
-  margin: 1rem 0 2.5rem;
+.tagRight {
+  left: auto;
+  right: 0;
+  flex-direction: row-reverse;
+
+  svg {
+    transform: scaleX(-1);
+  }
 }
 
-.toolGrid {
+@keyframes tagIn {
+  from {
+    opacity: 0;
+    translate: 0 10px;
+  }
+}
+
+@keyframes draw {
+  from {
+    stroke-dashoffset: 60;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ---------- Toolkit ---------- */
+
+.cv {
+  position: relative;
+  z-index: 2;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: clamp(80px, 10vw, 140px) var(--gutter);
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(24px, 4vw, 70px);
+
+  h2 {
+    margin-top: 14px;
+  }
 }
 
-.toolCard {
+.chips {
   display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+
+  span {
+    padding: 10px 14px;
+    border-radius: 99px;
+    background: var(--card);
+    box-shadow: inset 0 0 0 1px var(--line);
+    font-size: 14px;
+  }
+}
+
+.chipsColumn {
   flex-direction: column;
-  gap: 1rem;
+  align-items: flex-start;
 }
 
 .elsewhere {
   display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 28px;
+
+  a {
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    color: var(--ink);
+
+    &:hover {
+      color: var(--accent);
+    }
+  }
 }
 
 /* ---------- Responsive ---------- */
 
-@media (max-width: 1360px) {
-  .note {
-    display: none;
+@media (max-width: 1100px) {
+  .tag :global(.hand) {
+    font-size: 18px;
+  }
+
+  .tag svg {
+    width: 30px;
   }
 }
 
 @media (max-width: 900px) {
-  .hero,
-  .story,
-  .sectionHead,
-  .toolGrid {
+  .hero {
     grid-template-columns: 1fr;
+    padding-top: 24px;
   }
 
-  .job {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
+  .whatido {
+    height: 118vw;
+    max-height: 620px;
   }
 
-  .photoWrap {
-    width: min(72%, 280px);
+  .cv {
+    grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 480px) {
   .facts {
     grid-template-columns: 1fr;
+  }
+
+  .tag :global(.hand) {
+    font-size: 16px;
+  }
+
+  .tag svg {
+    width: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .whatTitle,
+  .whatImg,
+  .tag,
+  .tag path {
+    animation: none;
   }
 }
