@@ -403,9 +403,11 @@
   }
 
   .name {
+    z-index: 3; /* letters sit on top of the photo */
+
     :global(.scrap) {
-      width: 11vw;
-      font-size: 9vw;
+      width: 10.6vw;
+      font-size: 8.8vw;
     }
   }
 
@@ -422,10 +424,11 @@
     margin: 18px 0 0;
   }
 
+  /* phone card overlaps the photo's lower-right corner, never the intro */
   .side {
     position: absolute;
     right: 0;
-    top: 36%;
+    top: calc(18px + 46vh - min(26vw, 150px) * 1.78 + 10px);
     order: 2;
   }
 
@@ -455,9 +458,28 @@
   }
 }
 
-@media (max-width: 480px) {
+/* Phones: stack the name as two rows of four, so it reads larger than one cramped row */
+@media (max-width: 560px) {
+  .name {
+    flex-wrap: wrap;
+    max-width: calc(4 * 15.5vw + 3 * 5px);
+    margin-inline: auto;
+    gap: 5px;
+
+    :global(.scrap) {
+      width: 15.5vw;
+      font-size: 12.5vw;
+      box-shadow: 0 12px 22px -8px rgba(0, 0, 0, 0.35);
+    }
+  }
+
   .cut {
-    height: 42vh;
+    height: 40vh;
+    margin-top: -14px; /* tuck the photo under the letters */
+  }
+
+  .side {
+    top: calc(40vh - 14px - 26vw * 1.78 + 10px);
   }
 }
 
