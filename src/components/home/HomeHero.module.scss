@@ -458,17 +458,17 @@
   }
 }
 
-/* Phones: stack the name as two rows of four, so each letter is nearly twice as big */
+/* Phones: stack the name as two rows of four, so it reads larger than one cramped row */
 @media (max-width: 560px) {
   .name {
     flex-wrap: wrap;
-    max-width: calc(4 * 21vw + 3 * 5px);
+    max-width: calc(4 * 15.5vw + 3 * 5px);
     margin-inline: auto;
-    gap: 6px 5px;
+    gap: 5px;
 
     :global(.scrap) {
-      width: 21vw;
-      font-size: 17vw;
+      width: 15.5vw;
+      font-size: 12.5vw;
       box-shadow: 0 12px 22px -8px rgba(0, 0, 0, 0.35);
     }
   }
