@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 
-import { CustomMDX } from "@/components/mdx";
+import { CustomMDX, getHeadings } from "@/components/mdx";
+import { TornEdge } from "@/components/TornEdge";
+import { Toc } from "@/components/work/Toc";
 import ScrollToHash from "@/components/ScrollToHash";
 import { getPosts } from "@/app/utils/utils";
 import Link from "next/link";
@@ -8,6 +10,8 @@ import { baseURL } from "@/app/resources";
 import { person, work } from "@/app/resources/content";
 
 import styles from "../project-page.module.scss";
+
+const pad = (n: number) => String(n).padStart(2, "0");
 
 interface WorkParams {
   params: {
@@ -77,6 +81,10 @@ export default function Project({ params }: WorkParams) {
   const order = work.featuredProjectSlugs;
   const nextSlug = order[(order.indexOf(project.slug) + 1) % order.length];
   const next = nextSlug !== project.slug ? work.featuredProjects.find((p) => p.slug === nextSlug) : undefined;
+  const index = Math.max(0, order.indexOf(project.slug));
+  const total = order.length;
+  const headings = getHeadings(post.content);
+  const coverNote = project.platform.toLowerCase().includes("mobile") ? "in your pocket" : project.platform.toLowerCase().includes("infra") ? "the bit nobody sees" : "the real thing";
 
   return (
     <>
@@ -100,65 +108,130 @@ export default function Project({ params }: WorkParams) {
         }}
       />
 
-      <section className={`wrap ${styles.hero}`}>
-        <Link href="/work" className={styles.back}>
-          <span aria-hidden="true">←</span> All work
-        </Link>
-        <span className="eyebrow">
-          {project.platform} · {project.year}
-        </span>
-        <h1 data-split className={`display display-l ${styles.title}`}>{project.name}</h1>
-        <p className={`lede ${styles.tagline}`}>{project.tagline}</p>
+      {/* ---------- Hero ---------- */}
+      <section className={styles.hero}>
+        <div className={styles.heroCopy}>
+          <Link href="/work" className={styles.back}>
+            <span aria-hidden="true">←</span> All work
+          </Link>
+          <span className="eyebrow">
+            Case study {pad(index + 1)}/{pad(total)} · {project.platform}
+          </span>
+          <h1 data-split className={`display display-l ${styles.title}`}>
+            {project.name}
+          </h1>
+          <p className="lede">{project.tagline}</p>
+          <dl className={styles.facts}>
+            <div>
+              <dt>Status</dt>
+              <dd>{project.status}</dd>
+            </div>
+            <div>
+              <dt>Year</dt>
+              <dd>{project.year}</dd>
+            </div>
+            <div>
+              <dt>Platform</dt>
+              <dd>{project.platform}</dd>
+            </div>
+            <div>
+              <dt>Built with</dt>
+              <dd>{project.stack.slice(0, 3).join(", ")}</dd>
+            </div>
+          </dl>
+          <div className="btn-row">
+            <a className="btn btn-solid" href="#story">
+              Read the story <span aria-hidden="true">↓</span>
+            </a>
+            {next && (
+              <Link className="btn btn-ghost" href={`/work/${next.slug}`}>
+                Next project
+              </Link>
+            )}
+          </div>
+        </div>
+
+        {project.images.length > 0 && (
+          <div className={styles.cover}>
+            <div className={`sticker ${styles.coverImg}`}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={project.images[0]} alt="" fetchPriority="high" />
+            </div>
+            <span className={`hand ${styles.coverNote}`}>{coverNote}</span>
+          </div>
+        )}
       </section>
 
-      <section className={`wrap ${styles.overview}`}>
-        <div className={styles.summary}>
-          <span className="eyebrow">The brief</span>
-          <p>{project.summary}</p>
+      {/* ---------- The short version ---------- */}
+      <section className={`${styles.short} crumple`}>
+        <TornEdge side="top" seed={31 + index} />
+        <div className={styles.shortInner}>
+          <div className={styles.shortHead}>
+            <span className="eyebrow">The short version</span>
+            <span className={`hand ${styles.shortNote}`}>for the skimmers</span>
+          </div>
+          <div className={styles.shortCols}>
+            <div>
+              <h2>The brief</h2>
+              <p>{project.summary}</p>
+            </div>
+            <div>
+              <h2>What I did</h2>
+              <ul>
+                {project.responsibilities.map((r) => (
+                  <li key={r}>{r}</li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h2>The result</h2>
+              <ul>
+                {project.highlights.map((h) => (
+                  <li key={h}>{h}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
-        <aside className={styles.meta}>
-          <div className={`card ${styles.metaCard}`}>
-            <span className="eyebrow">Status</span>
-            <p>{project.status}</p>
-          </div>
-          <div className={`card ${styles.metaCard}`}>
-            <span className="eyebrow">Highlights</span>
-            <ul>
-              {project.highlights.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </div>
-          <div className={`card ${styles.metaCard}`}>
-            <span className="eyebrow">Stack</span>
-            <div className="chips">
-              {project.stack.map((item) => (
-                <span key={item} className="chip chip-outline">
-                  {item}
-                </span>
-              ))}
+        <TornEdge side="bottom" seed={41 + index} />
+      </section>
+
+      {/* ---------- The full story ---------- */}
+      <section className={styles.story} id="story">
+        <aside className={styles.aside}>
+          <div className={styles.asideInner}>
+            {headings.length > 1 && <Toc headings={headings} />}
+            <div>
+              <span className="eyebrow">Stack</span>
+              <div className={styles.stack}>
+                {project.stack.map((item) => (
+                  <span key={item}>{item}</span>
+                ))}
+              </div>
             </div>
           </div>
         </aside>
+        <article className={styles.article}>
+          <CustomMDX source={post.content} />
+        </article>
       </section>
 
-      {project.images.length > 0 && (
-        <section className={`wrap ${styles.cover}`}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={project.images[0]} alt="" />
-        </section>
-      )}
-
-      <article className={`wrap ${styles.article}`}>
-        <CustomMDX source={post.content} />
-      </article>
-
+      {/* ---------- Up next ---------- */}
       {next && (
-        <section className={`wrap ${styles.next}`}>
-          <span className="hand">up next →</span>
-          <Link href={`/work/${next.slug}`} className={styles.nextLink}>
-            <span className="eyebrow">{next.platform}</span>
-            <span className="display display-m">{next.name}</span>
+        <section className={styles.next}>
+          <span className={`hand ${styles.nextNote}`}>up next →</span>
+          <Link href={`/work/${next.slug}`} className={`${styles.nextLink} crumple`}>
+            <span className={styles.nextCopy}>
+              <span className="eyebrow">
+                {pad(((index + 1) % total) + 1)}/{pad(total)} · {next.platform}
+              </span>
+              <span className="display display-l">{next.name}</span>
+              <span className={styles.nextTag}>{next.tagline}</span>
+            </span>
+            <span className={`sticker ${styles.nextImg}`}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={next.images[0].replace("w=1600", "w=700")} alt="" loading="lazy" />
+            </span>
           </Link>
         </section>
       )}

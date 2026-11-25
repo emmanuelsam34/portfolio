@@ -383,6 +383,47 @@ const about = {
     { label: "Focus", value: "Mobile, platform & infrastructure" },
   ],
   sinceYear: 2018,
+  // The "how it started" card under the intro
+  story:
+    "It started in 2018 at LIBL Academy, leading the tech behind an e-learning platform. Then came client products at AmpliViral. These days it's the whole LIBL stack: the apps, the dashboards and the servers they run on.",
+  // Handwritten labels around the portrait (left side first, then right)
+  tags: ["writes the code", "ships the apps", "runs the servers", "answers the 2am pager"],
+  // Work history, oldest first. Points are taken from the experience and project write-ups.
+  timeline: [
+    {
+      year: "2018",
+      role: "Technical Lead",
+      company: "LIBL Academy",
+      span: "2018 to 2022",
+      points: [
+        "Led technical execution for an e-learning platform and its supporting internal systems.",
+        "Shaped product direction across content management, user workflows and platform delivery.",
+        "Built the foundation for connected tutoring across multiple user roles.",
+      ],
+    },
+    {
+      year: "2023",
+      role: "Software Engineer",
+      company: "AmpliViral Digital Solutions",
+      span: "2023 to now",
+      points: [
+        "Builds and maintains web products with React, Next.js and TypeScript.",
+        "Delivers client-facing product flows and internal tooling built to stay maintainable.",
+        "Works across feature delivery, interface design and platform-level problem solving.",
+      ],
+    },
+    {
+      year: "2026",
+      role: "Mobile, platform and infrastructure",
+      company: "The LIBL platform",
+      span: "Now",
+      points: [
+        "Shipped tutor and student mobile apps, a desktop app and the admin dashboard on one Appwrite backend.",
+        "Built the online school enrollment portal with soft-proctored placement exams.",
+        "Self-hosts and operates the BigBlueButton live-class infrastructure.",
+      ],
+    },
+  ],
   intro: {
     display: true,
     title: "Introduction",

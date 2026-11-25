@@ -66,6 +66,7 @@
 }
 
 .link {
+  white-space: nowrap;
   height: 38px;
   padding: 0 16px;
   display: flex;
@@ -86,6 +87,7 @@
 }
 
 .cta {
+  white-space: nowrap;
   height: 38px;
   padding: 0 16px;
   display: flex;
@@ -110,6 +112,12 @@
     svg {
       transform: rotate(-45deg);
     }
+  }
+}
+
+@media (max-width: 380px) {
+  .cta svg {
+    display: none;
   }
 }
 

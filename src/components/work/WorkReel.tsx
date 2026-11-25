@@ -20,6 +20,8 @@ export interface ReelItem {
   brief: string;
   did: string;
   result: string;
+  /** Shorter result for phones, where the pinned screen has little room */
+  resultShort: string;
 }
 
 interface WorkReelProps {
@@ -189,7 +191,7 @@ export function WorkReel({ items, hint }: WorkReelProps) {
           </div>
           <div className={styles.full} data-flip>
             <dt>The result</dt>
-            <dd>{current.result}</dd>
+            <dd>{current.resultShort}</dd>
           </div>
         </dl>
 

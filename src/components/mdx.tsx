@@ -22,8 +22,31 @@ type CustomMDXProps = {
   components?: Record<string, React.ComponentType<any>>;
 };
 
+/** URL-safe id for a heading, shared by the renderer and the table of contents. */
+export function headingId(text: string) {
+  return text
+    .toLowerCase()
+    .replace(/<[^>]+>/g, "")
+    .replace(/&[a-z#0-9]+;/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+/** The "## " section headings of a Markdown source, for an on-page menu. */
+export function getHeadings(source: string) {
+  return source
+    .split("\n")
+    .filter((line) => /^##\s+/.test(line))
+    .map((line) => {
+      const text = line.replace(/^##\s+/, "").replace(/[*_`]/g, "").trim();
+      return { text, id: headingId(text) };
+    });
+}
+
 export async function CustomMDX({ source }: CustomMDXProps) {
-  const html = await markdownToHtml(source);
+  const rendered = await markdownToHtml(source);
+  // give h2/h3 ids so the on-page menu and #links can jump to them
+  const html = rendered.replace(/<(h[23])>([\s\S]*?)<\/\1>/g, (_m, tag: string, inner: string) => `<${tag} id="${headingId(inner)}">${inner}</${tag}>`);
   return (
     <div
       className="mdx-content"
