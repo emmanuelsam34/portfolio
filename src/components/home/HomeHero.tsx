@@ -100,8 +100,11 @@ export function HomeHero(props: HomeHeroProps) {
           const wb = nameBox.getBoundingClientRect();
           const lb = last.getBoundingClientRect();
           const fb = first.getBoundingClientRect();
-          gsap.set(right, { left: lb.right - wb.left - 18, top: lb.top - wb.top + lb.height * 0.2 });
-          gsap.set(left, { left: fb.left - wb.left - right.offsetWidth + 18, top: fb.top - wb.top + fb.height * 0.2 });
+          const hw = right.offsetWidth;
+          const hh = right.offsetHeight;
+          // fingers overlap the outer edge of each end letter, like a grip
+          gsap.set(right, { left: lb.right - wb.left - hw * 0.38, top: lb.top - wb.top + lb.height * 0.5 - hh * 0.55 });
+          gsap.set(left, { left: fb.left - wb.left - hw * 0.62, top: fb.top - wb.top + fb.height * 0.5 - hh * 0.55 });
         };
         window.addEventListener("resize", place);
 

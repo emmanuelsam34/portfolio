@@ -65,6 +65,7 @@ export default function Home() {
         nowLabel={home.nowLabel}
         nowTitle={home.nowTitle}
         workThumb={shots[0].src}
+        handSrc="/images/hand-right.webp"
       />
     </>
   );
