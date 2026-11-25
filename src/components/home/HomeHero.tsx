@@ -67,11 +67,12 @@ export function HomeHero(props: HomeHeroProps) {
 
       gsap.to(`.${styles.cut}`, { y: -8, duration: 3.2, ease: "sine.inOut", yoyo: true, repeat: -1, delay: 2 });
 
-      // Phones: two hands, one from each side, play tug-of-war with the name.
-      // The left hand grips the first letter, the right hand the last. Each pull
-      // drags the letters toward the puller (staggered from its end, tilting with
-      // the strain) and drags the other hand along. Then both let go and the
-      // letters spring back with an elastic wobble.
+      // Phones: two hands play a gentle tug-of-war with the name.
+      // Each hand slides in from fully off-screen on its own side, grips an end
+      // letter with a slight squeeze, then they take turns pulling: slow, eased
+      // and small, with the letters trailing and tilting a little toward the
+      // puller. They ease the name back to centre, let go softly and slide
+      // back out the way they came. Then a pause, and it repeats.
       const mm = gsap.matchMedia();
       mm.add("(max-width: 560px)", () => {
         const right = el.querySelector<HTMLElement>(`.${styles.grabber}[data-side="right"]`);
@@ -82,21 +83,24 @@ export function HomeHero(props: HomeHeroProps) {
         const last = scraps[scraps.length - 1];
         const n = scraps.length;
         let base: number[] = scraps.map(() => 0);
+        let offR = 300; // distance that takes each hand fully off-screen
+        let offL = -300;
 
-        // Letters lean toward whoever is pulling; the nearer a letter is to the puller, the sooner and harder it moves
-        const tug = (dx: number, from: "start" | "end", duration: number) => ({
+        // Letters drift toward whoever is pulling; nearer letters move a touch sooner and lean a touch more
+        const pull = (dx: number, from: "start" | "end", duration: number) => ({
           x: dx,
           rotate: (i: number) => {
             const nearness = from === "end" ? i / (n - 1) : 1 - i / (n - 1);
-            return base[i] + Math.sign(dx) * (3 + nearness * 9);
+            return base[i] + Math.sign(dx) * (1 + nearness * 4);
           },
           duration,
-          ease: "power3.inOut",
-          stagger: { each: 0.03, from },
+          ease: "sine.inOut",
+          stagger: { each: 0.05, from },
         });
 
-        // Park each hand on its letter's outer edge (measured once the letters have settled)
+        // Park each hand on its letter's outer edge and work out how far off-screen it starts
         const place = () => {
+          gsap.set([right, left], { x: 0 });
           const wb = nameBox.getBoundingClientRect();
           const lb = last.getBoundingClientRect();
           const fb = first.getBoundingClientRect();
@@ -105,44 +109,42 @@ export function HomeHero(props: HomeHeroProps) {
           // fingers overlap the outer edge of each end letter, like a grip
           gsap.set(right, { left: lb.right - wb.left - hw * 0.38, top: lb.top - wb.top + lb.height * 0.5 - hh * 0.55 });
           gsap.set(left, { left: fb.left - wb.left - hw * 0.62, top: fb.top - wb.top + fb.height * 0.5 - hh * 0.55 });
+          offR = window.innerWidth - right.getBoundingClientRect().left + 12;
+          offL = -left.getBoundingClientRect().right - 12;
+          gsap.set(right, { x: offR, opacity: 1 });
+          gsap.set(left, { x: offL, opacity: 1 });
         };
         window.addEventListener("resize", place);
 
-        const tl = gsap.timeline({ repeat: -1, repeatDelay: 2.4, delay: 2.4 });
+        // repeatRefresh re-reads the off-screen distances on every loop
+        const tl = gsap.timeline({ repeat: -1, repeatDelay: 3, delay: 2.2, repeatRefresh: true, defaults: { ease: "sine.inOut" } });
         tl.call(() => {
           if (!base.some(Boolean)) base = scraps.map((s) => Number(gsap.getProperty(s, "rotate")) || 0);
           place();
         })
-          // both hands reach in from their own side and grab
-          .fromTo(right, { opacity: 0, x: 70, y: 16, rotate: 18, scale: 1 }, { opacity: 1, x: 0, y: 0, rotate: -6, duration: 0.55, ease: "power3.out" })
-          .fromTo(left, { opacity: 0, x: -70, y: 16, rotate: -18, scale: 1 }, { opacity: 1, x: 0, y: 0, rotate: 6, duration: 0.55, ease: "power3.out" }, "<0.12")
-          .to([right, left], { scale: 0.88, duration: 0.14, ease: "power2.in" })
-          // round 1: right pulls, left is dragged along
-          .addLabel("r1")
-          .to(scraps, tug(26, "end", 0.5), "r1")
-          .to(right, { x: 30, rotate: -12, duration: 0.5, ease: "power3.inOut" }, "r1")
-          .to(left, { x: 22, rotate: 14, duration: 0.5, ease: "power3.inOut" }, "r1+=0.06")
-          // round 2: left yanks it back, harder
-          .addLabel("r2")
-          .to(scraps, tug(-34, "start", 0.45), "r2")
-          .to(left, { x: -38, rotate: 16, duration: 0.45, ease: "power3.inOut" }, "r2")
-          .to(right, { x: -26, rotate: -2, duration: 0.45, ease: "power3.inOut" }, "r2+=0.06")
-          // round 3: right wins a quick tug
-          .addLabel("r3")
-          .to(scraps, tug(18, "end", 0.32), "r3")
-          .to(right, { x: 22, rotate: -14, duration: 0.32, ease: "power2.inOut" }, "r3")
-          .to(left, { x: 14, rotate: 10, duration: 0.32, ease: "power2.inOut" }, "r3+=0.05")
-          // round 4: a short stalemate shake
-          .addLabel("r4")
-          .to(scraps, tug(-8, "start", 0.18), "r4")
-          .to(left, { x: -10, duration: 0.18, ease: "power1.inOut" }, "r4")
-          .to(right, { x: -4, duration: 0.18, ease: "power1.inOut" }, "r4")
-          // both let go at once
-          .to([right, left], { scale: 1, duration: 0.12 })
-          .addLabel("free")
-          .to(scraps, { x: 0, rotate: (i: number) => base[i], duration: 1.3, ease: "elastic.out(1, 0.35)", stagger: { each: 0.025, from: "center" } }, "free")
-          .to(right, { x: 80, y: -14, rotate: 22, opacity: 0, duration: 0.45, ease: "power2.in" }, "free+=0.05")
-          .to(left, { x: -80, y: -14, rotate: -22, opacity: 0, duration: 0.45, ease: "power2.in" }, "free+=0.05");
+          // slide in from each edge
+          .fromTo(right, { x: () => offR, rotate: 8, scale: 1 }, { x: 0, rotate: -3, duration: 1.1, ease: "power2.out" })
+          .fromTo(left, { x: () => offL, rotate: -8, scale: 1 }, { x: 0, rotate: 3, duration: 1.1, ease: "power2.out" }, "<0.15")
+          // grip: a slight squeeze
+          .to([right, left], { scale: 0.95, duration: 0.35 }, ">-0.05")
+          // right hand pulls, the left is drawn along a little behind
+          .addLabel("pullR")
+          .to(scraps, pull(16, "end", 1.2), "pullR")
+          .to(right, { x: 18, rotate: -6, duration: 1.2 }, "pullR")
+          .to(left, { x: 13, rotate: 4, duration: 1.2 }, "pullR+=0.1")
+          // left hand pulls it back the other way
+          .addLabel("pullL")
+          .to(scraps, pull(-16, "start", 1.4), "pullL")
+          .to(left, { x: -18, rotate: 6, duration: 1.4 }, "pullL")
+          .to(right, { x: -13, rotate: -2, duration: 1.4 }, "pullL+=0.1")
+          // both ease the name back to the middle, with a soft settle
+          .addLabel("settle")
+          .to(scraps, { x: 0, rotate: (i: number) => base[i], duration: 1.1, ease: "back.out(1.6)", stagger: { each: 0.04, from: "center" } }, "settle")
+          .to([right, left], { x: 0, duration: 1, ease: "power2.out" }, "settle")
+          // let go, then slide back out the way they came
+          .to([right, left], { scale: 1, rotate: 0, duration: 0.35 }, "settle+=0.7")
+          .to(right, { x: () => offR, rotate: 8, duration: 1, ease: "power2.in" }, ">0.1")
+          .to(left, { x: () => offL, rotate: -8, duration: 1, ease: "power2.in" }, "<0.08");
 
         return () => {
           window.removeEventListener("resize", place);
